@@ -5,4 +5,5 @@ O KALUB é um sistema online organizador e gerador avançado das informações f
 
 - ASP.NET MVC
 - C#
+- JavaScript
 - SQL Server
