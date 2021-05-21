@@ -1,0 +1,14 @@
+﻿using System.Web.Mvc;
+
+namespace ProfitManager.Web.Controllers.AcessoRestrito.Administrador
+{
+    [HandleError]
+    public class PrincipalController : BaseController
+    {
+        public ActionResult Index()
+        {
+            return View();
+        }
+
+    }
+}

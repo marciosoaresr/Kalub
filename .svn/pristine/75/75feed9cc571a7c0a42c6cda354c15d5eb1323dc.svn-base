@@ -1,0 +1,368 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Kalub</title>
+    <link href="../../css/style.css" rel="stylesheet" title="default">
+    <link href="../../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../../css/jquery.ui.min.css" rel="stylesheet">
+    <link href="../../css/plugins/font-awesome.min.css" rel="stylesheet"/>
+    <link href="../../css/plugins/animate.min.css" rel="stylesheet">
+    <link href="../../css/vendors.css" rel="stylesheet">
+    <link href="../../css/style-blue.css" rel="stylesheet" title="default">
+
+</head>
+
+<body style="overflow: visible;">
+<div style="position: fixed; top: 0px; left: 0px; width: 0; height: 0;" id="scrollzipPoint"></div>
+<div id="preloader" style="display: none;">
+    <div id="status" style="display: none;">&nbsp;</div>
+</div>
+
+    <div id="sb-site">
+        <div class="boxed">
+            <header id="header-full-top" class="hidden-xs header-full">
+                <div class="container">
+                    <div class="header-full-title">
+                        <h1 class="animated fadeInRight">
+                            <a href="#"><img src="../../Images/kalub-logo-home.png" width="220" /></a>
+                        </h1>
+
+                    </div>
+                    <nav class="top-nav">
+                        <ul class="top-nav-social hidden-sm">
+                            <li><a href="#" class="animated fadeIn animation-delay-7 twitter"><i class="fa fa-twitter"></i></a></li>
+                            <li><a href="#" class="animated fadeIn animation-delay-8 facebook"><i class="fa fa-facebook"></i></a></li>
+                            <li><a href="#" class="animated fadeIn animation-delay-7 linkedin"><i class="fa fa-linkedin"></i></a></li>
+                        </ul>
+                        <div class="dropdown animated fadeInDown animation-delay-11">
+                            <a href="" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-user"></i> Login</a>
+                            <div class="dropdown-menu dropdown-menu-right dropdown-login-box animated flipCenter">
+                                @using (Html.BeginForm("Autenticar", "Login", FormMethod.Post))
+                                {
+                                    <h4>Login</h4>
+                                    <div class="form-group">
+                                        <div class="input-group login-input">
+                                            <span class="input-group-addon"><i class="fa fa-user"></i></span>
+                                            <input type="text" class="form-control" placeholder="email" id="validate_email" name="email" required>
+                                        </div>
+                                        <br>
+                                        <div class="input-group login-input">
+                                            <span class="input-group-addon"><i class="fa fa-lock"></i></span>
+                                            <input type="password" class="form-control" placeholder="senha" id="validate_password" name="senha" required>
+                                        </div>
+
+                                        <button type="submit" class="btn btn-ar btn-primary pull-right">Login</button>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                }
+                            </div>
+                        </div> <!-- dropdown -->
+
+                    </nav>
+                </div>
+            </header>
+            <nav class="navbar-default navbar-header-full navbar-dark yamm navbar-static-top" role="navigation" id="header" height="65">
+                <div class="container">
+                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                        <ul class="nav navbar-nav">
+                            <li>
+                                <a href="#" class="animated fadeIn animation-delay-7">Home</a>
+                            </li>
+                            <li>
+                                <a href="#sobre" class="animated fadeIn animation-delay-7">Sobre</a>
+                            </li>
+                            <li>
+                                <a href="#seguranca" class="animated fadeIn animation-delay-7">Segurança</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        <section class="carousel-section">
+            <div id="carousel-example-generic" class="carousel carousel-razon slide" data-ride="carousel" data-interval="6000">
+                <ol class="carousel-indicators">
+                    <li data-target="#carousel-example-generic" data-slide-to="1" class=""></li>
+                    <li data-target="#carousel-example-generic" data-slide-to="2" class="active"></li>
+                </ol>
+                <div class="carousel-inner">
+                    <div class="item">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-lg-6 col-md-7 col-sm-9">
+                                    <div class="carousel-caption">
+                                        <div class="carousel-text" style="padding-left: 50px;">
+                                            <h1 class="animated fadeInDownBig animation-delay-7 carousel-title">Exclusivo para micros e pequenas empresas comerciais</h1>
+                                            <h2 class="animated fadeInDownBig animation-delay-5  crousel-subtitle">Optantes pelo Simples Nacional</h2>
+                                            <ul class="list-unstyled carousel-list">
+                                                <li class="animated bounceInLeft animation-delay-11"><i class="fa fa-check"></i>Empresas do comércio varejistas de mercadorias em geral</li>
+                                                <li class="animated bounceInLeft animation-delay-13"><i class="fa fa-check"></i>Postos de combustíveis</li>
+                                                <li class="animated bounceInLeft animation-delay-15"><i class="fa fa-check"></i>Lojas de conveniências</li>
+                                                <li class="animated bounceInLeft animation-delay-15"><i class="fa fa-check"></i>Ideal para MEI (Micro Empreendedor Individual)</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-md-5 col-sm-3 hidden-xs carousel-img-wrap">
+                                    <div class="carousel-img">
+                                        <img src="../../Images/pre2.png" class="img-responsive animated bounceInUp animation-delay-3" alt="Image">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item active">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-md-6 col-sm-8">
+                                    <div class="carousel-caption">
+                                        <div class="carousel-text" style="padding-left: 50px;">
+                                            <h1 class="animated fadeInDownBig animation-delay-7 carousel-title">A maior Inovação de Todos os Tempos</h1>
+                                            <h2 class="animated fadeInDownBig animation-delay-5  crousel-subtitle">Aplicativo online organizador e gerador avançado das informações financeiras:</h2>
+                                            <ul class="list-unstyled carousel-list">
+                                                <li class="animated bounceInLeft animation-delay-11"><i class="fa fa-check"></i>Exclusivo para as micros e pequenas empresas</li>
+                                                <li class="animated bounceInLeft animation-delay-13"><i class="fa fa-check"></i>Conheça a formação do lucro líquido diariamente</li>
+                                                <li class="animated bounceInLeft animation-delay-15"><i class="fa fa-check"></i>Fluxo de caixa exclusivo da atividade fim (operacional)</li>
+                                                <li class="animated bounceInLeft animation-delay-15"><i class="fa fa-check"></i>Fluxo de caixa exclusivo das atividades de investimentos</li>
+                                                <li class="animated bounceInLeft animation-delay-15"><i class="fa fa-check"></i>Fluxo de caixa exclusivo das atividades de financiamentos</li>
+                                                <li class="animated bounceInLeft animation-delay-15"><i class="fa fa-check"></i>Em uma única fotografia panorâmica: saldo de todas as contas das empresa (do caixa ao lucro acumulado)</li>
+                                                <li class="animated bounceInLeft animation-delay-15"><i class="fa fa-check"></i>Diagnóstico de análise dos resultados</li>
+                                            </ul>
+                                            <p class="animated fadeInUpBig animation-delay-17"><span>Experimente grátis: você vai se surpreender !!!</span></p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-4 hidden-xs carousel-img-wrap">
+                                    <div class="carousel-img">
+                                        <img src="../../Images/pre3.png" class="img-responsive animated bounceInUp animation-delay-3" alt="Image">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <a class="left carousel-control" href="#carousel-example-generic" data-slide="prev">
+                    <span class="glyphicon glyphicon-chevron-left"></span>
+                </a>
+                <a class="right carousel-control" href="#carousel-example-generic" data-slide="next">
+                    <span class="glyphicon glyphicon-chevron-right"></span>
+                </a>
+            </div>
+        </section>
+            <section class="margin-bottom">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-4 col-sm-6">
+                            <div class="content-box box-default animated fadeInUp animation-delay-10">
+                                <img src="../../Images/16.png"/>
+                                <h4 class="content-box-title">Melhore sua qualidade de vida</h4>
+                                <p>Sabe aquela angústia que costuma aparecer no final do domingo? normalmente causada por não saber como pagar as contas na segunda-feira? E o que é pior: não saber o que está acontecendo. Isso tudo é por falta de informações técnicas de alta qualidade. Com o Kalub isso vai acabar. </p>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-sm-6">
+                            <div class="content-box box-default animated fadeInUp animation-delay-14">
+                                <img src="../../Images/20.png" />
+                                <h4 class="content-box-title">Relatórios on-line</h4>
+                                <p>Tome decisões inteligentes, em qualquer hora, baseadas em informações organizadas com alta tecnologia e teorias avançadas.</p>
+                                <p></p><br/><br/><br/>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-sm-6">
+                            <div class="content-box box-default animated fadeInUp animation-delay-16">
+                                <img src="../../Images/78.png" />
+                                <h4 class="content-box-title">Saiba tudo sobre o impacto de suas decisões</h4>
+                                <p>A situação financeira da sua empresa nada mais é do que consequências de suas decisões e boas decisões, precisam de informações técnicas e profissionais.</p>
+                                <br/>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+        <section class="section-lines">
+
+            <div class="container" id="sobre">
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="home-devices">
+                            <h4>
+                                <b>
+                                    A MAIOR INOVAÇÃO DE TODOS OS TEMPOS EM FERRAMENTA DE APOIO À
+                                    GESTÃO FINANCEIRA DAS MICRO E PEQUENAS EMPRESAS
+                                </b>
+                            </h4>
+                            Olá, empresários e gestores financeiros, imaginem-se na seguinte situação:<br/>
+
+                            <h5>
+                                <i class="fa fa-check"></i> Ter disponível, diariamente, toda e qualquer informação relativa a formação do lucro líquido, do caixa, dos investimentos e das dívidas de sua empresa.
+                                <br/><br/>
+                                <i class="fa fa-check"></i> Logo no primeiro ou segundo dia após terminar um mês de muito trabalho, ter disponível em suas mãos um diagnóstico com análise dos resultados do mês: orientando, aconselhando, comparando, comentando, dando dicas preciosas para auxiliá-lo a tomar as melhores decisões e com isso manter a saúde financeira de sua empresa impecável?
+                            </h5>
+
+                            É isso mesmo, um sofisticado relatório como se fosse feito por uma daquelas
+                            equipes de grandes empresas, que utilizam a vanguarda em tecnologia de
+                            modelagens matemáticas e teorias de finanças e contabilidade.<br/><br/>
+
+                            Parece um sonho, não é mesmo? Mas agora é realidade. Trata-se da maior inovação
+                            de todos os tempos em ferramenta de apoio à gestão financeira, feito sob medida
+                            exclusivamente para as micro e pequenas empresas.<br/><br/>
+
+                            <span class="primary-color" style="font-size: 20px;">
+                                Chegou o KALUB !!!<br/><br/>
+                            </span>
+
+                            O <span class="primary-color" style="font-size: 20px;">KALUB</span> é um aplicativo
+                            elaborador de diagnóstico financeiro avançado feito exclusivamente para as micro e pequenas
+                            empresas optantes pelo Simples Nacional. Por enquanto está preparado somente para
+                            empresas comerciais (revenda de mercadorias). Está sendo criada e em breve será liberada
+                            uma versão para empresas prestadoras de serviços. O <span class="primary-color" style="font-size: 20px;">KALUB</span>
+                            não é indicado para empresas industriais (transformação). No entanto, atende bem os
+                            postos de combustíveis, mesmo quando tributados pelo lucro real, devido à baixa complexidade
+                            tributária.<br/><br/>
+
+                            É avançado porque utiliza teorias e técnicas de finanças e contabilidade consagradas e presentes
+                            nas grandes empresas de todo o mundo e foram traduzidas em linguagem muito simples e de fácil entendimento.<br/><br/>
+
+                            Enquanto que a maioria dos sistemas presentes nas pequenas empresas são para atender áreas
+                            específicas e controlar documentos fiscais das operações, como por exemplo estoques, compras e vendas, 
+                            pagamentos e recebimentos, o <span class="primary-color" style="font-size: 20px;">KALUB</span>
+                            atende exclusivamente os <b>sócios, proprietários e gestores</b> tomadores de decisões, porque organiza,
+                            gera e interpreta as informações financeiras geradas por essas áreas em <b>todas as contas da empresa, do
+                            caixa ao lucro acumulado</b>. Essa organização das informações financeiras tem as seguintes finalidades:
+                            conhecer a formação do lucro líquido livre e o seu <b>impacto no caixa</b> da empresa e, finalmente, facilitar 
+                            a tomada de melhores decisões.
+
+                            O <span class="primary-color" style="font-size: 20px;">KALUB</span> foi desenvolvido por profissionais
+                            com mais de vinte anos de experiência em tecnologia da informação e finanças corporativas nos mais
+                            variados ramos de atividades e tamanho de empresas.<br/><br/>
+
+                            <b>
+                                DIFERENCIAIS<br /><br />
+
+                                O KALUB não substitui sistemas que a sua empresa já tem
+                            </b><br/><br/>
+
+                            E jamais deve
+                            ser visto como mais um. Muito pelo contrário, trabalha com resumo de valores fornecidos pelo sistema
+                            de automação existente em sua empresa que afetam todas as contas da empresa. Veja o KALUB como uma
+                            equipe de profissionais de contabilidade e finanças de alto nível trabalhando o tempo todo para a sua pequena empresa.<br/><br/>
+
+                            <b>Única tela de lançamentos e poucos minutos por dia</b><br/><br/>
+
+                            O <span class="primary-color" style="font-size: 20px;">KALUB</span> é tão inovador que o usuário tem apenas
+                            uma única tela para incluir lançamentos resumidos diários das compras, vendas, pagamentos e recebimentos, além
+                            de não precisar de nenhum conhecimento avançado em finanças.<br/><br/>
+
+                            Fora o diferencial de tela única, não precisa mais do que 20 a 30 minutos por dia para inclusão de dados, e
+                            de uma forma totalmente descomplicada.<br/><br/>
+
+                            <b>Manual de utilização em todos os campos de dados</b><br/><br/>
+
+                            Outro grande diferencial do <span class="primary-color" style="font-size: 20px;">KALUB</span> é que em qualquer
+                            lugar que o usuário tenha que incluir dados existe um help com tudo que precisa saber: o que significa,
+                            onde buscar, como calcular, etc.<br/><br/>
+
+                            <b>Produtos finais</b><br/><br/>
+
+                                Após inclusão de todos os dados, o aplicativo classifica, organiza e trata essas
+                            informações financeiras e econômicas e gera os três demonstrativos consagrados e 
+                            universais da gestão financeira empresarial:<br />
+
+                                <h5>
+                                    <i class="fa fa-check"></i> Demonstração do Resultado (DRE): conheça o verdadeiro <b>lucro líquido</b> da sua empresa.<br />
+                                    <i class="fa fa-check"></i> Demonstração dos Fluxos de Caixa (DFC): conheça o impacto do lucro líquido no caixa da empresa
+                                    no caixa operacional, de investimentos e financiamentos.<br />
+                                    <i class="fa fa-check"></i> Balanço Patrimonial: uma fotográfica panorâmica com todas as contas de investimentos e dívidas da empresa<br/>
+                                    <i class="fa fa-check"></i> Diagnóstico de análise de resultados: indicadores, análises e comentários dos resultados e dicas.
+                                </h5>
+
+                            <b>Outros diferenciais</b><br/>
+
+                            <h5>
+                                <i class="fa fa-check"></i> Nada no KALUB pode ser complicado.<br/>
+                                <i class="fa fa-check"></i> Informações de qualidade em tempo real: evita surpresas e sustos.<br/>
+                                <i class="fa fa-check"></i> Uma verdadeira aula de gestão financeira com quem entende do assunto.<br/>
+                                <i class="fa fa-check"></i> Estimula naturalmente melhor planejamento com desenvolvimento de melhores rotinas de organização da papelada e informações.<br/>
+                                <i class="fa fa-check"></i> Permite conhecer limites e perceber novas oportunidades.<br/>
+                                <i class="fa fa-check"></i> Tranquilidade, e melhora na qualidade de vida. Isso mesmo. Percebemos melhoras na qualidade de vida de empresários que passaram a utilizar o <span class="primary-color" style="font-size: 20px;">KALUB</span>, simplesmente pelo fato de saberem para onde sua empresa está indo.
+                            </h5>
+
+
+                            É assustador o número de empresas que fecham as portas logo nos dois
+                                primeiros anos de vida, simplesmente pelo fato de não terem as informações
+                            organizadas tecnicamente e em tempo hábil para tomada de boas decisões.<br/><br/>
+
+                            Então, não perca mais tempo e não faça parte desse grupo de risco, conheça e utilize o <span class="primary-color" style="font-size: 20px;">KALUB</span>
+                            e faça uma revolução nas finanças de sua empresa.<br /><br />
+
+                            Sabe aquela angustia que bate nos domingos à noite? A chegada da segunda-feira e não saber como pagar as contas.
+                            E o que é pior, não saber o que está acontecendo. Sabe por que isso acontece? é por falta de informações de qualidade
+                            estruturadas. Mais agora o seu problema vai acabar.<br/><br/>
+
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="tab-content" style="padding-top: 100px;">
+
+                            <img src="../../Images/gestao-financeira.png" alt="">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+            <section class="margin-bottom">
+                <div class="container" id="seguranca" >
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="home-devices">
+                                <p class="lead lead-lg primary-color">
+                                    <strong>Segurança</strong>
+                                </p>
+                                <h4>Nossa prioridade é garantir a integridade e a confidenciabilidade de suas informações</h4>
+                                <p>
+                                    <b>Privacidade</b><br>
+                                    SUAS INFORMAÇÕES SÃO TOTALMENTE CONFIDENCIAIS
+                                </p>
+                                <p>Não divulgaremos nenhuma informação que identifique a sua empresa ou os negócios que realiza para nenhuma empresa terceira sem o seu consentimento</p>
+                                <p>
+                                    <b>Segurança</b><br>
+                                    A SEGURANÇA DA SUA INFORMAÇÃO É NOSSA PRIORIDADE
+                                </p>
+                                <p>Os dados da sua empresa estarão armazenados em servidores com a melhor segurança da internet</p>
+
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="tab-content">
+                                <div class="tab-pane active" id="desktop">
+                                    <img src="../../Images/safe.png" alt="" class="img-responsive">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <aside id="footer-widgets">
+                <div class="container" style="padding-top: 20px;">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <img src="../../Images/kalub-logo-home.png" width="100" />
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+        </div>
+    </div>
+    <div id="back-top" style="display: none;">
+        <a href="#header"><i class="fa fa-chevron-up"></i></a>
+    </div>
+    @RenderBody()
+    <script src="../../Scripts/vendors.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,11 @@
+﻿@{
+    ViewBag.Title = "Profit Manager";
+    Layout = "~/Views/Shared/_LayoutInicial.cshtml";
+}
+
+@*<div style="margin-top: 50px">
+    @Html.ActionLink("Acessar", "Login", "Login")<br />
+    
+    @Html.ActionLink("Acessar parte administrativa", "LoginAdm", "Login")
+
+</div>*@

@@ -1,0 +1,40 @@
+﻿@model ProfitManager.Fabrica.Entidade.EventoLancamento
+
+<div id="AbreEventoHelp" class="modal fade" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="panel-heading2">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Lançamento - @ViewBag.NomeEvento</h4>
+            </div>
+
+            @using (Html.BeginForm("AbreEventoHelp", "EventoLancamento", FormMethod.Post))
+            {
+                <div class="modal-body">
+                    <div style="display: inline-block">
+
+                        <div style="padding-top: 2px;">
+                            <b>@ViewBag.NomeEvento</b>
+                            <br/><br/>
+                            @Html.Raw(ViewBag.eventoHelp)
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<div id="abrirModalProcessando" class="modal fade modal-v2" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body" align=center>
+                <img src="../../Images/loading_2x.gif" width="300">
+            </div>
+        </div>
+    </div>
+</div>

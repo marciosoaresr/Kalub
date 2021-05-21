@@ -1,0 +1,173 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="ProfitManager.Fabrica.Entidade.Area" HideInheritanceLine="true">
+    <Position X="6.5" Y="10.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAQAAAIAAAAAAEAAAAAgAAIAAAAAAAAAAAAA=</HashCode>
+      <FileName>Entidade\Area.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ProfitManager.Fabrica.Entidade.Campo" HideInheritanceLine="true">
+    <Position X="6.5" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAQAAAAAAAAAAAAAAAAAAAIAAAAAAAAEAAAA=</HashCode>
+      <FileName>Entidade\Campo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ProfitManager.Fabrica.Entidade.CampoIdioma" HideInheritanceLine="true">
+    <Position X="2.5" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAIAAAAAAAAAAAAAAAQAAAAAAACAAAAAAAAA=</HashCode>
+      <FileName>Entidade\CampoIdioma.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Campo" />
+      <Property Name="Idioma" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="ProfitManager.Fabrica.Entidade.CategoriaEmpresa">
+    <Position X="12" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAQAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAA=</HashCode>
+      <FileName>Entidade\CategoriaEmpresa.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="CampoNome" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="ProfitManager.Fabrica.Entidade.Cidade">
+    <Position X="12.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAEAAAg=</HashCode>
+      <FileName>Entidade\Cidade.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Estado" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="ProfitManager.Fabrica.Entidade.ContaContabil" HideInheritanceLine="true">
+    <Position X="3.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAQAAAAAAAAAAAAAAAAgAAIAAAAAAAAAAQAA=</HashCode>
+      <FileName>Entidade\ContaContabil.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="ContaContabilSubGrupo" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="ProfitManager.Fabrica.Entidade.ContaContabilGrupo" Collapsed="true" HideInheritanceLine="true">
+    <Position X="18.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEAQAAAQAEAAAAAAAAAAgACIAAAAAAAAAAAAQ=</HashCode>
+      <FileName>Entidade\ContaContabilGrupo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ProfitManager.Fabrica.Entidade.ContaContabilSubGrupo">
+    <Position X="9.25" Y="3.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIQQAAAAAAAAAQAAAAAAgAAIAACAAAAAAAAAA=</HashCode>
+      <FileName>Entidade\ContaContabilSubGrupo.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="CampoNome" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="ProfitManager.Fabrica.Entidade.Empresa">
+    <Position X="12.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAAAIAAAAAAAACIAAABAAACAAAAAACAAAAAAAAEBAgA=</HashCode>
+      <FileName>Entidade\Empresa.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Cidade" />
+      <Property Name="CategoriaEmpresa" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="ProfitManager.Fabrica.Entidade.EmpresaUsuario">
+    <Position X="15.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAAAAAACAAAAAAAAAAAAAAACAAAAAAAAAQAAEAAAA=</HashCode>
+      <FileName>Entidade\EmpresaUsuario.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Empresa" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="ProfitManager.Fabrica.Entidade.Estado" HideInheritanceLine="true">
+    <Position X="9.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAA=</HashCode>
+      <FileName>Entidade\Estado.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Pais" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="ProfitManager.Fabrica.Entidade.Evento" HideInheritanceLine="true">
+    <Position X="6.5" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAQAAACAAAABAAAAAAAgAAICAAAAAAQAEAAE=</HashCode>
+      <FileName>Entidade\Evento.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Area" />
+      <Property Name="CampoNome" />
+      <Property Name="CampoHelp" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="ProfitManager.Fabrica.Entidade.EventoCategoriaEmpresa">
+    <Position X="9.25" Y="9.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAgA=</HashCode>
+      <FileName>Entidade\EventoCategoriaEmpresa.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Evento" />
+      <Property Name="CategoriaEmpresa" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="ProfitManager.Fabrica.Entidade.EventoLancamento">
+    <Position X="9.5" Y="7.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>ABAAAAAAAAAAAAAAAAAAAAAEAgAAABAAAAAAAAAAAAA=</HashCode>
+      <FileName>Entidade\EventoLancamento.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Empresa" />
+      <Property Name="Evento" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="ProfitManager.Fabrica.Entidade.EventoOperacao">
+    <Position X="3.5" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAAAAAAAAAAAAAgAAAAAAAAgAAAIAAAAAAAAAAAAQ=</HashCode>
+      <FileName>Entidade\EventoOperacao.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Evento" />
+      <Property Name="ContaContabil" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="ProfitManager.Fabrica.Entidade.Idioma" HideInheritanceLine="true">
+    <Position X="0.5" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAA=</HashCode>
+      <FileName>Entidade\Idioma.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ProfitManager.Fabrica.Entidade.Pais" HideInheritanceLine="true">
+    <Position X="6.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAA=</HashCode>
+      <FileName>Entidade\Pais.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ProfitManager.Fabrica.Entidade.Usuario" Collapsed="true">
+    <Position X="20" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAAAAAAAAAAAACAAAAAAAAAQAAEBAAA=</HashCode>
+      <FileName>Entidade\Usuario.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

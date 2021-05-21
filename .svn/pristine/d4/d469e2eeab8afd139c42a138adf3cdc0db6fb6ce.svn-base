@@ -1,0 +1,78 @@
+﻿@using App_Code.CustomHelper
+@using ProfitManager.Fabrica.Entidade
+@using PagedList.Mvc;
+@using PagedList;
+@using ProfitManager.Fabrica.Enum
+@model PagedList.IPagedList<ProfitManager.Fabrica.Entidade.EmpresaRecebimentoTransacao>
+
+@{
+    ViewBag.Title = "Extrato Financeiro Pagseguro";
+    Layout = "~/Views/Shared/_LayoutRestritoUser.cshtml";
+
+
+}
+
+<div id="content">
+    <div class="tabs-wrapper text-center">
+        <div class="panel box-shadow-none text-left content-header">
+            <div class="panel-body">
+                <div class="col-sm-4" style="padding-top: 35px;">
+                    <p class="animated fadeInLeft">
+                        <a href="/PrincipalUser" style="font-size: 1.0em !important; color: #fff;">Home</a> <span class="fa-angle-right fa"></span> Extrato Financeiro Pagseguro
+                    </p>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+        <div style="width: 100%;">
+            <div style="width: 70%; left: 15%; top: 105%; position: absolute;">
+                <div class="panel">
+                    <div class="panel-heading" style="padding-left: 10px; padding-right: 30px; padding-bottom: 50px">
+                        <ul class="nav navbar-nav navbar-left" style="color: #2c4970;">
+                            <h4><b>Extrato Financeiro Pagseguro</b></h4>
+                        </ul>
+                    </div>
+
+                    <div class="panel-body" >
+
+                        @GridView.Grid(Model, new string[] { "Data Transação", "Id Transação", "Tipo Pagamento", "Status", "Valor" },
+                        new string[] { "DataHoraCriacao", "IdTransacao", "TipoPagamento", "Status", "Valor" }, typeof(EmpresaRecebimentoTransacao))
+
+                        @if (ViewBag.PageCount > 1)
+                        {
+                            <div style="text-align: center">
+                                <div>
+                                    Página: @(ViewBag.PageCount < ViewBag.PageNumber ? 0 : ViewBag.PageNumber) de @ViewBag.PageCount
+                                    @Html.PagedListPager((IPagedList)Model, pageNumber => Url.Action("ExtratoFinanceiroPagseguro", new { pageNumber, search = ViewBag.Search }))
+                                </div>
+                            </div>
+                        }
+
+                    </div>
+
+                </div>
+            </div>
+
+
+        </div>
+
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            
+            $('#datatables-example').DataTable();
+
+
+        });
+
+    </script>
+
+}

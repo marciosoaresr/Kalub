@@ -1,0 +1,90 @@
+﻿@using System.Collections.Generic
+@using System.Linq
+@using ProfitManager.Fabrica.Entidade
+@using ProfitManager.Fabrica.Enum
+
+@helper GetPlanoContasTreeView(List<ContaContabilGrupo> listContaContabilGrupo)
+{
+    <div class="treeview">
+        <ul>
+            @foreach (var contaContabilGrupo in listContaContabilGrupo)
+            {
+                var numeroItensBagSubGrupo = contaContabilGrupo.ListContaContabilSubGrupo.Count();
+
+                <li>
+                    @if (numeroItensBagSubGrupo > 0)
+                    {
+                        <span class="expand collapsible" >&nbsp;</span>
+                    }
+                    else
+                    {
+                        <span style="width: 15px; display: inline-block">&nbsp;</span>
+                    }
+                    
+                    <span>
+                        <a href="#" data-id="@contaContabilGrupo.Id" class="contacontabilgrupo"><b>@contaContabilGrupo.NomeNormalizado</b></a>
+                        <a href="PlanoContas/ExcluirContaContabilGrupo?id=@contaContabilGrupo.Id" class="excluir"> <img src="../../../Images/file_delete.png" width=20 alt="apagar registro"> </a>
+                    </span>
+
+                    @if (numeroItensBagSubGrupo > 0)
+                    {
+                        <ul>
+                            @foreach (var contaContabilSubGrupo in contaContabilGrupo.ListContaContabilSubGrupo.OrderBy(x => x.Codigo))
+                            {
+
+                                var numeroItensBagContaContabil = contaContabilSubGrupo.ListContaContabil.Count();
+
+                                <li>
+                                    @if (numeroItensBagContaContabil > 0)
+                                    {
+                                        <span class="expand collapsible">&nbsp;</span>
+                                    }
+                                    else
+                                    {
+                                        <span style="width: 15px; display: inline-block">&nbsp;</span>
+                                    }
+                                    <span>
+                                        <a href="#" data-id="@contaContabilSubGrupo.Id" class="contacontabilsubgrupo"><b>@contaContabilSubGrupo.NomeNormalizado</b></a>
+                                        <a href="PlanoContas/ExcluirContaContabilSubGrupo?id=@contaContabilSubGrupo.Id" class="excluir"><img src="../../../Images/file_delete.png" width=20 alt="apagar registro"></a>
+                                    </span>
+
+                                    @if (numeroItensBagContaContabil > 0)
+                                    {
+                                        <ul>
+                                            @foreach (var contaContabil in contaContabilSubGrupo.ListContaContabil.OrderBy(x => x.Codigo))
+                                            {
+                                                var lucroPrejuizoAcumulado = contaContabil.LucroPrejuizoAcumulado;
+                                                var msgLucroPrejuizo = "";
+                                                if (lucroPrejuizoAcumulado == EnumSimNao.Sim)
+                                                {
+                                                    msgLucroPrejuizo = " - lucro prejuizo acumulado";
+                                                }
+
+                                                var exigeSaldoInicial = contaContabil.ExigeSaldoinicial;
+                                                var msgSaldoInicial = "";
+                                                if (exigeSaldoInicial == EnumExigeSaldoinicial.Sim)
+                                                {
+                                                    msgSaldoInicial = " - exige saldo inicial";
+                                                }
+                                                <li>
+                                                    <span style="margin-left: 20px;">
+                                                        <a href="#" data-id="@contaContabil.Id" class="contacontabil">@contaContabil.NomeNormalizado</a> 
+                                                        <span style="color:green;"><b> @msgLucroPrejuizo</b></span>
+                                                        <span style="color:red;"><b>@msgSaldoInicial</b></span>
+                                                        <a href="#" data-id="@contaContabil.Id" class="helpConta"> <img data-id="@contaContabil.Id" src="../../../Images/icon_help.png" width=20 alt="editar help"> </a>
+                                                        <a href="PlanoContas/ExcluirContaContabil?id=@contaContabil.Id" class="excluir"><img src="../../../Images/file_delete.png" width=20 alt="apagar registro"></a>
+                                                    </span>
+                                                </li>
+                                            }
+                                        </ul>
+                                    }
+                                </li>
+                            }
+                        </ul>
+                    }
+                </li>
+            }
+        </ul>
+    </div>
+}
+

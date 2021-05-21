@@ -1,0 +1,250 @@
+﻿@using ProfitManager.Fabrica.Entidade
+@using ProfitManager.Fabrica.Enum
+@model ProfitManager.Fabrica.Entidade.Empresa
+
+@{
+    DateTime dataAbertura = DateTime.Now;
+    if (Model.DataAbertura == Convert.ToDateTime("01/01/0001"))
+    {
+        Model.DataAbertura = dataAbertura;
+    }
+}
+
+<div id="AbreCadastrarEditarCadastroEmpresa" class="modal fade" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="panel-heading2">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Cadastro Empresa</h4>
+            </div>
+
+            @using (Html.BeginForm("CadastrarEditarCadastroEmpresa", "CadastroEmpresa", FormMethod.Post, new { id = "formCadastrarEditarCadastroEmpresa" }))
+            {
+                <div class="modal-body">
+                    <div style="display: inline-block">
+                        @Html.AntiForgeryToken()
+                        @Html.ValidationSummary(true)
+
+                        @Html.HiddenFor(x => x.Id)
+                        @Html.HiddenFor(x => x.DataHoraCriacao)
+
+                        <div class="col-sm-5" style="padding-top: 2px;">
+                            <b>Cnpj</b><br />
+                            @Html.TextBoxFor(x => x.Cnpj, new
+                   {
+                       @style = "width:150px;",
+                       @onKeyPress = "MascaraCNPJ(formCadastrarEditarCadastroEmpresa.Cnpj);",
+                       @maxlength = "18",
+                       @onblur = "this.style.backgroundColor = '#ffffff'"
+                   })
+                        </div>
+                        <div class="col-sm-4" style="padding-top: 2px;">
+                            <b>Data de Abertura</b><br />
+                            <input class="dateAnimate" data-val="true" data-val-date="The field DataAbertura must be a date." data-val-required="O campo DataAbertura é obrigatório." id="DataAbertura" name="DataAbertura" style="width: 75px;" type="text" value="@Model.DataAbertura" />
+                        </div>
+
+                        <div class="col-sm-12" style="padding-top: 10px;">
+                            <b>Nome Empresarial</b>
+                            @Html.TextBoxFor(x => x.Nome, new { @style = "width:525px;", @onblur = "this.style.backgroundColor = '#ffffff'" })
+                        </div>
+                        <br />
+
+                        <div class="col-sm-12" style="padding-top: 10px;">
+                            <b>Título do Estabelecimento (nome de fantasia)</b><br />
+                            @Html.TextBoxFor(x => x.NomeFantasia, new { @style = "width:525px;", @onblur = "this.style.backgroundColor = '#ffffff'" })
+                        </div>
+                        <br />
+
+                        <div class="col-sm-12" style="padding-top: 10px;">
+                            <b>Atividade econômica principal</b><br />
+                            @Html.DropDownListFor(x => x.CategoriaEmpresa, (IEnumerable<SelectListItem>)ViewBag.ListaCategoriaEmpresa, "Selecione uma CNAE", new { @style = "width:525px;" })
+                        </div>
+                        <br />
+
+                        <br />
+
+                        <div class="col-sm-5" style="padding-top: 10px;">
+                            <b>Logradouro</b><br />
+                            @Html.TextBoxFor(x => x.Logradouro, new { @style = "width:200px;", @onblur = "this.style.backgroundColor = '#ffffff'" })
+                        </div>
+                        <div class="col-sm-2" style="padding-top: 10px;">
+                            <b>Numero</b><br />
+                            @Html.TextBoxFor(x => x.Numero, new { @style = "width:40px;", @onblur = "this.style.backgroundColor = '#ffffff'" })
+                        </div>
+                        <div class="col-sm-5" style="padding-top: 10px;">
+                            <b>Complemento</b><br />
+                            @Html.TextBoxFor(x => x.Complemento, new { @style = "width:150px;", @onblur = "this.style.backgroundColor = '#ffffff'" })
+                        </div>
+                        <br />
+
+                        <div class="col-sm-2" style="padding-top: 10px;">
+                            <b>Cep</b><br />
+                            @Html.TextBoxFor(x => x.Cep, new { @style = "width:80px;", @onKeyPress = "MascaraCep(formCadastrarEditarCadastroEmpresa.Cep);", @maxlength = "10", @onblur = "this.style.backgroundColor = '#ffffff'" })
+                        </div>
+                        <div class="col-sm-4" style="padding-top: 10px;">
+                            <b>Bairro/Distrito</b><br />
+                            @Html.TextBoxFor(x => x.Bairro, new { @style = "width:150px;", @onblur = "this.style.backgroundColor = '#ffffff'" })
+                        </div>
+                        <div class="col-sm-4" style="padding-top: 10px;">
+                            <b>Email</b><br />
+                            @Html.TextBoxFor(x => x.Email, new { @style = "width:250px;", @onblur = "this.style.backgroundColor = '#ffffff'" })
+                        </div>
+                        <br />
+
+                        <div class="col-sm-3" style="padding-top: 10px;">
+                            <b>Telefone 1</b><br />
+                            @Html.TextBoxFor(x => x.Telefone1, new
+                   {
+                       @style = "width:110px;",
+                       @onKeyPress = "MascaraTelefone(formCadastrarEditarCadastroEmpresa.Telefone1);",
+                       @maxlength = "15",
+                       @onblur = "this.style.backgroundColor = '#ffffff'"
+                   })
+                        </div>
+                        <div class="col-sm-3" style="padding-top: 10px;">
+                            <b>Telefone 2</b><br />
+                            @Html.TextBoxFor(x => x.Telefone2, new
+                   {
+                       @style = "width:110px;",
+                       @onKeyPress = "MascaraTelefone(formCadastrarEditarCadastroEmpresa.Telefone2);",
+                       @maxlength = "15",
+                       @onblur = "this.style.backgroundColor = '#ffffff'"
+                   })
+                        </div>
+                        <br />
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+                        <input type="submit" value="Salvar" name="enviar" id="salvar" class="btn btn-primary">
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+</div>
+
+
+<div id="abrirModalProcessando" class="modal fade modal-v2" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body" align=center>
+                <img src="../../Images/loading_2x.gif" width="300">
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    $(document).ready(function() {
+
+        $('.dateAnimate').bootstrapMaterialDatePicker({ weekStart: 0, time: false, animation: true });
+
+        $("#salvar").click(function () {
+            $('#abrirModalProcessando').modal('show');
+        });
+
+    });
+
+    function MascaraCNPJ(cnpj) {
+        if (mascaraInteiro(cnpj) == false) {
+            event.returnValue = false;
+        }
+        return formataCampo(cnpj, '00.000.000/0000-00', event);
+    }
+
+    //adiciona mascara de cep
+    function MascaraCep(cep) {
+        if (mascaraInteiro(cep) == false) {
+            event.returnValue = false;
+        }
+        return formataCampo(cep, '00.000-000', event);
+    }
+
+    function MascaraTelefone(tel) {
+        if (mascaraInteiro(tel) == false) {
+            event.returnValue = false;
+        }
+        return formataCampo(tel, '(00) 0000-00000', event);
+    }
+
+    function ValidaTelefone(tel) {
+        //exp = /\(\d{2}\)\ \d{4}\-\d{4}/
+        //if (!exp.test(tel.value))
+        //alert('Numero de Telefone Invalido!');
+    }
+
+    //valida CEP
+    function ValidaCep(cep) {
+        // exp = /\d{2}\.\d{3}\-\d{3}/
+        //if (!exp.test(cep.value))
+        //$('#alertaCep').modal('show');
+    }
+
+    function mascaraInteiro() {
+        if (event.keyCode < 48 || event.keyCode > 57) {
+            event.returnValue = false;
+            return false;
+        }
+        return true;
+    }
+
+    //valida o CNPJ digitado
+    function ValidarCNPJ(ObjCnpj) {
+        var cnpj = ObjCnpj.value;
+        var valida = new Array(6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2);
+        var dig1 = new Number;
+        var dig2 = new Number;
+
+        exp = /\.|\-|\//g
+        cnpj = cnpj.toString().replace(exp, "");
+        var digito = new Number(eval(cnpj.charAt(12) + cnpj.charAt(13)));
+
+        for (i = 0; i < valida.length; i++) {
+            dig1 += (i > 0 ? (cnpj.charAt(i - 1) * valida[i]) : 0);
+            dig2 += cnpj.charAt(i) * valida[i];
+        }
+        dig1 = (((dig1 % 11) < 2) ? 0 : (11 - (dig1 % 11)));
+        dig2 = (((dig2 % 11) < 2) ? 0 : (11 - (dig2 % 11)));
+
+        //if (((dig1 * 10) + dig2) != digito)
+        //alert('CNPJ Invalido!');
+
+    }
+
+    //formata de forma generica os campos
+    function formataCampo(campo, Mascara, evento) {
+        var boleanoMascara;
+
+        var Digitato = evento.keyCode;
+        exp = /\-|\.|\/|\(|\)| /g
+        campoSoNumeros = campo.value.toString().replace(exp, "");
+
+        var posicaoCampo = 0;
+        var NovoValorCampo = "";
+        var TamanhoMascara = campoSoNumeros.length;;
+
+        if (Digitato != 8) { // backspace 
+            for (i = 0; i <= TamanhoMascara; i++) {
+                boleanoMascara = ((Mascara.charAt(i) == "-") || (Mascara.charAt(i) == ".")
+                                                        || (Mascara.charAt(i) == "/"))
+                boleanoMascara = boleanoMascara || ((Mascara.charAt(i) == "(")
+                                                        || (Mascara.charAt(i) == ")") || (Mascara.charAt(i) == " "))
+                if (boleanoMascara) {
+                    NovoValorCampo += Mascara.charAt(i);
+                    TamanhoMascara++;
+                } else {
+                    NovoValorCampo += campoSoNumeros.charAt(posicaoCampo);
+                    posicaoCampo++;
+                }
+            }
+            campo.value = NovoValorCampo;
+            return true;
+        } else {
+            return true;
+        }
+    }
+
+</script>

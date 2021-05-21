@@ -1,0 +1,250 @@
+﻿@using System
+@using System.Collections.Generic
+@using NHibernate.Mapping
+@using ProfitManager.Fabrica.Entidade
+@using PagedList.Mvc;
+@using PagedList;
+@model ProfitManager.Fabrica.Entidade.EmpresaTransacaoIugu
+
+@{
+    ViewBag.Title = "KALUB - Faturas";
+    Layout = "~/Views/Shared/_LayoutRestritoUser.cshtml";
+    
+}
+
+
+<style type="text/css">
+    /*  bhoechie tab */
+    div.bhoechie-tab-container {
+        z-index: 10;
+        background-color: transparent;
+        border-color: #000;
+        padding: 0 !important;
+        border-radius: 4px;
+        -moz-border-radius: 4px;
+        border: 1px solid #ddd;
+        margin-top: 20px;
+        -webkit-box-shadow: 0 6px 12px rgba(0,0,0,.175);
+        box-shadow: 0 6px 12px rgba(0,0,0,.175);
+        -moz-box-shadow: 0 6px 12px rgba(0,0,0,.175);
+        background-clip: padding-box;
+        opacity: 0.97;
+        filter: alpha(opacity=97);
+    }
+
+    div.bhoechie-tab-menu {
+        padding-right: 0;
+        padding-left: 0;
+        padding-bottom: 0;
+    }
+
+        div.bhoechie-tab-menu div.list-group {
+            margin-bottom: 0;
+        }
+
+            div.bhoechie-tab-menu div.list-group > a {
+                margin-bottom: 0;
+            }
+
+                div.bhoechie-tab-menu div.list-group > a .glyphicon,
+                div.bhoechie-tab-menu div.list-group > a .fa {
+                    color: #e6e6fa;
+                }
+
+                div.bhoechie-tab-menu div.list-group > a:first-child {
+                    border-top-right-radius: 0;
+                    -moz-border-top-right-radius: 0;
+                }
+
+                div.bhoechie-tab-menu div.list-group > a:last-child {
+                    border-bottom-right-radius: 0;
+                    -moz-border-bottom-right-radius: 0;
+                }
+
+                div.bhoechie-tab-menu div.list-group > a.active,
+                div.bhoechie-tab-menu div.list-group > a.active .glyphicon,
+                div.bhoechie-tab-menu div.list-group > a.active .fa {
+                    background-color: #e6e6fa;
+                    background-image: #e6e6fa;
+                    border-color: #e6e6fa;
+                    color: #ffffff;
+                }
+
+                    div.bhoechie-tab-menu div.list-group > a.active:after {
+                        content: '';
+                        position: absolute;
+                        left: 100%;
+                        top: 50%;
+                        margin-top: -13px;
+                        border-left: 0;
+                        border-bottom: 13px solid transparent;
+                        border-top: 13px solid transparent;
+                        border-left: 10px solid #e6e6fa;
+                    }
+
+    div.bhoechie-tab-content {
+        background-color: #ffffff;
+        /* border: 1px solid #eeeeee; */
+        padding-left: 20px;
+        padding-top: 10px;
+    }
+
+    div.bhoechie-tab div.bhoechie-tab-content:not(.active) {
+        display: none;
+    }
+</style>
+
+
+
+<div id="content">
+    <div class="tabs-wrapper text-center">
+        <div class="panel box-shadow-none text-left content-header">
+            <div class="panel-body">
+                <div class="col-sm-3" style="padding-top: 55px;">
+                    <p class="animated fadeInLeft">
+                        <a href="/Principal" style="font-size: 1.0em!important; color: #fff;">Home</a> <span class="fa-angle-right fa"></span> Faturas
+                    </p>
+                </div>
+                <div style="text-align: right; padding-top: 38px; padding-left: 86%;">
+                    <table width="190" height="40" border="1px" bordercolor="#fff">
+                        <tr>
+                            <td style="text-align: right; ">
+                                <span style="padding-right: 20px;">Dinheiro em Caixa</span>
+                                <p style="padding-top: 10px;"><span style="padding-right: 20px; font-weight: bold;font-size: 20px;">R$ @string.Format("{0:#,##0}", ViewBag.TotalSaldoinicialDiaAnteiorContaCaixa)</span></p>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row" >
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 bhoechie-tab-container" style="background-color: #fff;">
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 bhoechie-tab-menu">
+                <div class="list-group">
+                    <a href="" class="list-group-item active text-center">
+                        <span style="color: #2c4970; font-size: 12.8px;">
+                            <b>Quantidade de faturas</b><br />
+                            @ViewBag.qtdFaturas<br /><br />
+                            <b>Valor Total</b><br />
+                            @ViewBag.totalFaturas
+                        </span>
+                        <br/><br/>
+                    </a>
+                    <div style="color: #2c4970; font-size: 14.8px; padding-bottom: 10px;">
+                        &nbsp;&nbsp;&nbsp;&nbsp;<b>Legendas</b><br/>
+                    </div>
+                    <span style="color: #2c4970; font-size: 14.8px;">
+                        &nbsp;&nbsp;&nbsp;&nbsp;<img src="../../Images/assinatura-paga.png" width="22"> Pago<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;<img src="../../Images/assinatura-aberto.png" width="22"> Em Aberto<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;<img src="../../Images/assinatura-vencida.png" width="22"> Em Atraso<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;<img src="../../Images/assinatura-cancelado.png" width="22"> Cancelado<br />
+                    </span>
+
+                </div>
+            </div>
+            <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8 bhoechie-tab">
+                <!-- flight section -->
+                <div class="bhoechie-tab-content active" style="padding-right: 30px; padding-left: 20px; padding-bottom: 200px;">
+
+                    <div style="padding-left: 20px;">
+                        <b>FATURAS</b><Br/>
+                        HISTÓRICO DE FATURAS GERADAS PELO SISTEMA.
+                    </div>
+                    <table width="750" style="margin-left: 20px">
+                        <tr><th colspan="5" height="10"></th></tr>
+                        <tr style="background-color: #2c4970;color: #fff;">
+                            <th>N.Fatura</th>
+                            <th>Data Venc.</th>
+                            <th>Status</th>
+                            <th>Valor</th>
+                            <th></th>
+                        </tr>
+                        <tr><th colspan="7" height="5"></th></tr>
+                        @foreach (var iGrupo in (List<EmpresaTransacaoIugu>) ViewBag.Faturas)
+                        {
+                            <tr class="linhatabela">
+                               
+
+                                <td width="180">@iGrupo.IdFatura</td>
+                                <td width="100">@iGrupo.DataVencimento.ToShortDateString()</td>
+                                @if (iGrupo.DataVencimento >= Convert.ToDateTime(DateTime.Now.ToShortDateString()) && iGrupo.Status == "pending")
+                                {
+                                    <td width="150"><img src="../../Images/assinatura-aberto.png" width="20" title="Fatura em Aberto" alt="Fatura em Aberto" /> Em Aberto</td>
+                                }
+                                @if (iGrupo.Status == "paid")
+                                {
+                                    <td width="150"><img src="../../Images/assinatura-paga.png" width="20" title="Fatura Paga" alt="Fatura Paga" /> Pago</td>
+                                }
+                                @if (iGrupo.Status == "canceled")
+                                {
+                                    <td width="150"><img src="../../Images/assinatura-cancelado.png" width="20" title="Fatura Cancelada" alt="Fatura Cancelada" /> Cancelado</td>
+                                }
+                                @if (iGrupo.DataVencimento < Convert.ToDateTime(DateTime.Now.ToShortDateString()) && iGrupo.Status == "pending")
+                                {
+                                    <td width="150"><img src="../../Images/assinatura-vencida.png" width="20" title="Fatura em Atraso" alt="Fatura Em Atraso" /> Em Atraso</td>
+                                }
+                                <td width="100">@iGrupo.Valor</td>
+                                @if (iGrupo.DataVencimento >= Convert.ToDateTime(DateTime.Now.ToShortDateString()) && iGrupo.Status == "pending")
+                                {
+                                    <td width="100">
+                                        <a href="@iGrupo.SecureUrl" target="_new" class="btn btn-success btn-round">Pagar</a>
+                                    </td>
+                                }
+                                @if (iGrupo.DataVencimento < Convert.ToDateTime(DateTime.Now.ToShortDateString()) && iGrupo.Status == "pending")
+                                {
+                                    <td width="100">
+                                        <a href="@iGrupo.SecureUrl" target="_new" class="btn btn-success btn-round">Pagar</a>
+                                    </td>
+
+                                }
+
+                            </tr>
+                        }
+
+                    </table>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts{
+
+    <script>
+
+        $(document).ready(function () {
+
+            $(".alterar-usuario").click(function (event) {
+                var id = $(event.target).data("id");
+                var item = $("#conteudoModalUsuario");
+                var url = item.data("url") + "?id=" + id;
+                item.load(url, abrirModalUsuario);
+            });
+
+            $("div.bhoechie-tab-menu>div.list-group>a").click(function (e) {
+                e.preventDefault();
+                $(this).siblings('a.active').removeClass("active");
+                $(this).addClass("active");
+                var index = $(this).index();
+                $("div.bhoechie-tab>div.bhoechie-tab-content").removeClass("active");
+                $("div.bhoechie-tab>div.bhoechie-tab-content").eq(index).addClass("active");
+            });
+
+
+
+        });
+
+        function abrirModalUsuario() {
+            $("#AbreCadastrarEditarEmpresaUsuario").modal('show');
+        }
+
+    </script>
+
+}

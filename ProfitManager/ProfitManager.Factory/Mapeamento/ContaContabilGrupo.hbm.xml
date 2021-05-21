@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+  <class name="ProfitManager.Fabrica.Entidade.ContaContabilGrupo, ProfitManager.Fabrica" table="ContaContabilGrupo" lazy="true">
+    <cache usage="read-write"/>
+    <id name="Id">
+      <column name="Id"/>
+      <generator class="native">
+        <param name="sequence">ContaContabilGrupo_</param>
+      </generator>
+    </id>
+    <property name="DataHoraCriacao" column= "DataHoraCriacao" type="Timestamp"/>
+    <property name="DataHoraAlteracao" column= "DataHoraAlteracao" type="Timestamp"/>
+
+    <property name="Codigo" column= "Codigo" type="String" />
+    <many-to-one name="CampoNome" column="CampoNome" class="ProfitManager.Fabrica.Entidade.Campo, ProfitManager.Fabrica" fetch="join" />
+    <property name="Tipo" column= "Tipo" type="NHibernate.Type.EnumCharType`1[[ProfitManager.Fabrica.Enum.EnumContaContabilGrupoTipo, ProfitManager.Fabrica]], NHibernate" length="1"/>
+    <property name="NotaExplicativaGrupo" column= "NotaExplicativaGrupo" type="String" length="2000" />
+
+    <!--Lista de SubGrupo de contas-->
+    <bag name="_ListContaContabilSubGrupo" inverse="true" lazy="true" order-by="Id" cascade="none" access="field" >
+      <key column="ContaContabilGrupo" />
+      <one-to-many class="ProfitManager.Fabrica.Entidade.ContaContabilSubGrupo, ProfitManager.Fabrica" />
+    </bag>
+    
+  </class>
+</hibernate-mapping>

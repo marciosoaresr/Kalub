@@ -1,0 +1,33 @@
+﻿@model HandleErrorInfo
+@{
+    ViewBag.Title = "LoginCnpj";
+}
+
+
+<div id="abrirModalLogin" class="" data-backdrop="static" style="padding-top: 100px;">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="panel-heading2">
+                <h4 class="modal-title"><font color="white">Informe Cnpj</font></h4>
+            </div>
+            @using (Html.BeginForm("AutenticarCnpj", "Login", FormMethod.Post))
+            {
+
+                @Html.Partial("ExceptionNotification")
+
+                <div class="modal-body">
+                    <Br/>
+                    <div class="input-group margin-bottom-sm">
+                        <span class="input-group-addon"><i class="fa fa-sign-out fa-fw" aria-hidden="true"></i></span>
+                        <input class="form-control" type="text" placeholder="cnpj" id="validate_cnpj" name="cnpj" required>
+                    </div>
+                    <br/>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" value="Entrar" class="btn btn-primary">Entrar</button>
+                </div>
+
+            }
+        </div>
+    </div>
+</div>

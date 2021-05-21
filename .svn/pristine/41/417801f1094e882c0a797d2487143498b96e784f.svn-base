@@ -1,0 +1,35 @@
+﻿@model System.Web.Mvc.HandleErrorInfo
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Error</title>
+</head>
+<body>
+    <hgroup style="margin-top: 60px">
+        <h1>Erro.</h1>
+        <h2>Problema detectado durante a execução.</h2>
+    </hgroup>
+    @if (Model != null)
+    {
+        <div style="margin-top: 20px">
+            <p>
+                <b>Message:</b> @Model.Exception.Message <br />
+                <b>Exception:</b> @Model.Exception.GetType().FullName<br />
+                <b>Controller:</b> @Model.ControllerName<br />
+                <b>Action:</b> @Model.ActionName
+            </p>
+            <div style="overflow: scroll; margin-top: 20px; ">
+                <p>
+                    @Model.Exception.StackTrace
+                </p>
+            </div>
+        </div>
+    }
+</body>
+</html>

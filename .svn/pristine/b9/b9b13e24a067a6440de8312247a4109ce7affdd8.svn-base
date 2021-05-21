@@ -1,0 +1,100 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using NHibernate;
+using ProfitManager.Fabrica.Entidade;
+using ProfitManager.Negocio.Repositorio;
+
+namespace ProfitManager.Negocio.Implementacao
+{
+    public static class FuncoesEmpresaUsuario
+    {
+        public static EmpresaUsuario Load(int idEmpresaUsuario)
+        {
+            using (var repositorio = SessionFactory.CreateRepositorio())
+            {
+                try
+                {
+                    var parameters = new List<HqlParameter>();
+                    parameters.Add(new HqlParameter("idEmpresaUsuario", idEmpresaUsuario));
+
+                    string hql = "FROM EmpresaUsuario WHERE Id = :idEmpresaUsuario ";
+
+                    var empresaUsuario = repositorio.Buscar<EmpresaUsuario>(hql, parameters).FirstOrDefault();
+
+                    return empresaUsuario;
+                }
+                catch (Exception err)
+                {
+                    throw err;
+                }
+            }
+        }
+
+
+        public static Empresa BuscarEmpresa(int idEmpresa)
+        {
+            using (var repositorio = SessionFactory.CreateRepositorio())
+            {
+                try
+                {
+                    var parameters = new List<HqlParameter>();
+                    parameters.Add(new HqlParameter("idEmpresa", idEmpresa));
+                    string hql = " FROM Empresa WHERE Id = :idEmpresa";
+
+                    var listDadosEmpresa = repositorio.Buscar<Empresa>(hql, parameters).FirstOrDefault();
+
+                    return listDadosEmpresa;
+                }
+                catch (Exception err)
+                {
+                    throw err;
+                }
+            }
+        }
+
+        public static EmpresaUsuario BuscarEmpresaUsuario(int idEmpresa)
+        {
+            using (var repositorio = SessionFactory.CreateRepositorio())
+            {
+                try
+                {
+                    var parameters = new List<HqlParameter>();
+                    parameters.Add(new HqlParameter("idEmpresa", idEmpresa));
+                    string hql = " FROM EmpresaUsuario WHERE Empresa = :idEmpresa";
+
+                    var listDadosEmpresaUsuario = repositorio.Buscar<EmpresaUsuario>(hql, parameters).FirstOrDefault();
+
+                    return listDadosEmpresaUsuario;
+                }
+                catch (Exception err)
+                {
+                    throw err;
+                }
+            }
+        }
+
+
+        public static EmpresaUsuario Salvar(EmpresaUsuario empresaUsuario)
+        {
+            using (var repositorio = SessionFactory.CreateRepositorio())
+            {
+                repositorio.Session.BeginTransaction();
+                try
+                {
+                    repositorio.Session.Clear();
+                    repositorio.Salvar(empresaUsuario);
+
+                    repositorio.Session.Transaction.Commit();
+
+                    return empresaUsuario;
+                }
+                catch (Exception err)
+                {
+                    repositorio.Session.Transaction.Rollback();
+                    throw;
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,61 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web.Mvc;
+using ProfitManager.Fabrica.Entidade;
+using ProfitManager.Fabrica.Enum;
+using ProfitManager.Negocio.Implementacao;
+using ProfitManager.Negocio.Repositorio;
+using ProfitManager.Web.RepositorioWeb;
+using ProfitManager.Web.ViewModels;
+
+namespace ProfitManager.Web.Controllers.AcessoRestrito
+{
+    public class PrincipalUserController : BaseController
+    {
+
+        public ActionResult Index()
+        {
+
+            using (var repositorio = SessionFactory.CreateRepositorio())
+            {
+                EmpresaUsuario empresaUsuario =
+                    FuncoesEmpresaUsuario.Load(RepositorioWebUsuario.VerificaSeOUsuarioEstaLogado(true).Id);
+
+                var dataLancamento = DateTime.Now;
+                dataLancamento = dataLancamento.AddDays(-1);
+
+                if (empresaUsuario != null)
+                {
+                    var valorTotalEntradasMesAtual =
+                        FuncoesEventoLancamento.CarregaValorTotalMesAtual(empresaUsuario.Empresa.Id, dataLancamento,
+                            EnumTipoEventoLancamento.Diario, 5);
+                    var valorTotalSaidasMesAtual =
+                        FuncoesEventoLancamento.CarregaValorTotalMesAtual(empresaUsuario.Empresa.Id, dataLancamento,
+                            EnumTipoEventoLancamento.Diario, 6);
+                    var listaSaldoInicialDiaAnterior =
+                        FuncoesEventoLancamento.PegaSaldoInicialContaContabil(empresaUsuario.Empresa.Id, 1,
+                            Convert.ToDateTime("1800-01-01"), true);
+
+
+                    ViewBag.TotalEntradas = valorTotalEntradasMesAtual;
+                    ViewBag.TotalSaidas = valorTotalSaidasMesAtual;
+                    ViewBag.TotalSaldoinicialDiaAnteiorContaCaixa = listaSaldoInicialDiaAnterior;
+                    ViewBag.Empresa = empresaUsuario.Empresa.NomeFantasia;
+
+                }
+                else
+                {
+                    ViewBag.TotalEntradas = 0;
+                    ViewBag.TotalSaidas = 0;
+                    ViewBag.TotalSaldoinicialDiaAnteiorContaCaixa = 0;
+                    ViewBag.Empresa = empresaUsuario.Empresa.NomeFantasia;
+                }
+
+                return View();
+            }
+        }
+
+    }
+
+}

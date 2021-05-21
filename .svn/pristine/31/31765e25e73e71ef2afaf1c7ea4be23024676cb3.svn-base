@@ -1,0 +1,217 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{D91E6D2A-28CD-44F8-A824-3FFAEFD98853}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ProfitManager.Fabrica</RootNamespace>
+    <AssemblyName>ProfitManager.Fabrica</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Build.Framework" />
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.4.5.11\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\nhibernatedlls\NHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Web.Helpers, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.30506.0\lib\net40\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.4.0.30506.0\lib\net40\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.Razor.2.0.30506.0\lib\net40\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.30506.0\lib\net40\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.30506.0\lib\net40\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.30506.0\lib\net40\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="EntidadeAuxiliar\DreAuxiliar.cs" />
+    <Compile Include="EntidadeAuxiliar\DreGrupoAuxiliar.cs" />
+    <Compile Include="EntidadeAuxiliar\DreGrupoItemAuxiliar.cs" />
+    <Compile Include="EntidadeAuxiliar\RelatorioAuxiliar.cs" />
+    <Compile Include="EntidadeAuxiliar\RelatorioItemAuxiliar.cs" />
+    <Compile Include="Entidade\Area.cs" />
+    <Compile Include="Entidade\BalancoPatrimonial.cs" />
+    <Compile Include="Entidade\DemonstracaoFluxoCaixa.cs" />
+    <Compile Include="Entidade\GrupoDRE.cs" />
+    <Compile Include="Entidade\ExtratoConta.cs" />
+    <Compile Include="Entidade\Balancete.cs" />
+    <Compile Include="Entidade\FechamentoCaixa.cs" />
+    <Compile Include="Entidade\TipoDocumentoFechamentoCaixa.cs" />
+    <Compile Include="Entidade\CategoriaEmpresaSecundaria.cs" />
+    <Compile Include="Entidade\CategoriaJuridicaEmpresa.cs" />
+    <Compile Include="Entidade\Cidade.cs" />
+    <Compile Include="Entidade\ContaContabil.cs" />
+    <Compile Include="Entidade\ContaContabilGrupo.cs" />
+    <Compile Include="Entidade\ContaContabilRelatorioItem.cs" />
+    <Compile Include="Entidade\ContaContabilSaldo.cs" />
+    <Compile Include="Entidade\ContaContabilSaldoInicial.cs" />
+    <Compile Include="Entidade\ContaContabilSubGrupo.cs" />
+    <Compile Include="Entidade\Empresa.cs" />
+    <Compile Include="Entidade\CategoriaEmpresa.cs" />
+    <Compile Include="Entidade\EmpresaUsuario.cs" />
+    <Compile Include="Entidade\EntidadeBase.cs" />
+    <Compile Include="Entidade\Estado.cs" />
+    <Compile Include="Entidade\Evento.cs" />
+    <Compile Include="Entidade\EventoCategoriaEmpresa.cs" />
+    <Compile Include="Entidade\EventoLancamento.cs" />
+    <Compile Include="Entidade\EventoOperacao.cs" />
+    <Compile Include="Entidade\Idioma.cs" />
+    <Compile Include="Entidade\Campo.cs" />
+    <Compile Include="Entidade\CampoIdioma.cs" />
+    <Compile Include="Entidade\Pais.cs" />
+    <Compile Include="Entidade\Relatorio.cs" />
+    <Compile Include="Entidade\RelatorioItem.cs" />
+    <Compile Include="Entidade\Usuario.cs" />
+    <Compile Include="Enum\EnumTipoContaContabil.cs" />
+    <Compile Include="Enum\EnumOpcaoDRE.cs" />
+    <Compile Include="Enum\EnumTipoDFC.cs" />
+    <Compile Include="Enum\EnumContaContabilGrupoTipo.cs" />
+    <Compile Include="Enum\EnumDescriptionAttribute.cs" />
+    <Compile Include="Enum\EnumMaisUsado.cs" />
+    <Compile Include="Enum\EnumExigeSaldoinicial.cs" />
+    <Compile Include="Enum\EnumSituacaoCadastral.cs" />
+    <Compile Include="Enum\EnumTipoEventoLancamento.cs" />
+    <Compile Include="Enum\EnumEventoOperacaoTipo.cs" />
+    <Compile Include="Enum\EnumOpcaoPesquisa.cs" />
+    <Compile Include="Enum\EnumSimNao.cs" />
+    <Compile Include="Enum\EnumTypeException.cs" />
+    <Compile Include="Excecao\NotificationException.cs" />
+    <Compile Include="Entidade\GrupoArea.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Mapeamento\CampoIdioma.hbm.xml" />
+    <EmbeddedResource Include="Mapeamento\CategoriaEmpresa.hbm.xml" />
+    <EmbeddedResource Include="Mapeamento\Cidade.hbm.xml" />
+    <EmbeddedResource Include="Mapeamento\ContaContabil.hbm.xml" />
+    <EmbeddedResource Include="Mapeamento\ContaContabilSubGrupo.hbm.xml" />
+    <EmbeddedResource Include="Mapeamento\Empresa.hbm.xml" />
+    <EmbeddedResource Include="Mapeamento\EmpresaUsuario.hbm.xml" />
+    <EmbeddedResource Include="Mapeamento\Estado.hbm.xml" />
+    <EmbeddedResource Include="Mapeamento\Evento.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Mapeamento\EventoCategoriaEmpresa.hbm.xml" />
+    <EmbeddedResource Include="Mapeamento\EventoLancamento.hbm.xml" />
+    <EmbeddedResource Include="Mapeamento\EventoOperacao.hbm.xml" />
+    <EmbeddedResource Include="Mapeamento\Idioma.hbm.xml" />
+    <EmbeddedResource Include="Mapeamento\Pais.hbm.xml" />
+    <EmbeddedResource Include="Mapeamento\Usuario.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Diagrama.cd" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Mapeamento\Area.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Mapeamento\Campo.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Mapeamento\ContaContabilGrupo.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Mapeamento\Relatorio.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Mapeamento\RelatorioItem.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Mapeamento\ContaContabilRelatorioItem.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Mapeamento\ContaContabilSaldoInicial.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Mapeamento\GrupoArea.hbm.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Mapeamento\ContaContabilSaldo.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Mapeamento\CategoriaJuridicaEmpresa.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Mapeamento\TipoDocumentoFechamentoCaixa.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Mapeamento\FechamentoCaixa.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Mapeamento\CategoriaEmpresaSecundaria.hbm.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Mapeamento\GrupoDRE.hbm.xml" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -1,0 +1,154 @@
+﻿@using App_Code.CustomHelper
+@model List<ProfitManager.Fabrica.Entidade.ContaContabilGrupo>
+
+@{
+    ViewBag.Title = "Plano de contas";
+    Layout = "~/Views/Shared/_LayoutRestrito.cshtml";
+}
+
+
+<!-- inicio: conteudo -->
+<div id="content">
+    <div class="tabs-wrapper text-center">
+        <div class="panel box-shadow-none text-left content-header">
+            <div class="panel-body">
+                <div class="col-sm-10" style="padding-top: 35px;">
+                    <p class="animated fadeInLeft">
+                        <a href="/Principal" style="font-size: 1.0em!important; color: #fff;">Home</a> <span class="fa-angle-right fa"></span> Plano de Contas
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12 tab-content">
+                <div class="col-md-12">
+                        <div class="col-md-12 tabs-area">
+                            
+                            <div class="panel-heading" style="padding-left: 20px; padding-right: 30px; padding-bottom: 40px">
+                                <ul class="nav navbar-nav navbar-left" style="color: #2c4970;">
+                                    <a href="#" data-toggle="modal" data-placement="bottom" title="Cadastrar Grupo" class="contacontabilgrupo"><img src="../../Images/file_add.png" width=25 alt="Cadastrar Grupo"> Cadastrar Grupo</a>
+                                    <img src="../../Images/space.jpg" width="50"><a href="#" data-toggle="modal" data-placement="bottom" title="Cadastrar SubGrupo" class="contacontabilsubgrupo"><img src="../../Images/file_add.png" width=25 alt="Cadastrar SubGrupo"> Cadastrar SubGrupo</a>
+                                    <img src="../../Images/space.jpg" width="50"><a href="#" data-toggle="modal" data-placement="bottom" title="Cadastrar Conta" class="contacontabil"><img src="../../Images/file_add.png" width=25 alt="Cadastrar Conta"> Cadastrar Conta</a>
+                                </ul>
+                                <ul class="nav navbar-nav navbar-right" align="left" style="padding-top: 10px;color: #2c4970;">
+                                    <b>Dicas:</b>
+                                    
+                                    <img src="../../Images/file_delete.png" width="15"> apagar conta contabil
+                                </ul>
+                            </div>
+                                
+                            <div >
+                                <div >
+                                    @if (Model != null && Model.Any())
+                                    {
+                                        @PlanoContasTreeView.GetPlanoContasTreeView(Model)
+                                    }
+                                    else
+                                    {
+                                        <p>Nenhum item cadastrado</p>
+                                    }
+                                </div>
+
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+                </div>
+        </div>
+    </div>
+</div>
+<!-- fim: conteudo -->
+
+
+<div id="conteudoModalConta" data-url="@Url.Action("CadastrarEditarContaContabil", "PlanoContas")">
+</div>
+<div id="conteudoModalGrupo" data-url="@Url.Action("CadastrarEditarContaContabilGrupo", "PlanoContas")">
+</div>
+<div id="conteudoModalSubGrupo" data-url="@Url.Action("CadastrarEditarContaContabilSubGrupo", "PlanoContas")">
+</div>
+
+<div id="abrirModalProcessando" class="modal fade modal-v2">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body" align=center>
+                <img src="../../Images/loading_2x.gif" width="400">
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts{
+    <script>
+        $(document).ready(function() {
+
+
+            $(".collapsible").click(function(e) {
+                e.preventDefault();
+                $(this).toggleClass("expand fechado");
+                $(this).closest('li').children('ul').slideToggle();
+            });
+
+
+            $(".nav-tabs a").click(function(e) {
+                e.preventDefault();
+                $(this).tab('show');
+            });
+
+
+            $(".contacontabil").click(function(event) {
+                var idContaContabilGrupo = $(event.target).data("id");
+                var item = $("#conteudoModalConta");
+                var url = item.data("url") + "?id=" + idContaContabilGrupo;
+                item.load(url, abrirModalContaContabil);
+            });
+
+            $(".contacontabilgrupo").click(function(event) {
+                var idContaContabilGrupo = $(event.target).data("id");
+                var item = $("#conteudoModalGrupo");
+                var url = item.data("url") + "?id=" + idContaContabilGrupo;
+                item.load(url, abrirModalContaContabilGrupo);
+            });
+
+
+            $(".contacontabilsubgrupo").click(function(event) {
+                var idContaContabilGrupo = $(event.target).data("id");
+                var item = $("#conteudoModalSubGrupo");
+                var url = item.data("url") + "?id=" + idContaContabilGrupo;
+                item.load(url, abrirModalContaContabilSubGrupo);
+            });
+
+
+        });
+
+
+        $(function() {
+            $(".excluir").on("click", function() {
+                if (confirm("Tem certeza que deseja excluir?")) {
+                    var urlExclusao = $(this).attr("href");
+                    location.href = urlExclusao;
+                }
+
+                return false;
+            });
+        });
+
+        function abrirModalContaContabil() {
+            $("#AbreCadastrarEditarContaContabil").modal('show');
+        }
+        function abrirModalContaContabilGrupo() {
+            $("#AbreCadastrarEditarContaContabilGrupo").modal('show');
+        }
+        function abrirModalContaContabilSubGrupo() {
+            $("#AbreCadastrarEditarContaContabilSubGrupo").modal('show');
+        }
+
+        function abrirModalProcessando() {
+            $('#abrirModalProcessando').modal('show');
+            setTimeout(function () {
+            $('#abrirModalProcessando').modal('hide')}, 1000);
+        }
+
+
+    </script>
+
+}
+

@@ -1,0 +1,98 @@
+﻿@using ProfitManager.Fabrica.Enum
+@using ProfitManager.Web.ViewModels
+@model ProfitManager.Fabrica.Entidade.EmpresaRecebimento
+@{
+    ViewBag.Title = "KALUB - Periodo de uso encerrado";
+    if (ViewBag.Mobile)
+    {
+        Layout = "~/Views/Shared/_LayoutRestritoUserMobile.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_LayoutRestritoUser.cshtml";
+    }
+
+}
+
+@if (ViewBag.Mobile)
+{
+    <nav class="navbar navbar-default header navbar-fixed-top" style="height: 30px">
+        <div class="col-md-12 nav-wrapper " style="text-align: center; width: 100%;padding-top: 15px;">
+            <span><img src="../../Images/kalub-logo-home.png" width="120" /></span><br />
+        </div>
+    </nav>
+}
+
+<div id="content" class="hidden-xs">
+    <div class="tabs-wrapper text-center">
+        <div class="panel box-shadow-none text-left content-header">
+            <div class="panel-body">
+                <div class="col-sm-4" style="padding-top: 55px;">
+                    <p class="animated fadeInLeft">
+                        <a href="/PrincipalUser" style="font-size: 1.0em !important; color: #fff;">Home</a> <span class="fa-angle-right fa"></span> Acesso Suspenso
+                    </p>
+
+                </div>
+                <div style="text-align: right; padding-top: 38px; padding-left: 86%;">
+                    <table width="190" height="40" border="1px" bordercolor="#fff">
+                        <tr>
+                            <td style="text-align: right; ">
+                                <span style="padding-right: 20px;">Dinheiro em Caixa</span>
+                                <p style="padding-top: 10px;"><span style="padding-right: 20px; font-weight: bold;font-size: 20px;">R$ @string.Format("{0:#,##0}", ViewBag.TotalSaldoinicialDiaAnteiorContaCaixa)</span></p>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<br /><br />
+<div align="center" class="hidden-xs">
+    <div class="panel " style="padding-bottom: 20px; width: 750px;">
+        <div class="panel-body">
+            <h3>
+                Período de uso encerrado!
+            </h3>
+            <br/><br/>
+
+            <table>
+                <tr>
+                    <td style="text-align: center">
+                        <img src="../../Images/icon-sad.png" width="50"/><br/><br/>
+                        <span style="font-size: 16.0px">
+                            Seu periodo de uso de 60 dias como <strong>Aluno/Professor/Consultor</strong> encerrou.<br />
+                            Caso seu acesso esteja encerrado indevidamente, entre em contato pelo email <a href="mailto:comercial@kalub.com.br">comercial@kalub.com.br</a>.
+                        </span>
+                    </td>
+                </tr>
+
+            </table>
+
+        </div>
+    </div>
+</div>
+
+<div class="hidden-lg" style="padding-top: 0px; padding-right: 10px; padding-left: 10px;">
+    <div class="alert alert-default fade in" role="alert" style="text-align: center">
+        <div class="alert alert-success fade in" role="alert" style="font-weight: bold; font-size: 20px;text-align: center">
+            Período de uso encerrado!
+        </div>
+        <br/>
+        <img src="../../Images/icon-sad.png" width="50" /><br /><br />
+        <span style="font-size: 16.0px">
+            Seu periodo de uso de 60 dias como <strong>Aluno/Professor/Consultor</strong> encerrou.<br />
+            Caso seu acesso esteja encerrado indevidamente, entre em contato pelo email <a href="mailto:comercial@kalub.com.br">comercial@kalub.com.br</a>.
+        </span>
+
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+      
+    </script>
+
+}

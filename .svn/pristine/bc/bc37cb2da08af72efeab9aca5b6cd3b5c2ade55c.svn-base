@@ -1,0 +1,193 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
+using System.Threading;
+using System.Web.Mvc;
+using Kendo.Mvc.Extensions;
+using Kendo.Mvc.UI;
+using NHibernate;
+using PagedList;
+using ProfitManager.Fabrica.Entidade;
+using ProfitManager.Fabrica.Enum;
+using ProfitManager.Negocio.Implementacao;
+using ProfitManager.Web.RepositorioWeb;
+
+namespace ProfitManager.Web.Controllers.AcessoRestrito.Administrador
+{
+    public class CadastroEmpresaController : Controller
+    {
+
+        public ActionResult Index(int? pageNumber, string search)
+        {
+            List<Empresa> listEmpresa = (search.HasValue()) ? FuncoesEmpresa.Load(search) : FuncoesEmpresa.Load();
+
+            const int pageSize = 10;
+            int pageCurrent = (pageNumber ?? 1);
+            ViewBag.PageCount = listEmpresa != null && listEmpresa.Count > 0 ? (listEmpresa.Count + pageSize - 1) / pageSize : 1;
+            ViewBag.PageNumber = pageCurrent;
+            ViewBag.Search = search;
+
+            return View(listEmpresa.ToPagedList(pageCurrent, pageSize));
+        }
+
+        [HttpGet]
+        public ActionResult Excluir(int? id)
+        {
+            if (id.HasValue)
+                FuncoesEmpresa.Excluir((int)id);
+
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public ActionResult CadastrarEditarCadastroEmpresa(int? id)
+        {
+            var empresa = (id.HasValue) ? FuncoesEmpresa.Load((int)id) : new Empresa();
+
+            ViewBag.ListaCidade = ListCidade(empresa);
+            ViewBag.ListaCategoriaEmpresa = ListCategoriaEmpresa(empresa);
+            //ViewBag.ListaCategoriaEmpresaSecundaria = ListCategoriaEmpresaSecundaria(empresa);
+
+            return PartialView("CadastrarEditarCadastroEmpresa", empresa);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CadastrarEditarCadastroEmpresa(Empresa empresa, FormCollection form)
+        {
+            ModelState["Id"].Errors.Clear();
+            ModelState["CategoriaEmpresa.Id"].Errors.Clear();
+            ModelState["CategoriaEmpresa.Codigo"].Errors.Clear();
+            ModelState["CategoriaEmpresa.CampoNome"].Errors.Clear();
+            ModelState["Cidade"].Errors.Clear();
+            ModelState["Telefone2"].Errors.Clear();
+
+            if (ModelState.IsValid)
+            {
+                FuncoesEmpresa.Salvar(empresa);
+                Thread.Sleep(1000);
+                return RedirectToAction("Index");
+            }
+
+
+            return View(empresa);
+        }
+
+
+        [HttpGet]
+        public ActionResult CadastrarEditarEmpresaUsuario(int? id)
+        {
+            var empresaDados = (id.HasValue) ? FuncoesEmpresaUsuario.BuscarEmpresaUsuario((int)id) : new EmpresaUsuario();
+
+            return PartialView("CadastrarEditarEmpresaUsuario", empresaDados);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CadastrarEditarEmpresaUsuario(EmpresaUsuario empresaUsuario, FormCollection form)
+        {
+
+            var empresaDados = FuncoesEmpresaUsuario.BuscarEmpresa((int)empresaUsuario.Id);
+            var empresaIdUsuario = FuncoesEmpresaUsuario.BuscarEmpresaUsuario((int)empresaUsuario.Id);
+
+            if (empresaIdUsuario != null)
+            {
+                empresaUsuario.Id = empresaIdUsuario.Id;
+                empresaUsuario.Empresa = empresaDados;
+                empresaUsuario.Cnpj = empresaDados.Cnpj;
+            }
+            else
+            {
+                empresaUsuario.Id = 0;
+                empresaUsuario.Empresa = empresaDados;
+                empresaUsuario.Cnpj = empresaDados.Cnpj;
+            }
+
+            ModelState["Cnpj"].Errors.Clear();
+
+            if (ModelState.IsValid)
+            {
+                empresaUsuario.Senha = RepositorioWebCriptografia.Criptografar(empresaUsuario.Senha);
+                FuncoesEmpresaUsuario.Salvar(empresaUsuario);
+                return RedirectToAction("Index", "CadastroEmpresa");
+            }
+
+            return View("Index");
+        }
+
+
+        private List<SelectListItem> ListCidade(Empresa empresa)
+        {
+            List<Cidade> listCidade = FuncoesCidade.Load();
+            var listItemsCidade = new List<SelectListItem>();
+
+            foreach (var cidade in listCidade)
+            {
+                var item = new SelectListItem
+                {
+                    Text = cidade.NomeNormalizado,
+                    Value = cidade.Id.ToString()
+                };
+
+                if (empresa.Cidade != null && cidade.Id == empresa.Cidade.Id)
+                {
+                    item.Selected = true;
+                }
+
+                listItemsCidade.Add(item);
+            }
+
+            return listItemsCidade;
+        }
+
+        private List<SelectListItem> ListCategoriaEmpresa(Empresa empresa)
+        {
+            List<CategoriaEmpresa> listCategoriaEmpresa = FuncoesCategoriaEmpresa.Load();
+            var listItemsCategoriaEmpresa = new List<SelectListItem>();
+
+            foreach (var categoriaempresa in listCategoriaEmpresa)
+            {
+                var item = new SelectListItem
+                {
+                    Text = categoriaempresa.CampoNome.Nome,
+                    Value = categoriaempresa.Id.ToString()
+                };
+
+                if (empresa.CategoriaEmpresa != null && categoriaempresa.Id == empresa.CategoriaEmpresa.Id)
+                {
+                    item.Selected = true;
+                }
+
+                listItemsCategoriaEmpresa.Add(item);
+            }
+
+            return listItemsCategoriaEmpresa.ToList();
+        }
+
+        private List<SelectListItem> ListCategoriaEmpresaSecundaria(Empresa empresa)
+        {
+            List<CategoriaEmpresaSecundaria> listCategoriaEmpresaSecundaria = FuncoesCategoriaEmpresaSecundaria.Load();
+            var listItemsCategoriaEmpresaSecundaria = new List<SelectListItem>();
+
+            foreach (var categoriaempresasegundaria in listCategoriaEmpresaSecundaria)
+            {
+                var item = new SelectListItem
+                {
+                    Text = categoriaempresasegundaria.CampoNome.Nome,
+                    Value = categoriaempresasegundaria.Id.ToString()
+                };
+
+                if (empresa.CategoriaEmpresaSecundaria != null && categoriaempresasegundaria.Id == empresa.CategoriaEmpresaSecundaria.Id)
+                {
+                    item.Selected = true;
+                }
+
+                listItemsCategoriaEmpresaSecundaria.Add(item);
+            }
+
+            return listItemsCategoriaEmpresaSecundaria.ToList();
+        }
+
+    }
+}

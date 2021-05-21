@@ -1,0 +1,124 @@
+﻿@using App_Code.CustomHelper
+@using ProfitManager.Fabrica.Entidade
+@using PagedList.Mvc;
+@using PagedList;
+@model PagedList.IPagedList<ProfitManager.Fabrica.Entidade.Empresa>
+
+@{
+    ViewBag.Title = "Empresa";
+    Layout = "~/Views/Shared/_LayoutRestrito.cshtml";
+}
+
+
+<!-- inicio: conteudo -->
+<div id="content">
+    <div class="tabs-wrapper text-center">
+        <div class="panel box-shadow-none text-left content-header">
+            <div class="panel-body">
+                <div class="col-sm-10" style="padding-top: 35px;">
+                    <p class="animated fadeInLeft">
+                        <a href="/Principal" style="font-size: 1.0em!important; color: #fff;">Home</a> <span class="fa-angle-right fa"></span> Empresa
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-12 top-20 padding-0">
+            <div class="col-md-12">
+                <div class="panel">
+                    <div class="panel-heading" style="padding-left: 20px; padding-right: 30px; padding-top: 5px; padding-bottom: 40px">
+                        <ul class="nav navbar-nav navbar-left" style="padding-top: 10px;color: #2c4970;">
+                            <a href="#" data-toggle="modal" data-placement="bottom" title="Cadastrar Empresa" class="evento"><img src="../../Images/file_add.png" width=25 alt="Cadastrar Evento"> Cadastrar Empresa</a>
+                        </ul>
+                        <ul class="nav navbar-nav navbar-right" align="left" style="padding-top: 10px;color: #2c4970;">
+                            <b>Dicas:</b>
+                            
+                            <img src="../../Images/file_edit.png" width="15"> editar 
+                            -
+                            <img src="../../Images/file_delete.png" width="15"> apagar 
+                            -
+                            <img src="../../Images/user_edit.png" width="15"> editar usuario
+                        </ul>
+                    </div>
+
+                    <div class="panel-body">
+
+                        @GridView.Grid(Model, new string[] { "Nome", "NomeFantasia", "Cnpj", "Logradouro", "Bairro" },
+                        new string[] { "Nome", "NomeFantasia", "Cnpj", "Logradouro", "Bairro" }, typeof(Empresa))
+
+                        @if (ViewBag.PageCount > 1)
+                        {
+                            <div style="text-align: center">
+                                <div >
+                                    Página: @(ViewBag.PageCount < ViewBag.PageNumber ? 0 : ViewBag.PageNumber) de @ViewBag.PageCount
+                                    @Html.PagedListPager((IPagedList)Model, pageNumber => Url.Action("Index", new { pageNumber, search = ViewBag.Search }))
+                                </div>
+                            </div>
+                        }
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- fim: conteudo -->
+
+
+<div id="conteudoModalEmpresa" data-url="@Url.Action("CadastrarEditarCadastroEmpresa", "CadastroEmpresa")">
+</div>
+<div id="conteudoModalUsuario" data-url="@Url.Action("CadastrarEditarEmpresaUsuario", "CadastroEmpresa")">
+</div>
+
+@section Scripts{
+
+    <script>
+        
+        $(document).ready(function () {
+
+            debugger;
+
+            $('#datatables-example').DataTable();
+
+            $(".evento").click(function (event) {
+                var id = $(event.target).data("id");
+                var item = $("#conteudoModalEmpresa");
+                var url = item.data("url") + "?id=" + id;
+                item.load(url, abrirModalEmpresa);
+            });
+
+            $(".empresausuario").click(function (event) {
+                var id = $(event.target).data("id");
+                var item = $("#conteudoModalUsuario");
+                var url = item.data("url") + "?id=" + id;
+                item.load(url, abrirModalUsuario);
+            });
+
+        });
+
+        $("body").tooltip({
+            selector: '[data-toggle="tooltip"]'
+        });
+
+
+        $(function () {
+            $(".deletar").on("click", function () {
+                if (confirm("Tem certeza que deseja excluir?")) {
+                    var valor = $(this).attr("value");
+                    location.href = "CadastroEmpresa/Excluir/?id=" + valor;
+                }
+                return false;
+            });
+        });
+
+        function abrirModalEmpresa() {
+            $("#AbreCadastrarEditarCadastroEmpresa").modal('show');
+        }
+
+        function abrirModalUsuario() {
+            $("#AbreCadastrarEditarEmpresaUsuario").modal('show');
+        }
+
+    </script>
+
+}

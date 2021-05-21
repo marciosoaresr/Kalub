@@ -1,0 +1,585 @@
+﻿@model ProfitManager.Fabrica.Entidade.Empresa
+@{
+    ViewBag.Title = "Registrar";
+    Layout = "~/Views/Shared/_LayoutRegistrar.cshtml";
+}
+
+<style>
+    body {
+        background: #dce2e5;
+    }
+</style>
+
+<div style="padding-top: 20px; text-align: center; color: #2c4970" class="hidden-xs">
+    <a href="/Home"><img src="../../Images/kalub-logo-home.png" alt="Logo KALUB" style="max-width: 170px" class="CToWUd"></a>
+</div>
+<div style="padding-top: 10px; text-align: center;color: #2c4970" class="hidden-xs">
+    <font size="5" color="red"><b>Experimente agora</b></font><br/>
+    <font size="4">Fique tranquilo seu cadastro é livre de pagamento</font>
+</div>
+<br/>
+
+<div align="center" class="hidden-xs">
+    <div class="panel " style="padding-bottom: 20px; width: 50%;">
+        <div class="">
+
+            @using (Html.BeginForm("Registrar", "Login", FormMethod.Post, new {id = "cadastro", name = "cadastro"}))
+            {
+                if (ViewBag.emailExistente != null)
+                {
+                    <div class="alert alert-danger alert-raised alert-dismissible fade in" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+                        @ViewBag.emailExistente
+                    </div>
+                }
+                <div class="modal-body">
+                    <table width="94%">
+                        @*<tr>
+                            <td colspan="3" >
+                                <table style="text-align: center;width: 100%">
+                                    <tr>
+                                        <td>
+                                            <div class="radio">
+                                                <input type="radio" name="tipoplano" id="tipoplano" value="1">
+                                                <label for="tipoplano" style="color: #2c4970; font-size: 14px; font-weight: bold">Empresa</label>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="radio">
+                                                <input type="radio" name="tipoplano" id="tipoplano" value="2">
+                                                <label for="tipoplano" style="color: #2c4970; font-size: 14px; font-weight: bold">Aluno</label>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="radio">
+                                                <input type="radio" name="tipoplano" id="tipoplano" value="3">
+                                                <label for="tipoplano" style="color: #2c4970; font-size: 14px; font-weight: bold">Professor</label>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="radio">
+                                                <input type="radio" name="tipoplano" id="tipoplano" value="4">
+                                                <label for="tipoplano" style="color: #2c4970; font-size: 14px; font-weight: bold">Consultor</label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>*@                        
+                        <tr>
+                            <td width="310" style="color: #2c4970; font-size: 12px;">
+                                <strong>EMPRESA*</strong><br/>
+                                @Html.TextBoxFor(x => x.Nome, new {@class = "form-control", @onblur = "this.style.backgroundColor = '#ffffff'", @placeholder = ""})
+                            </td>
+                            <td width="10"></td>
+                            <td style="color: #2c4970; font-size: 12px;">
+                                <strong>ATIVIDADE ECONÔMICA*</strong><br/>
+                                @Html.DropDownListFor(x => x.CategoriaEmpresa.Id, (IEnumerable<SelectListItem>) ViewBag.ListaCategoriaEmpresa, "", new {@class = "select", @style = "width:330px;", required = "required", @onblur = "this.style.backgroundColor = '#ffffff'"})
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="color: #2c4970; font-size: 12px;">
+                                <strong>SENHA*</strong><br/>
+                                <input class="form-control" type="password" placeholder="" name="senha1" required onblur="this.style.backgroundColor = '#ffffff'">
+                            </td>
+                            <td width="10"></td>
+                            <td style="color: #2c4970; font-size: 12px;">
+                                <strong>CONFIRME A SENHA*</strong><br/>
+                                <input class="form-control" type="password" placeholder="" name="senha2" required onblur="this.style.backgroundColor = '#ffffff'">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="color: #2c4970; font-size: 12px;">
+                                <strong>E-MAIL*</strong><br/>
+                                <input id="Email" name="Email" type="text" placeholder="" onblur="this.style.backgroundColor = '#ffffff';" class="form-control"/>
+                            </td>
+                            <td width="10"></td>
+                            <td style="color: #2c4970; font-size: 12px;">
+                                <strong>INFORME SEU CUPOM DESCONTO</strong><br/>
+                                @Html.TextBoxFor(x => x.CupomPromocional, new {@class = "form-control", @onblur = "this.style.backgroundColor = '#ffffff'"})
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="color: #2c4970; font-size: 12px;">
+                                <strong>TELEFONE*</strong><br/>
+                                @Html.TextBoxFor(x => x.Telefone1, new
+                                {
+                                    @style = "width:310px;",
+                                    @onKeyPress = "MascaraTelefone(cadastro.Telefone1);",
+                                    @maxlength = "15",
+                                    @class = "form-control",
+                                    @onblur = "this.style.backgroundColor = '#ffffff'"
+                                })
+                            </td>
+                            <td width="10"></td>
+                            <td style="color: #2c4970; font-size: 12px;">
+                                <strong>TELEFONE 2</strong><br/>
+                                @Html.TextBoxFor(x => x.Telefone2, new
+                                {
+                                    @style = "width:330px;",
+                                    @onKeyPress = "MascaraTelefone(cadastro.Telefone2);",
+                                    @maxlength = "15",
+                                    @class = "form-control",
+                                    @onblur = "this.style.backgroundColor = '#ffffff'"
+                                })
+                            </td>
+                        </tr>
+
+
+                    </table>
+                </div>
+                <div class="modal-footer" style="color: #2c4970; text-align: center; font-size: 12px;">
+                    <table style="text-align: center; width: 100%">
+                        <tr>
+                            <td style="text-align: center; width: 60%">
+                                <input type="submit" style="font-weight: bold" value="Comece Agora" name="enviar" id="enviarcadastro" onclick="return validaForm()" class="button button-rounded button-caution button-large">
+                                <br/>
+                                    Declaro que li e concordo com os <b><a href="#" data-toggle="modal" data-placement="bottom" class="termo">termos e condições de uso</a></b>.<br />
+                                    *campos obrigatórios
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+
+            }
+        </div>
+    </div>
+</div>
+
+<div style="padding-top: 20px; text-align: center; color: #2c4970" class="hidden-lg">
+    <a href="/Home"><img src="../../Images/kalub-logo-home.png" alt="Logo KALUB" style="max-width: 140px" class="CToWUd"></a>
+</div>
+<div style="padding-top: 10px; text-align: center;color: #2c4970" class="hidden-lg">
+    <font size="4" color="red"><b>Experimente agora</b></font><br />
+    <font size="3">Fique tranquilo seu cadastro é livre de pagamento</font>
+</div>
+<br />
+<div class="hidden-lg">
+    @using (Html.BeginForm("Registrar", "Login", FormMethod.Post, new { id = "cadastroMobile", name = "cadastroMobile" }))
+    {
+        if (ViewBag.emailExistente != null)
+        {
+            <div class="alert alert-danger alert-raised alert-dismissible fade in" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+                @ViewBag.emailExistente
+            </div>
+        }
+        <div class="form-element hidden-lg">
+            <div class="col-md-12 padding-0">
+                <div class="col-md-8">
+                    <div class="panel form-element-padding">
+                        <div class="panel-body" style="padding-bottom: 30px;">
+                            <div class="col-md-12">
+                                <div class="form-group">
+
+                                    <div class="col-sm-10 padding-0">
+                                        <strong>Atividade Econômica*</strong>
+                                        @Html.DropDownListFor(x => x.CategoriaEmpresa.Id, (IEnumerable<SelectListItem>)ViewBag.ListaCategoriaEmpresa, "Selecione atividade econômica", new { @class = "select", @style = "width:100%;", required = "required", @onblur = "this.style.backgroundColor = '#ffffff'" })
+                                    </div>
+                                    <br />
+                                    <label class="col-sm-2 control-label text-right">Empresa*</label>
+                                    <div class="col-sm-10">
+                                        @Html.TextBoxFor(x => x.Nome, new { @class = "form-control", @onblur = "this.style.backgroundColor = '#ffffff'", @placeholder = "nome empresa", required = "required" })
+                                    </div>
+                                    <label class="col-sm-2 control-label text-right">Senha*</label>
+                                    <div class="col-sm-10">
+                                        <input class="form-control" type="password" placeholder="senha" name="senha1" required onblur="this.style.backgroundColor = '#ffffff'">
+                                    </div>
+                                    <label class="col-sm-2 control-label text-right">Confirme a Senha*</label>
+                                    <div class="col-sm-10">
+                                        <input class="form-control" type="password" placeholder="confirme a senha" name="senha2" required onblur="this.style.backgroundColor = '#ffffff'">
+                                    </div>
+                                    <label class="col-sm-2 control-label text-right">E-mail*</label>
+                                    <div class="col-sm-10">
+                                        <input id="Email" name="Email" type="text" placeholder="email" required onblur="this.style.backgroundColor = '#ffffff';" class="form-control" />
+                                    </div>
+                                    <label class="col-sm-2 control-label text-right">Telefone*</label>
+                                    <div class="col-sm-10">
+                                        @Html.TextBoxFor(x => x.Telefone1, new
+                                   {
+                                       @style = "",
+                                       @onKeyPress = "MascaraTelefoneMobile(cadastro.Telefone1);",
+                                       @maxlength = "15",
+                                       @class = "form-control",
+                                       @required = "required",
+                                       @onblur = "this.style.backgroundColor = '#ffffff'"
+                                   })
+                                    </div>
+                                    <label class="col-sm-2 control-label text-right">Telefone 2</label>
+                                    <div class="col-sm-10">
+                                        @Html.TextBoxFor(x => x.Telefone2, new
+                                        {
+                                            @style = "",
+                                            @onKeyPress = "MascaraTelefoneMobile(cadastro.Telefone2);",
+                                            @maxlength = "15",
+                                            @class = "form-control",
+                                            @onblur = "this.style.backgroundColor = '#ffffff'"
+                                        })
+                                    </div>
+                                    <label class="col-sm-2 control-label text-right">Cupom Promocional</label>
+                                    <div class="col-sm-10">
+                                        @Html.TextBoxFor(x => x.CupomPromocional, new { @class = "form-control", @onblur = "this.style.backgroundColor = '#ffffff'" })
+                                    </div>
+                                    @*<div class="col-sm-10">
+                                        <div style="padding-top: 10px;" class="form-group form-animate-checkbox">
+                                            <input type="checkbox" class="checkbox" name="TipoPlano" value="1">
+                                            <strong> Aluno / Professor / Consultor</strong>
+                                        </div>
+                                    </div>*@
+
+                                    <div class="col-sm-10" style="text-align: center; padding-top: 20px;">
+                                        <input type="submit" style="font-weight: bold" value="Comece Agora" name="enviar" id="enviarcadastro" onclick="return validaFormMobile()" class="button button-rounded button-caution button-width-small">
+                                        <br />
+                                        <font size="1">
+                                            Declaro que li e concordo com os <b><a href="#" data-toggle="modal" data-placement="bottom" class="termo">termos e condições de uso</a></b>.<br />
+                                            *campos obrigatórios
+                                        </font>
+                                    </div>
+
+                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    }
+    
+</div>
+
+
+    <div style="text-align: center; color: #2c4970;">
+        <font size="2">Já tenho uma conta. <b>@Html.ActionLink("Fazer o login", "Login", "Login", new { @style = "color: #2c4970" })</b></font>
+    </div>
+
+
+    <div id="abrirModalProcessando" class="modal fade modal-v2" data-backdrop="static">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body" align=center>
+                    <img src="../../Images/loading_2x.gif" width="300">
+                </div>
+            </div>
+        </div>
+    </div>
+
+<div id="AbreTermo" class="modal fade">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="panel-heading2" style="padding-bottom: 15px;">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true" style="color: #fff;">&times;</span></button>
+                <h4 class="modal-title" style="color: #fff;"><b>Termos e Condições de Uso</b></h4>
+            </div>
+            <div class="modal-body">
+                <div style="display: inline-block">
+                    @Html.Raw(ViewBag.termo.Texto)
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="button button-rounded button-primary button-width-small" data-dismiss="modal">Fechar</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div id="ModalChekbox" class="modal fade" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="panel-heading2" style="padding-bottom: 15px;">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true" style="color: #fff;">&times;</span></button>
+                <h4 class="modal-title" style="color: #fff;"><b>Atenção</b></h4>
+            </div>
+            <div class="modal-body">
+                <div style="display: inline-block">
+                    Este plano <strong>Aluno / Professor / Consultor</strong> é limitado para realizar lançamentos por um período máximo de 2 (dois) meses. 
+                    Após este período é irreversível retornar ao plano empresarial.
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="button button-rounded button-primary button-width-small" data-dismiss="modal">Fechar</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+
+        <script>
+            $(document).ready(function () {
+                $(document).on('click', 'input[type=text]', function () { this.style.backgroundColor = '#FFFF00'; });
+                $(document).on('click', 'input[type=password]', function () { this.style.backgroundColor = '#FFFF00'; });
+
+                //$('.select').on({ change: listChildren }).trigger('change');
+
+                $(".termo").click(function (event) {
+                    $("#AbreTermo").modal('show');
+                });
+
+                //$('input[type="checkbox"]').on('change', function (e) {
+                //    if (e.target.checked) {
+                //        $("#ModalChekbox").modal('show');
+                //    }
+                //});
+
+            });
+
+            function listChildren() {
+
+                if ($(this).val() != '') {
+                    children = $(this).val();
+                    $.simplyToast('danger', children);
+                }
+
+            }
+
+            function validaForm() {
+                d = document.cadastro;
+
+                //var isChecked = jQuery("input[name=tipoplano]:checked").val();
+                //var booleanVlaueIsChecked = false;
+                //if (!isChecked) {
+                //    booleanVlaueIsChecked = true;
+                //    $.simplyToast('danger', 'Informe se é Empresa, Aluno, Professor ou Consultor !');
+                //    return false;
+                //}
+
+                if (d.Nome.value == "") {
+                    d.Nome.style.border = "1px solid red";
+                    $.simplyToast('danger', 'O nome da empresa não foi informado!');
+                    return false;
+                }
+                if (d.CategoriaEmpresa_Id.value == "") {
+                    d.CategoriaEmpresa_Id.style.border = "1px solid red";
+                    $.simplyToast('danger', 'A atividade econômica não foi informada!');
+                    return false;
+                }
+                if (d.senha1.value == "") {
+                    d.senha1.style.border = "1px solid red";
+                    $.simplyToast('danger', 'A senha não foi informada!');
+                    return false;
+                }
+                if (d.senha2.value == "") {
+                    d.senha2.style.border = "1px solid red";
+                    $.simplyToast('danger', 'A confirmação da senha não foi informada!');
+                    return false;
+                }
+                if (d.senha1.value != d.senha2.value) {
+                    $.simplyToast('danger', 'As senhas estão diferentes, favor digitar senhas iguais!');
+                    return false;
+                }
+
+                usuario = d.Email.value.substring(0, d.Email.value.indexOf('@@'));
+                dominio = d.Email.value.substring(d.Email.value.indexOf('@@') + 1, d.Email.value.length);
+                if ((usuario.length >= 1) &&
+                    (dominio.length >= 3) &&
+                    (usuario.search('@@') == -1) &&
+                    (dominio.search('@@') == -1) &&
+                    (usuario.search(" ") == -1) &&
+                    (dominio.search(" ") == -1) &&
+                    (dominio.search(".") != -1) &&
+                    (dominio.indexOf(".") >= 1) &&
+                    (dominio.lastIndexOf(".") < dominio.length - 1)) {
+                    //document.getElementById("msgemail").innerHTML = "E-mail válido";
+                    //alert("E-mail valido");
+                }
+                else {
+                    $.simplyToast('danger', 'Por favor, informe um E-MAIL válido!');
+                    return false;
+                }
+
+                if ((d.CupomPromocional.value != "iugu.com") && (d.CupomPromocional.value != "")) {
+                    d.CupomPromocional.style.border = "1px solid red";
+                    $.simplyToast('danger', 'Cupom de desconto inválido!');
+                    return false;
+                }
+
+                if (d.Telefone1.value == "") {
+                    d.Telefone1.style.border = "1px solid red";
+                    $.simplyToast('danger', 'Informe pelo menos um telefone de contato!');
+                    return false;
+                }
+
+
+
+                $('#abrirModalProcessando').modal('show');
+
+            };
+
+
+            function MascaraTelefone(tel) {
+                if (mascaraInteiro(tel) == false) {
+                    event.returnValue = false;
+                }
+                if (tel.value.length > 13) {
+                    return formataCampo(tel, '(00) 00000-0000', event);
+
+                } else {
+                    return formataCampo(tel, '(00) 0000-00000', event);
+                }
+            }
+
+            function mascaraInteiro() {
+                if (event.keyCode < 48 || event.keyCode > 57) {
+                    event.returnValue = false;
+                    return false;
+                }
+                return true;
+            }
+
+            //formata de forma generica os campos
+            function formataCampo(campo, Mascara, evento) {
+                var boleanoMascara;
+
+                var Digitato = evento.keyCode;
+                exp = /\-|\.|\/|\(|\)| /g
+                campoSoNumeros = campo.value.toString().replace(exp, "");
+
+                var posicaoCampo = 0;
+                var NovoValorCampo = "";
+                var TamanhoMascara = campoSoNumeros.length;;
+
+                if (Digitato != 8) { // backspace
+                    for (i = 0; i <= TamanhoMascara; i++) {
+                        boleanoMascara = ((Mascara.charAt(i) == "-") || (Mascara.charAt(i) == ".")
+                                                                || (Mascara.charAt(i) == "/"))
+                        boleanoMascara = boleanoMascara || ((Mascara.charAt(i) == "(")
+                                                                || (Mascara.charAt(i) == ")") || (Mascara.charAt(i) == " "))
+                        if (boleanoMascara) {
+                            NovoValorCampo += Mascara.charAt(i);
+                            TamanhoMascara++;
+                        } else {
+                            NovoValorCampo += campoSoNumeros.charAt(posicaoCampo);
+                            posicaoCampo++;
+                        }
+                    }
+                    campo.value = NovoValorCampo;
+                    return true;
+                } else {
+                    return true;
+                }
+            }
+
+
+            function validaFormMobile() {
+                d = document.cadastroMobile;
+                if (d.CategoriaEmpresa_Id.value == "") {
+                    d.CategoriaEmpresa_Id.style.border = "1px solid red";
+                    $.simplyToast('danger', 'A atividade econômica não foi informada!');
+                    return false;
+                }
+                if (d.Nome.value == "") {
+                    d.Nome.style.border = "1px solid red";
+                    $.simplyToast('danger', 'O nome da empresa não foi informado!');
+                    return false;
+                }
+                if (d.senha1.value == "") {
+                    d.senha1.style.border = "1px solid red";
+                    $.simplyToast('danger', 'A senha não foi informada!');
+                    return false;
+                }
+                if (d.senha2.value == "") {
+                    d.senha2.style.border = "1px solid red";
+                    $.simplyToast('danger', 'A confirmação da senha não foi informada!');
+                    return false;
+                }
+                if (d.senha1.value != d.senha2.value) {
+                    $.simplyToast('danger', 'As senhas estão diferentes, favor digitar senhas iguais!');
+                    return false;
+                }
+
+                usuario = d.Email.value.substring(0, d.Email.value.indexOf('@@'));
+                dominio = d.Email.value.substring(d.Email.value.indexOf('@@') + 1, d.Email.value.length);
+                if ((usuario.length >= 1) &&
+                    (dominio.length >= 3) &&
+                    (usuario.search('@@') == -1) &&
+                    (dominio.search('@@') == -1) &&
+                    (usuario.search(" ") == -1) &&
+                    (dominio.search(" ") == -1) &&
+                    (dominio.search(".") != -1) &&
+                    (dominio.indexOf(".") >= 1) &&
+                    (dominio.lastIndexOf(".") < dominio.length - 1)) {
+                    //document.getElementById("msgemail").innerHTML = "E-mail válido";
+                    //alert("E-mail valido");
+                }
+                else {
+                    $.simplyToast('danger', 'Por favor, informe um E-MAIL válido!');
+                    return false;
+                }
+
+                if (d.Telefone1.value == "") {
+                    d.Telefone1.style.border = "1px solid red";
+                    $.simplyToast('danger', 'Informe pelo menos um telefone de contato!');
+                    return false;
+                }
+
+                //exp = /\(\d{2}\)\ \d{5}\-\d{4}/;
+                //if (d.Telefone1.value.length <= 12) {
+                //    d.Telefone1.style.border = "1px solid red";
+                //    $.simplyToast('danger', 'Telefone inválido, digite DDD + NÚMERO !');
+                //    return false;
+                //}
+
+                $('#abrirModalProcessando').modal('show');
+
+            };
+
+            function MascaraTelefoneMobile(tel) {
+                if (mascaraInteiroMobile(tel) == false) {
+                    event.returnValue = false;
+                }
+                if (tel.value.length > 13) {
+                    return formataCampoMobile(tel, '(00) 00000-0000', event);
+
+                } else {
+                    return formataCampoMobile(tel, '(00) 0000-00000', event);
+                }
+            }
+
+            function mascaraInteiroMobile() {
+                if (event.keyCode < 48 || event.keyCode > 57) {
+                    event.returnValue = false;
+                    return false;
+                }
+                return true;
+            }
+
+            //formata de forma generica os campos
+            function formataCampoMobile(campo, Mascara, evento) {
+                var boleanoMascara;
+
+                var Digitato = evento.keyCode;
+                exp = /\-|\.|\/|\(|\)| /g;
+                campoSoNumeros = campo.value.toString().replace(exp, "");
+
+                var posicaoCampo = 0;
+                var NovoValorCampo = "";
+                var TamanhoMascara = campoSoNumeros.length;;
+
+                if (Digitato != 8) { // backspace
+                    for (i = 0; i <= TamanhoMascara; i++) {
+                        boleanoMascara = ((Mascara.charAt(i) == "-") || (Mascara.charAt(i) == ".")
+                            || (Mascara.charAt(i) == "/"));
+                        boleanoMascara = boleanoMascara || ((Mascara.charAt(i) == "(")
+                            || (Mascara.charAt(i) == ")") || (Mascara.charAt(i) == " "));
+                        if (boleanoMascara) {
+                            NovoValorCampo += Mascara.charAt(i);
+                            TamanhoMascara++;
+                        } else {
+                            NovoValorCampo += campoSoNumeros.charAt(posicaoCampo);
+                            posicaoCampo++;
+                        }
+                    }
+                    campo.value = NovoValorCampo;
+                    return true;
+                } else {
+                    return true;
+                }
+            }
+
+
+        </script>
+    }

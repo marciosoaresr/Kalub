@@ -1,0 +1,57 @@
+﻿@model ProfitManager.Fabrica.Entidade.EventoLancamento
+
+<div id="AbreCadastrarEditarNotaExplicativa" class="modal fade" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="panel-heading2">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Nota Explicativa</h4>
+            </div>
+
+            @using (Html.BeginForm("CadastrarEditarNotaExplicativa", "EventoLancamento", FormMethod.Post))
+            {
+                <div class="modal-body">
+                    <div style="display: inline-block">
+                        @Html.AntiForgeryToken()
+                        @Html.ValidationSummary(true)
+
+                        @Html.HiddenFor(x => x.Id)
+                        @Html.HiddenFor(x => x.DataHoraCriacao)
+                        @Html.HiddenFor(x => x.DataHoraAlteracao)
+                        @Html.HiddenFor(x => x.Data)
+
+                        <div class="col-sm-6" style="padding-top: 2px;">@Html.TextAreaFor(x => x.NotaExplicativa, new { rows = "3", cols = "70", @style = "font-size: 14px;" })</div>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+                    <button type="submit" value="Salvar" id="salvarNotaExplicativa" class="btn btn-primary">Salvar</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<div id="abrirModalProcessando" class="modal fade modal-v2" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body" align=center>
+                <img src="../../Images/loading_2x.gif" width="300">
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    $(document).ready(function() {
+
+        $("#salvarNotaExplicativa").click(function () {
+            $('#abrirModalProcessando').modal('show');
+        });
+
+    });
+
+
+</script>

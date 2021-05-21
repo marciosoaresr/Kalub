@@ -1,0 +1,122 @@
+﻿@model List<ProfitManager.Web.ViewModels.EventoLancamentoViewModel>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutRestritoUser.cshtml";
+}
+
+
+<div id="content">
+    <div class="tabs-wrapper text-center">
+        <div class="panel box-shadow-none text-left content-header">
+            <div class="panel-body">
+                <div class="col-sm-4" style="padding-top: 35px;">
+                    <p class="animated fadeInLeft">
+                        Resumo de Operações
+                    </p>
+                </div>
+                <div class="col-sm-8" style="text-align: left; padding-top: 42px; padding-left: 100px;">
+                       Empresa:  @ViewBag.Empresa
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@if (ViewBag.TotalSaldoinicialDiaAnteiorContaCaixa == 0)
+{
+    <div id="modal" class="modal fade modal-v1" data-backdrop="static" style="padding-top: 70px;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <p style="padding-top: 10px;">
+                        <h3 style="color: #2c4970;">Seja Bem vindo ao KALUB!</h3><br/><br/>
+                    </p>
+                    <b> Olá @ViewBag.Empresa</b>,<br/>
+                    Sua conta foi criada com sucesso! Agora você faz parte da nossa comunidade!<br/>
+                    Com o <b>KALUB</b> você pode muito mais!<br/><br/>
+                    <span style="color: red;"><strong>ATENÇÃO:</strong> Você ainda não lançou os saldos iniciais! <br /></span>
+                    Sua primeira tarefa dentro do <b>KALUB</b> é lançar os <b>SALDOS INICIAIS</b>.<br/>
+                    Em seguida você pode realizar os lançamentos resumidos diários das compras, vendas, pagamentos e recebimentos.<br/><br/>
+
+                    <span style="color: #2c4970;">Um grande abraço e bons negócios!</span>
+
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary btn-login" data-dismiss="modal">
+                        Fechar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">$(document).ready(function() { $('#modal').modal('show'); });</script>
+}
+
+<div class="col-md-12 top-20 padding-0">
+    <div class="">
+        <div class="panel">
+            <div class="panel-body" width="100%" style="padding-top: 2px; padding-bottom: 10px;">
+                <center>
+                    <table width="948">
+                        <tbody>
+                            <tr>
+                                <td width="190" height="98" style="background-image: url('../../Images/bt-caixa.jpg');">
+                                    <p style="color: #fff; font-size: 200%; padding-left: 20px;">
+                                        @string.Format("{0:#,##0}", ViewBag.TotalSaldoinicialDiaAnteiorContaCaixa)
+                                    </p>
+                                    <p style="color: #fff; font-size: 100%; padding-left: 20px;">
+                                        Dinheiro em Caixa
+                                    </p>
+                                </td>
+                                <td width="6%"></td>
+                                <td width="190" height="98" style="background-image: url('../../Images/bt-entrada.jpg');">
+                                    <p style="color: #fff; font-size: 200%; padding-top: 5px; padding-left: 20px;">
+                                        @string.Format("{0:#,##0}", ViewBag.TotalEntradas)
+                                    </p>
+                                    <p style="color: #fff; font-size: 100%; padding-left: 20px;">
+                                        Venda Bruta
+                                    </p>
+                                </td>
+                                <td width="5%"></td>
+                                <td width="190" height="98" style="background-image: url('../../Images/bt-saida.jpg');">
+                                    <p style="color: #fff; font-size: 200%; padding-top: 5px; padding-left: 20px;">
+                                        @string.Format("{0:#,##0}", ViewBag.TotalSaidas)
+                                    </p>
+                                    <p style="color: #fff; font-size: 100%; padding-top: 0px; padding-left: 20px;">
+                                        Saidas
+                                    </p>
+                                </td>
+                                <td width="5%"></td>
+                                <td width="190" height="98" style="background-image: url('../../Images/bt-saldo-final.jpg');">
+                                    <p style="color: #fff; font-size: 200%; padding-top: 5px; padding-left: 20px;">
+                                        @string.Format("{0:#,##0}", ViewBag.TotalSaldoinicialDiaAnteiorContaCaixa + ViewBag.TotalEntradas - ViewBag.TotalSaidas)
+                                    </p>
+                                    <p style="color: #fff; font-size: 100%; padding-top: 0px; padding-left: 20px;">
+                                        Saldo Final
+                                    </p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </center>
+                </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts{
+
+    <script>
+
+        $(document).ready(function () {
+
+           // $('#grid1', '#grid2').DataTable();
+
+        });
+
+    </script>
+
+}

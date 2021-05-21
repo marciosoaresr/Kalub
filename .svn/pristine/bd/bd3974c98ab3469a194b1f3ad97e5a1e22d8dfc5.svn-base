@@ -1,0 +1,420 @@
+﻿@using ProfitManager.Fabrica.Enum
+<!DOCTYPE html>
+<html>
+<head>
+    @*<meta http-equiv="refresh" content="1800;url=../Login/Logout" />*@
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    <link rel="shortcut icon" href="../../Images/favicon.ico">
+    @Styles.Render("~/css")
+    @Styles.Render("~/css/plugins")
+    @Styles.Render("~/fonts")
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    @Scripts.Render("~/Scripts")
+    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+    @Scripts.Render("~/Scripts/plugins")
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
+    <script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+    
+    <script>
+        $(document).ready(function () {
+            $('.dropdown-toggle').dropdown();
+            $.datepicker.regional['pt-BR'] = {
+                closeText: 'OK',
+                prevText: '&lt;Anterior',
+                nextText: 'Próximo&gt;',
+                currentText: 'Hoje',
+                monthNamesShort: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+                'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+                dayNamesMin: ['Do', 'Se', 'Te', 'Qu', 'Qu', 'Se', 'Sa'],
+                dateFormat: 'mm/yy',
+                firstDay: 0,
+                isRTL: false,
+                showMonthAfterYear: false,
+                yearSuffix: ''
+            };
+
+            $.datepicker.setDefaults($.datepicker.regional['pt-BR']);
+
+        });
+    </script>
+
+@{
+
+    bool exibealert = false;
+    if (ViewBag.status == EnumEmpresaStatus.Gratis)
+    {
+        exibealert = true;
+    }
+    //bool exibeAlertaDiasUso = false;
+    //if (ViewBag.status == EnumEmpresaStatus.TipoPlano)
+    //{
+    //    exibeAlertaDiasUso = true;
+    //}
+}
+
+    <style>
+        body {
+            background: #dce2e5;
+        }
+  /* Popover */
+  .popover {
+      border: 2px dotted red;
+  }
+  /* Popover Header */
+  .popover-title {
+      background-color: #73AD21;
+      color: #FFFFFF;
+      font-size: 28px;
+      text-align:center;
+  }
+  /* Popover Body */
+  .popover-content {
+      background-color: #73AD21;
+      color: #FFFFFF;
+      padding: 15px;
+  }
+  /* Popover Arrow */
+  .arrow {
+      border-right-color: red !important;
+  }
+    </style>
+
+</head>
+<body style="background-color: #dce2e5;">
+
+<div id="wrapper" style="height: 100%;">
+<!-- inicio: Cabeçalho -->
+    @*@if (exibeAlertaDiasUso)
+    {
+        <nav class="navbar navbar-default header navbar-fixed-top " style="height: 120px">
+            <div class="col-md-12 nav-wrapper " style="text-align: center; width: 100%; background-color: lightsalmon;">
+                <div class="navbar-header" style="width: 100%;">
+                    <table width="100%" style="text-align: center;">
+                        <tr>
+                            <td style="color: white; height: 30px; text-align: center; width: 100%">
+                                <b>@ViewBag.diasUso</b>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+
+            <div class="col-md-12 nav-wrapper">
+                <div class="navbar-header" style="padding-top: 10px; padding-left: 20px; width: 100%;">
+                    <ul class="nav navbar-nav">
+                        <img src="../../Images/kalub-logo-home.png" width="200" />
+                    </ul>
+
+                    <ul class="nav navbar-nav" style="padding-top: 20px; padding-left: 200px;">
+                        <span class="fa-newspaper-o fa"></span> @Html.ActionLink("Manual de Instruções", "Manual", "PrincipalUser", null, new { @class = "navbar-brand-menu" })
+                        @if (ViewBag.TotalSaldoinicialDiaAnteiorContaCaixa == 0)
+                        {
+                            <a href="/ContaContabilSaldoInicial" data-placement="bottom" data-content="Sua primeira tarefa é lançar os SALDOS INICIAIS!" data-toggle="popover" id="link"><span class="fa-dollar fa" style="color: red; font-size: 14px;font-weight: bold"></span> <span style="color: red; font-size: 14px;font-weight: bold">Saldos Iniciais</span>&nbsp;&nbsp;&nbsp;&nbsp;</a>
+                        }
+                        else
+                        {
+                            <span class="fa-dollar fa"></span> @Html.ActionLink("Saldos Iniciais", "Index", "ContaContabilSaldoInicial", null, new { @class = "navbar-brand-menu" })
+                        }
+                        <span class="fa-money fa"></span> @Html.ActionLink("Lançamentos", "Index", "EventoLancamento", null, new { @class = "navbar-brand-menu" })
+                    </ul>
+
+                    <ul class="nav navbar-nav" style="padding-top: 20px; padding-left: 0px;">
+                        <li>
+                            <a href="#" class="dropdown-toggle navbar-brand-menu" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><font size="2"><span class="fa-file-text fa"></span> Relatórios</font><span class="caret"></span></a>
+                            <ul class="dropdown-menu" role="menu">
+                                <script language="JavaScript">
+                                    function getCookie(nome) {
+                                        if (document.cookie.length > 0) {
+                                            c_start = document.cookie.indexOf(nome + "=");
+                                            if (c_start != -1) {
+                                                c_start = c_start + nome.length + 1;
+                                                c_end = document.cookie.indexOf("&", c_start);
+                                                if (c_end == -1)
+                                                    c_end = document.cookie.length;
+                                                return unescape(document.cookie.substring(c_start, c_end));
+                                            }
+                                        }
+                                        return null;
+                                    };
+
+                                    var login = getCookie('&Login');
+                                    if (login == 'kalub@kalub.com.br') {
+                                        document.write('<li>@Html.ActionLink("Balancete", "Index", "Balancete")</li>');
+                                    }
+                                </script>
+                                <li>@Html.ActionLink("Extrato de Conta", "Index", "ExtratoConta")</li>
+                                <li>@Html.ActionLink("Demonstração do Resultado (DRE)", "GerarDRE", "GrupoDRE")</li>
+                                <li>@Html.ActionLink("Demonstração do Fluxo de Caixa (DFC)", "Index", "DemonstracaoFluxoCaixa")</li>
+                                <li>@Html.ActionLink("Balanço Patrimonial", "Index", "BalancoPatrimonial")</li>
+                                <li>@Html.ActionLink("Diagnóstico de Resultados", "GerarDiagnostico", "Diagnostico")</li>
+                            </ul>
+                        </li>
+
+                    </ul>
+
+                    <span class="nav navbar-nav navbar-right" style="padding-right: 40px;"><b>Empresa: @ViewBag.Empresa</b></span><br />
+
+
+                    <ul class="nav navbar-nav navbar-right" style="padding-top: 5px;">
+                        <span class="fa-power-off fa"></span> @Html.ActionLink("Sair", "Logout", "Login", null, new { @class = "navbar-brand-menu" })
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right" style="padding-top: 5px;">
+                        <li>
+                            <a href="#" class="dropdown-toggle navbar-brand-menu" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><font size="2"><span class="fa-cogs fa"></span> Configurações</font><span class="caret"></span></a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li>@Html.ActionLink("Dados da Empresa", "CadastrarEditarEmpresa", "Empresa")</li>
+                                <li>@Html.ActionLink("Usuários", "Usuarios", "Empresa")</li>
+                                <li role="separator" class="divider"></li>
+                                <li>@Html.ActionLink("Faturas", "Faturas", "EmpresaRecebimento")</li>
+                            </ul>
+                        </li>
+                    </ul>
+
+
+                </div>
+            </div>
+        </nav>
+         fim: Cabeçalho 
+    }*@
+    @if (exibealert)
+    {
+        <nav class="navbar navbar-default header navbar-fixed-top " style="height: 120px">
+            <div class="col-md-12 nav-wrapper " style="text-align: center; width: 100%; background-color: #FF5722;">
+                <div class="navbar-header" style="width: 100%;">
+                    <table width="100%" style="text-align: center;">
+                        <tr>
+                            <td style="color: white; height: 35px; text-align: center; width: 100%">
+                                <a href="/Contratar"><span style="font-size: 15px; color: #ffffff;"> @ViewBag.diasGratis </span></a>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+
+            <div class="col-md-12 nav-wrapper">
+                <div class="navbar-header" style="padding-top: 10px; padding-left: 20px; width: 100%;">
+                    <ul class="nav navbar-nav">
+                        <img src="../../Images/kalub-logo-home.png" width="200"/>
+                    </ul>
+
+                    <ul class="nav navbar-nav" style="padding-top: 20px; padding-left: 150px;">
+                        <span class="fa-newspaper-o fa"></span> @Html.ActionLink("Manual", "Manual", "PrincipalUser", null, new {@class = "navbar-brand-menu"})
+                        @*@if (ViewBag.TotalSaldoinicialDiaAnteiorContaCaixa == 0)
+                        {
+                            <a href="/ContaContabilSaldoInicial" data-placement="bottom" data-content="Sua primeira tarefa é lançar os SALDOS INICIAIS!" data-toggle="popover" id="link"><span class="fa-dollar fa" style="color: red; font-size: 14px;font-weight: bold"></span> <span style="color: red; font-size: 14px;font-weight: bold">Saldos Iniciais</span>&nbsp;&nbsp;&nbsp;&nbsp;</a>
+                        }
+                        else*@
+                        @*{*@
+                        <span class="fa-dollar fa"></span> @Html.ActionLink("Saldos Iniciais", "Index", "ContaContabilSaldoInicial", null, new { @class = "navbar-brand-menu" })
+                        @*}*@
+                        <span class="fa-money fa"></span> @Html.ActionLink("Lançamentos", "Index", "EventoLancamento", null, new {@class = "navbar-brand-menu"})
+                    </ul>
+
+                    <ul class="nav navbar-nav" style="padding-top: 20px; padding-left: 0px;">
+                        <li>
+                            <a href="#" class="dropdown-toggle navbar-brand-menu" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><font size="2"><span class="fa-file-text fa"></span> Relatórios</font><span class="caret"></span></a>
+                            <ul class="dropdown-menu" role="menu">
+                                <script language="JavaScript">
+                                    function getCookie(nome) {
+                                        if (document.cookie.length > 0) {
+                                            c_start = document.cookie.indexOf(nome + "=");
+                                            if (c_start != -1) {
+                                                c_start = c_start + nome.length + 1;
+                                                c_end = document.cookie.indexOf("&", c_start);
+                                                if (c_end == -1)
+                                                    c_end = document.cookie.length;
+                                                return unescape(document.cookie.substring(c_start, c_end));
+                                            }
+                                        }
+                                        return null;
+                                    };
+
+                                    var login = getCookie('&Login');
+                                    if (login == 'kalub@kalub.com.br') {
+                                        document.write('<li>@Html.ActionLink("Balancete", "Index", "Balancete")</li>');
+                                    }
+                                </script>
+                                <li>@Html.ActionLink("Extrato de Conta", "Index", "ExtratoConta")</li>
+                                <li>@Html.ActionLink("Demonstração do Resultado (DRE)", "GerarDRE", "GrupoDRE")</li>
+                                <li>@Html.ActionLink("Demonstração do Fluxo de Caixa (DFC)", "Index", "DemonstracaoFluxoCaixa")</li>
+                                <li>@Html.ActionLink("Balanço Patrimonial", "Index", "BalancoPatrimonial")</li>
+                                <li>@Html.ActionLink("Diagnóstico de Resultados", "GerarDiagnostico", "Diagnostico")</li>
+                            </ul>
+                        </li>
+
+                    </ul>
+
+                    @if (ViewBag.CategoriaEmpresa == 27)
+                    {
+                        <ul class="nav navbar-nav" style="padding-top: 20px; padding-left: 0px;">
+                            <li>
+                                <span class="fa-check-square-o fa"></span> @Html.ActionLink("Exercícios", "Index", "Exercicio", null, new { @class = "navbar-brand-menu" })
+
+                                @*<a href="#" class="dropdown-toggle navbar-brand-menu" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><font size="2"><span class="fa-check-square-o fa"></span> Exercícios</font><span class="caret"></span></a>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li>@Html.ActionLink("Criar Exercícios", "Index", "Exercicio")</li>
+
+                                </ul>*@
+                            </li>
+
+                        </ul>
+                    }
+
+                    <span class="nav navbar-nav navbar-right" style="padding-right: 40px;"><b>Empresa: @ViewBag.Empresa</b></span><br/>
+
+
+                    <ul class="nav navbar-nav navbar-right" style="padding-top: 5px;">
+                        <span class="fa-power-off fa"></span> @Html.ActionLink("Sair", "Logout", "Login", null, new {@class = "navbar-brand-menu"})
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right" style="padding-top: 5px;">
+                        <li>
+                            <a href="#" class="dropdown-toggle navbar-brand-menu" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><font size="2"><span class="fa-cogs fa"></span> Configurações</font><span class="caret"></span></a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li>@Html.ActionLink("Dados da Empresa", "CadastrarEditarEmpresa", "Empresa")</li>
+                                <li>@Html.ActionLink("Usuários", "Usuarios", "Empresa")</li>
+                                <li role="separator" class="divider"></li>
+                                <li>@Html.ActionLink("Faturas", "Faturas", "EmpresaRecebimento")</li>
+                            </ul>
+                        </li>
+                    </ul>
+
+
+                </div>
+            </div>
+        </nav>
+        <!-- fim: Cabeçalho -->
+    }
+    else
+    {
+        <nav class="navbar navbar-default header navbar-fixed-top">
+            <div class="col-md-12 nav-wrapper">
+                <div class="navbar-header" style="padding-top: 10px; padding-left: 20px; width: 100%;">
+                    <ul class="nav navbar-nav">
+                        <img src="../../Images/kalub-logo-home.png" width="200"/>
+                    </ul>
+
+                    <ul class="nav navbar-nav" style="padding-top: 20px; padding-left: 180px;">
+                        <span class="fa-newspaper-o fa"></span> @Html.ActionLink("Manual", "Manual", "PrincipalUser", null, new {@class = "navbar-brand-menu"})
+                        @*@if (ViewBag.TotalSaldoinicialDiaAnteiorContaCaixa == 0)
+                        {
+                            <a href="/ContaContabilSaldoInicial" data-placement="bottom" data-content="Sua primeira tarefa é lançar os SALDOS INICIAIS!" data-toggle="popover" id="link"><span class="fa-dollar fa" style="color: red; font-size: 14px;font-weight: bold"></span> <span style="color: red; font-size: 14px;font-weight: bold">Saldos Iniciais</span>&nbsp;&nbsp;&nbsp;&nbsp;</a>
+                        }
+                        else
+                        {*@
+                        <span class="fa-dollar fa"></span> @Html.ActionLink("Saldos Iniciais", "Index", "ContaContabilSaldoInicial", null, new { @class = "navbar-brand-menu" })
+                        @*}*@                        
+                        <span class="fa-money fa"></span> @Html.ActionLink("Lançamentos", "Index", "EventoLancamento", null, new {@class = "navbar-brand-menu"})
+
+                    </ul>
+
+                    <ul class="nav navbar-nav" style="padding-top: 20px; padding-left: 0px;">
+                        <li>
+                            <a href="#" class="dropdown-toggle navbar-brand-menu" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><font size="2"><span class="fa-file-text fa"></span> Relatórios</font><span class="caret"></span></a>
+                            <ul class="dropdown-menu" role="menu">
+                                <script language="JavaScript">
+                                    function getCookie(nome) {
+                                        if (document.cookie.length > 0) {
+                                            c_start = document.cookie.indexOf(nome + "=");
+                                            if (c_start != -1) {
+                                                c_start = c_start + nome.length + 1;
+                                                c_end = document.cookie.indexOf("&", c_start);
+                                                if (c_end == -1)
+                                                    c_end = document.cookie.length;
+                                                return unescape(document.cookie.substring(c_start, c_end));
+                                            }
+                                        }
+                                        return null;
+                                    };
+
+                                    var login = getCookie('&Login');
+                                    if (login == 'kalub@kalub.com.br') {
+                                        document.write('<li>@Html.ActionLink("Balancete", "Index", "Balancete")</li>');
+                                    }
+                                </script>
+                                <li>@Html.ActionLink("Extrato de Conta", "Index", "ExtratoConta")</li>
+                                <li>@Html.ActionLink("Demonstração do Resultado (DRE)", "GerarDRE", "GrupoDRE")</li>
+                                <li>@Html.ActionLink("Demonstração do Fluxo de Caixa (DFC)", "Index", "DemonstracaoFluxoCaixa")</li>
+                                <li>@Html.ActionLink("Balanço Patrimonial", "Index", "BalancoPatrimonial")</li>
+                                <li>@Html.ActionLink("Diagnóstico de Resultados", "GerarDiagnostico", "Diagnostico")</li>
+                            </ul>
+                        </li>
+                        @if (ViewBag.CategoriaEmpresa == 27)
+                        {
+                            <span class="fa-check-square-o fa"></span> @Html.ActionLink("Exercícios", "Index", "Exercicio", null, new { @class = "navbar-brand-menu" })
+                        }
+
+                    </ul>
+
+
+
+                    <span class="nav navbar-nav navbar-right" style="padding-right: 40px;"><b>Empresa: @ViewBag.Empresa</b></span><br/>
+
+
+                    <ul class="nav navbar-nav navbar-right" style="padding-top: 5px;">
+                        <span class="fa-power-off fa"></span> @Html.ActionLink("Sair", "Logout", "Login", null, new {@class = "navbar-brand-menu"})
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right" style="padding-top: 5px;">
+                        <li>
+                            <a href="#" class="dropdown-toggle navbar-brand-menu" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><font size="2"><span class="fa-cogs fa"></span> Configurações</font><span class="caret"></span></a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li>@Html.ActionLink("Dados da Empresa", "CadastrarEditarEmpresa", "Empresa")</li>
+                                <li>@Html.ActionLink("Usuários", "Usuarios", "Empresa")</li>
+                                <li role="separator" class="divider"></li>
+                                <li>@Html.ActionLink("Faturas", "Faturas", "EmpresaRecebimento")</li>
+                            </ul>
+                        </li>
+                    </ul>
+
+
+                </div>
+            </div>
+        </nav>
+
+    }
+
+
+
+    <section id="content" style="height: 100%" >
+        @*@if (exibeAlertaDiasUso)
+        {
+            <section id="contentrigth" style="width: 100%; position: absolute; top: 45px;">
+                @RenderBody()
+            </section>
+        }*@
+        @if (exibealert)
+        {
+            <section id="contentrigth" style="width: 100%; position: absolute; top: 45px;">
+                @RenderBody()
+            </section>
+        }
+        else
+        {
+            <section id="contentrigth" style="width: 100%; position: absolute; top: 0px;">
+                @RenderBody()
+            </section>
+        }
+
+    </section>
+
+
+
+    @RenderSection("scripts", required: false)
+
+</div>
+
+
+
+
+<script>
+    $(document).ready(function() {
+
+        $('[data-toggle="popover"]').popover('show');
+
+    });
+</script>
+</body>
+</html>

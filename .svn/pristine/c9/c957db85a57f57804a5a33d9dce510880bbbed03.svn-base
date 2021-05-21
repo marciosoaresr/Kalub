@@ -1,0 +1,228 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>KALUB - Software de Controle Financeiro - Ferramenta de apoio à gestão financeira da micro e pequena empresa. Facilite a gestão financeira agora! Experimente grátis.</title>
+    <meta name="description" content="Aplicativo online organizador e gerador de informações financeiras exclusivo para micro e pequenas empresas. Facilite a gestão financeira agora! Experimente grátis." />
+    <meta name="keywords" content="controle financeiro online controle financeiro para empresas gestão empresarial gestão financeira software de gestão sistema de gestão empresarial software de gestão empresarial programa de controle financeiro software de gestão empresarial  sistemas de gestão empresarial software de gestão financeira gestão financeira empresarial sistema de gestão financeira gestão financeira online fluxo de caixa planejamento financeiro sistema de controle financeiro fluxo de caixa online controle de contas">
+    <link rel="canonical" href="../../" />
+    <meta property="og:locale" content="pt_BR" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="KALUB - Software de Controle Financeiro - Ferramenta de apoio à gestão financeira da micro e pequena empresa. Facilite a gestão financeira agora! Experimente grátis." />
+    <meta property="og:description" content="Aplicativo online organizador e gerador de informações financeiras exclusivo para micro e pequenas empresas. Facilite a gestão financeira agora! Experimente grátis." />
+    <meta property="og:url" content="../../" />
+    <meta property="og:site_name" content="KALUB" />
+    <meta property="og:image" content="../../Images/kalub-facebook.png"/>
+    
+    <link rel="shortcut icon" href="../../Images/favicon.ico">
+    <link href="../../css/style.css" rel="stylesheet" title="default">
+    <link href="../../css/bootstrap.min.css" rel="styles">
+    <link href="../../css/jquery.ui.min.css" rel="stylesheet">
+    <link href="../../css/plugins/font-awesome.min.css" rel="stylesheet"/>
+    <link href="../../css/plugins/animate.min.css" rel="stylesheet">
+    <link href="../../css/vendors.css" rel="stylesheet">
+    <link href="../../css/style-blue.css" rel="stylesheet" title="default">
+
+    <script>
+        (function(i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r;
+            i[r] = i[r] || function() {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date();
+            a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0];
+            a.async = 1;
+            a.src = g;
+            m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-80999470-1', 'auto');
+        ga('send', 'pageview');
+
+    </script>
+
+    <div id="fb-root"></div>
+    <script>
+        (function(d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) return;
+            js = d.createElement(s);
+            js.id = id;
+            js.src = "//connect.facebook.net/pt_BR/sdk.js#xfbml=1&version=v2.7";
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+    </script>
+
+
+
+</head>
+
+<body style="overflow: visible;">
+<div style="position: fixed; top: 0px; left: 0px; width: 0; height: 0;" id="scrollzipPoint"></div>
+<div id="preloader" style="display: none;">
+    <div id="status" style="display: none;">&nbsp;</div>
+</div>
+
+    <div id="sb-site">
+        <div class="boxed">
+            <header id="header-full-top" class="hidden-xs header-full ">
+                <div class="container">
+                    <div class="header-full-title">
+                        <h1 class="animated fadeInRight">
+                            <a href="#"><img src="../../Images/kalub-logo-home.png" width="220" /></a>
+                        </h1>
+
+                    </div>
+                    <nav class="top-nav">
+                        <ul class="top-nav hidden-sm animated fadeInDown animation-delay-7" style="padding-top: 0px;">
+                            <a href="/Login/Registrar" class="button button-rounded button-caution button-normal"><span style="font-size: 16.8px;font-weight: bold"> QUERO CONHECER </span><i class="fa fa-arrow-right"></i></a>
+                        </ul>  
+                        <div class="dropdown animated fadeInDown animation-delay-11">
+                            <a href="" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-user" style="color: #fff;"></i> Login</a>
+                            <div class="dropdown-menu dropdown-menu-right dropdown-login-box animated flipCenter">
+                                @using (Html.BeginForm("Autenticar", "Login", FormMethod.Post))
+                                {
+                                    <h4 style="color: #fff;">Login</h4>
+                                    <div class="form-group">
+                                        <div class="input-group login-input">
+                                            <span class="input-group-addon"><i class="fa fa-user"></i></span>
+                                            <input type="text" class="form-control" placeholder="email" id="validate_email" name="email" required>
+                                        </div>
+                                        <br>
+                                        <div class="input-group login-input">
+                                            <span class="input-group-addon"><i class="fa fa-lock"></i></span>
+                                            <input type="password" class="form-control" placeholder="senha" id="validate_password" name="senha" required>
+                                        </div>
+                                        <a href="Login/RecuperarSenha"><span style="font-size: 12px;">Esqueci minha senha!</span></a>
+                                        <button type="submit" class="btn btn-ar btn-danger pull-right">Login</button>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                }
+                            </div>
+                        </div> <!-- dropdown -->
+                        
+
+                    </nav>
+                </div>
+            </header>
+            <nav class="navbar-default navbar-header-full navbar-dark yamm navbar-static-top" role="navigation" id="header" height="65">
+                <div class="navbar-dark container">
+                    <!-- Brand and toggle get grouped for better mobile display -->
+                    <div class="navbar-header navbar-dark2">
+                        <button type="button" class="navbar-toggle " data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                            <span class="sr-only">Toggle navigation</span>
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <div style="width: 100%; text-align: center;" class="hidden-lg hidden-md hidden-sm">
+                            <table>
+                                <tr>
+                                    <td>
+                                        <a id="ar-brand" class="navbar-brand hidden-lg hidden-md hidden-sm" href="../PrincipalUser"><img src="../../Images/kalub-logo-home.png" width="120" /></a>
+                                    </td>
+                                    <td style="text-align: right; width: 45%; padding-right: 10px;">
+                                        <a href="/Login/Login" class="button button-rounded button-caution button-small"><i class="fa fa-user" style="color: #fff;"></i><span style="color: #fff;"> Login</span></a>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+
+
+                        </div> <!-- navbar-header -->
+
+                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                        <ul class="nav navbar-nav">
+
+                            <li class="">
+                                <a href="/Home" class="animated fadeIn animation-delay-7">Home</a>
+                            </li>
+                            @*<li class="">
+                                <a href="/Preco" class="animated fadeIn animation-delay-7">Preço</a>
+                            </li>*@
+                            <li class="">
+                                <a href="/Home#seguranca" class="animated fadeIn animation-delay-7">Segurança</a>
+                            </li>
+                            <li class="">
+                                <a href="/Contato" class="animated fadeIn animation-delay-7">Fale Conosco</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+
+            @RenderBody()
+
+            <aside id="footer-widgets" style="padding-left: 0%;">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <h3 class="footer-widget-title">Menu</h3>
+                            <ul class="list-unstyled three_cols">
+                                <li><a href="/Home">Home</a></li>
+                                <li><a href="/Preco">Preço</a></li>
+                                <li><a href="/Home#seguranca">Seguranca</a></li>
+                                <li><a href="/Contato">Fale Conosco</a></li>
+                                <li><a href="/Termos">Termos de uso</a></li>
+                            </ul>
+                            <h3 class="footer-widget-title">Receba as novidades do KALUB</h3>
+                            <p>Fique por dentro de tudo o que acontece no Kalub, receba em seu email todas as nossas novidades.</p>
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="Email">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-ar btn-primary" type="button">Enviar</button>
+                                </span>
+                            </div><!-- /input-group -->
+                        </div>
+                        <div class="col-md-4">
+                            <div class="footer-widget">
+                                
+                                <div class="media" style="padding-top: 60px; padding-left: 40px;">
+                                    <div class="media-body footer-widget-title2">
+                                        JS BRASIL TECNOLOGIA S/A<br/>
+                                        CNPJ: 24.129.880/0001-69<br/>
+                                        Av. B, Quadra 7, Lote 2 - Sala 1<br/>
+                                        Estância Itanhangá I<br/>
+                                        75690-000 - Caldas Novas - GO<br/>
+                                        Telefone - 64-3453-0486
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="footer-widget">
+                                <h3 class="footer-widget-title">Nos acompanhe nas redes sociais</h3>
+                                <div class="media">
+                                    <div class="media-body">
+                                        <div class="fb-page" data-href="https://www.facebook.com/kalub.br/" data-small-header="false" data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="true"><blockquote cite="https://www.facebook.com/KALUB-1621978994759765/" class="fb-xfbml-parse-ignore"><a href="https://www.facebook.com/KALUB-1621978994759765/">KALUB</a></blockquote></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div> <!-- row -->
+                </div> <!-- container -->
+              </div>
+            </aside> <!-- footer-widgets -->
+            <footer id="footer">
+                <img src="../../Images/alliance.png" width="400" >
+                <p style="font-size: 13px">© 2016 KALUB, Todos os direitos reservados.</p>
+            </footer>
+        </div>
+    </div>
+<div class="sb-slidebar sb-right">
+    <h2 class="slidebar-header">Redes Sociais</h2>
+    <div class="slidebar-social-icons">
+        <a href="https://www.facebook.com/kalub.br/" class="social-icon-ar facebook"><i class="fa fa-facebook"></i></a>
+    </div>
+</div> <!-- sb-slidebar sb-right -->
+<div id="back-top" style="display: none;">
+    <a href="#header"><i class="fa fa-chevron-up"></i></a>
+</div>
+
+
+    <script src="../../Scripts/vendors.js"></script>
+    <script src="../../Scripts/shCore.js"></script>
+    <script src="../../Scripts/shBrushXml.js"></script>
+    <script src="../../Scripts/shBrushJScript.js"></script>
+    <script src="../../Scripts/app.js"></script>
+    <script src="../../Scripts/index.js"></script>
+</body>
+</html>

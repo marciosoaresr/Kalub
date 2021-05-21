@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+  <class name="ProfitManager.Fabrica.Entidade.Exercicio, ProfitManager.Fabrica" table="Exercicio" lazy="true">
+    <cache usage="read-write"/>
+    <id name="Id">
+      <column name="Id"/>
+      <generator class="native">
+        <param name="sequence">Exercicio_</param>
+      </generator>
+    </id>
+    <property name="DataHoraCriacao" column= "DataHoraCriacao" type="Timestamp"/>
+    <property name="DataHoraAlteracao" column= "DataHoraAlteracao" type="Timestamp"/>
+
+    <many-to-one name="Empresa" column="Empresa" class="ProfitManager.Fabrica.Entidade.Empresa, ProfitManager.Fabrica" fetch="join" />
+    <property name="Usuario" column= "Usuario" type="String" length="100" />
+    <property name="Titulo" column= "Titulo" type="String" length="100"/>
+    <property name="Descricao" column= "Descricao" type="String" length="1000"/>
+    <property name="DataInicio" column= "DataInicio" type="Timestamp" />
+    <property name="DataFim" column= "DataFim" type="Timestamp" />
+
+    <!--<bag name="listExercicios" inverse="true" lazy="true" order-by="Id" cascade="none" access="field">
+      <key column="Exercicio" />
+      <one-to-many class="ProfitManager.Fabrica.Entidade.ExercicioEmpresa, ProfitManager.Fabrica" />
+    </bag>-->
+    
+    
+  </class>
+</hibernate-mapping>

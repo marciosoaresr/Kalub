@@ -1,0 +1,38 @@
+﻿@model List<ProfitManager.Fabrica.Entidade.Relatorio>
+
+@{
+    ViewBag.Title = "SelecionarRelatorio";
+    Layout = "~/Views/Shared/_LayoutRestritoUser.cshtml";
+}
+
+@{
+    DateTime dataResultado = DateTime.MinValue;
+    if (ViewBag.DataResultado == null)
+    {
+        HttpContext.Current.Response.Redirect("/Principal");
+    }
+    else
+    {
+        dataResultado = (DateTime)ViewBag.DataResultado;
+    }
+}
+
+<div class="formcadeidt">
+
+    <h3 style="border-bottom: 1px solid #e5e5e5">Relatórios</h3>
+
+    <div style="margin-top: 15px">
+        
+        @Html.ActionLink(@dataResultado.ToString("MM/yyyy"), "Index", "RelatorioReadOnly",
+        new { novaData = "new" },
+        new { style = "float: right; margin-right: 10px;position: relative; font-size: 1.2em;" })
+
+        @foreach (var relatorio in Model)
+        {
+            @Html.ActionLink(relatorio.Nome, "VisualizarRelatorio", "RelatorioReadOnly",
+                          new { idRelatorio = relatorio.Id, dataRelatorio = dataResultado },
+                new { style = "position: relative; top: 4px;" })<br />
+        }
+
+    </div>
+</div>

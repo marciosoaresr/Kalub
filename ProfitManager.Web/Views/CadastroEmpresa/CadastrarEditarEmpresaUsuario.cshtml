@@ -1,0 +1,98 @@
+﻿@using ProfitManager.Fabrica.Entidade
+@using ProfitManager.Fabrica.Enum
+@model ProfitManager.Fabrica.Entidade.EmpresaUsuario
+
+
+<div id="AbreCadastrarEditarEmpresaUsuario" class="modal fade" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="panel-heading2" style="padding-bottom: 15px;">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title"><b>Cadastro Usuario</b></h4>
+            </div>
+
+            @using (Html.BeginForm("CadastrarEditarEmpresaUsuario", "CadastroEmpresa", FormMethod.Post, new { id = "formCadastrarEditarEmpresaUsuario" }))
+            {
+                <div class="modal-body">
+                    <div style="display: inline-block">
+                        @Html.AntiForgeryToken()
+                        @Html.ValidationSummary(true)
+
+                        @Html.HiddenFor(x => x.Id)
+                        @Html.HiddenFor(x => x.DataHoraCriacao)
+
+                        <div class="col-sm-5">@Html.LabelFor(x => x.Nome):</div>
+                        <div class="col-sm-5" style="padding-top: 2px;">@Html.TextBoxFor(x => x.Nome, new { @style = "width:270px;" })</div>
+                        @Html.ValidationMessageFor(x => x.Nome)
+                        <br />
+
+                        <div class="col-sm-5">@Html.LabelFor(x => x.Login):</div>
+                        <div class="col-sm-5" style="padding-top: 2px;">@Html.TextBoxFor(x => x.Login, new { @style = "width:150px;" })</div>
+                        @Html.ValidationMessageFor(x => x.Login)
+                        <br />
+
+                        <div class="col-sm-5">@Html.LabelFor(x => x.Email):</div>
+                        <div class="col-sm-5" style="padding-top: 2px;">@Html.TextBoxFor(x => x.Email, new { @style = "width:270px;" })</div>
+                        @Html.ValidationMessageFor(x => x.Email)
+                        <br />
+
+                        <div class="col-sm-5">@Html.LabelFor(x => x.Senha):</div>
+                        <div class="col-sm-5" style="padding-top: 2px;">@Html.PasswordFor(x => x.Senha, new { @style = "width:150px;" })<b>Senha Atual: @ViewBag.Senha</b>
+                        </div>
+                        @Html.ValidationMessageFor(x => x.Senha)
+                        <br />
+
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+                        <input type="submit" value="Salvar" name="salvar" id="salvar" class="btn btn-primary">
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+</div>
+
+
+<div id="abrirModalProcessando" class="modal fade modal-v2" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body" align=center>
+                <img src="../../Images/loading_2x.gif" width="300">
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    $(document).ready(function() {
+
+        $("#salvar").click(function () {
+            $('#abrirModalProcessando').modal('show');
+        });
+
+        //$("#salvar").click(function (e) {
+        //    // bloqueando envio do form
+        //    e.preventDefault();
+        //    var erros = 0;
+        //    $("#form input").each(function () {
+        //        if ($(this).val() == 0 || $(this).val() == "") {
+        //            erros = erros + 1;
+        //        }
+        //    });
+        //    erros = erros - 1;
+        //    if (erros > 0) {
+        //        //$('#alerta').modal('show');
+        //    } else {
+        //        //$("#form").submit();
+        //        //$('#abrirModalProcessando').modal('show');
+        //    }
+        //});
+
+    });
+
+
+</script>

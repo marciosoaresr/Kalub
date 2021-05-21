@@ -1,0 +1,361 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
+using System.Web.Mvc;
+using ProfitManager.Fabrica.Entidade;
+using ProfitManager.Fabrica.Enum;
+using ProfitManager.Negocio.Implementacao;
+
+using ProfitManager.Web.RepositorioWeb;
+using ProfitManager.Web.ViewModels;
+
+namespace ProfitManager.Web.Controllers.AcessoRestrito
+{
+    [HandleError]
+    public class EmpresaController : BaseController
+    {
+
+        public ActionResult Index()
+        {
+            EmpresaUsuario empresaUsuario =
+                FuncoesEmpresaUsuario.Load(RepositorioWebUsuario.VerificaSeOUsuarioEstaLogado(true).Id) ??
+                new EmpresaUsuario();
+            
+
+            ViewBag.empresaDados = FuncoesEmpresaUsuario.BuscarEmpresa(empresaUsuario.Empresa.Id);
+            ViewBag.empresaUsuarioDados = FuncoesEmpresaUsuario.BuscarEmpresaUsuario(empresaUsuario.Empresa.Id);
+
+            FuncoesContaContabilSaldoInicial.DeletarContaContabilSaldo(empresaUsuario.Empresa.Id);
+            FuncoesContaContabilSaldoInicial.DeletarContaContabilSaldoInicial(empresaUsuario.Empresa.Id);
+
+            ContaContabilSaldoInicial_Read();
+
+            var listExisteLucroPrejuizo = FuncoesContaContabil.LoadWithSeekByHqlObject().Where(x => x.LucroPrejuizoAcumulado == EnumSimNao.Sim);
+
+            var listExisteSaldoInicial = FuncoesContaContabil.LoadWithSeekByHqlObject().Where(x => x.ExigeSaldoinicial == EnumExigeSaldoinicial.Sim);
+
+            if (listExisteLucroPrejuizo.Count() == 0)
+            {
+                ViewBag.ExisteLucroPrejuizoAcumulado = 0;
+            }
+            if (listExisteSaldoInicial.Count() == 0)
+            {
+                ViewBag.ExisteSaldoinicial = 0;
+            }
+
+            return View();
+        }
+
+        public ActionResult Empresa()
+        {
+            EmpresaUsuario empresa =
+                FuncoesEmpresaUsuario.Load(RepositorioWebUsuario.VerificaSeOUsuarioEstaLogado(true).Id) ??
+                new EmpresaUsuario();
+
+            ViewBag.ListaCidade = FuncoesCidade.Load();
+
+            return View();
+        }
+
+
+        [HttpGet]
+        public ActionResult CadastarEditarEmpresa()
+        {
+            EmpresaUsuario empresaUsuario =
+                FuncoesEmpresaUsuario.Load(RepositorioWebUsuario.VerificaSeOUsuarioEstaLogado(true).Id);
+
+            var empresa = FuncoesEmpresa.Load((int)empresaUsuario.Empresa.Id);
+            ViewBag.ListaCategoriaEmpresa = ListCategoriaEmpresa(empresaUsuario.Empresa);
+            ViewBag.ListaNaturezaJuridica = ListNaturezaJuridica(empresaUsuario.Empresa);
+
+            return View("Empresa", empresa);
+        }
+
+        [HttpGet]
+        public ActionResult CadastarEditarEmpresaUsuario()
+        {
+            EmpresaUsuario empresaUsuario =
+                FuncoesEmpresaUsuario.Load(RepositorioWebUsuario.VerificaSeOUsuarioEstaLogado(false).Id);
+
+            var empresausuario = FuncoesEmpresaUsuario.Load((int)empresaUsuario.Empresa.Id);
+
+            return View("EmpresaUsuario", empresausuario);
+        }
+        [HttpPost]
+        public ActionResult CadastarEditarEmpresa(Empresa empresa, FormCollection form)
+        {
+            EmpresaUsuario empresaUsuario =
+                FuncoesEmpresaUsuario.Load(RepositorioWebUsuario.VerificaSeOUsuarioEstaLogado(false).Id);
+
+            if (empresaUsuario.Empresa.Id == 0)
+            {
+                if (ModelState.Keys.Any(x => x.Contains("Empresa.Id")))
+                {
+                    ModelState.Remove(new KeyValuePair<string, ModelState>("Empresa.Id",
+                        ModelState["Empresa.Id"]));
+                }
+            }
+
+            ModelState["Cidade"].Errors.Clear();
+            ModelState["CategoriaEmpresa.Codigo"].Errors.Clear();
+            ModelState["CategoriaEmpresa.CampoNome"].Errors.Clear();
+            ModelState["Telefone1"].Errors.Clear();
+            ModelState["Telefone2"].Errors.Clear();
+            ModelState["Email"].Errors.Clear();
+
+            if (ModelState.IsValid)
+            {
+                //empresaUsuario.Senha = RepositorioWebCriptografia.Criptografar(empresaUsuario.Senha);
+                FuncoesEmpresa.Salvar(empresa);
+                //FuncoesEmpresaUsuario.Salvar(empresausuario);
+                return RedirectToAction("CadastarEditarEmpresa");
+            }
+
+            //if (empresaUsuario.Empresa.Cidade.Id != 0)
+                //empresaUsuario.Empresa.Cidade = FuncoesCidade.Load(empresaUsuario.Empresa.Cidade.Id);
+
+
+
+            return RedirectToAction("CadastarEditarEmpresa");
+        }
+
+        [HttpPost]
+        public ActionResult CadastarEditarEmpresaUsuario(EmpresaUsuario empresausuario, FormCollection form)
+        {
+            EmpresaUsuario empresaUsuario =
+                FuncoesEmpresaUsuario.Load(RepositorioWebUsuario.VerificaSeOUsuarioEstaLogado(false).Id);
+
+            empresausuario.Empresa = empresaUsuario.Empresa;
+            if (ModelState.IsValid)
+            {
+                empresausuario.Senha = RepositorioWebCriptografia.Criptografar(empresausuario.Senha);
+                FuncoesEmpresaUsuario.Salvar(empresausuario);
+                return RedirectToAction("CadastarEditarEmpresaUsuario");
+            }
+
+
+
+
+            return RedirectToAction("CadastarEditarEmpresaUsuario");
+        }
+        public JsonResult GetCidades(string text)
+        {
+            var listCidades = new List<Cidade>();
+
+            if (!string.IsNullOrEmpty(text.Trim()))
+            {
+                listCidades = FuncoesCidade.LoadByName(text);
+            }
+
+            return Json(listCidades, JsonRequestBehavior.AllowGet);
+        }
+
+
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult ContaContabilSaldoInicial_Salvar(FormCollection form)
+        {
+            
+            var contas = form.AllKeys.Where(x => x.StartsWith("S"));
+            EmpresaUsuario empresaUsuario =
+                FuncoesEmpresaUsuario.Load(RepositorioWebUsuario.VerificaSeOUsuarioEstaLogado(false).Id);
+
+
+            var listContaContabilSaldo = new List<ContaContabilSaldoInicialViewModel>();
+
+            foreach (var item in contas)
+            {
+                int idConta = Convert.ToInt32(String.Join("", Regex.Split(item, @"[^\d]")));
+                var listSaldoInicial = FuncoesContaContabilSaldoInicial.LoadById(idConta);
+
+                if (listSaldoInicial.Count != 0)
+                {
+                    foreach (var idcontacontabil in listSaldoInicial)
+                    {
+                        var contaLancamento = new ContaContabilSaldoInicialViewModel
+                        {
+                            IdContaContabil = idcontacontabil.ContaContabil.Id,
+                            Id = idConta,
+                            Valor = Convert.ToDecimal(form[item])
+                        };
+                        listContaContabilSaldo.Add(contaLancamento);
+
+                    }
+                }
+                else
+                {
+                    var contaLancamento = new ContaContabilSaldoInicialViewModel
+                    {
+                        IdContaContabil = idConta,
+                        Valor = Convert.ToDecimal(form[item])
+                    };
+                    listContaContabilSaldo.Add(contaLancamento);
+
+                }
+            }
+
+            List<ContaContabilSaldoInicial> listContaContabilSaldoInicialBd;
+                if (listContaContabilSaldo.All(x => x.Id != 0))
+                {
+                    listContaContabilSaldoInicialBd =
+                        FuncoesContaContabilSaldoInicial.Load(listContaContabilSaldo.Select(x => x.Id).ToList());
+
+                    foreach (var contaContabilSaldoInicial in listContaContabilSaldoInicialBd)
+                    {
+                        if (listContaContabilSaldo.Any(x => x.Id == contaContabilSaldoInicial.Id))
+                        {
+                            contaContabilSaldoInicial.Valor = listContaContabilSaldo.First(x => x.Id == contaContabilSaldoInicial.Id).Valor;
+                        }
+                    }
+                }
+                else
+                {
+                    listContaContabilSaldoInicialBd = listContaContabilSaldo.Select(item => new ContaContabilSaldoInicial
+                    {
+                        Id = item.Id,
+                        ContaContabil = new ContaContabil
+                        {
+                            Id = item.IdContaContabil,
+                            CampoNome = new Campo
+                            {
+                                Nome = item.ContaContabil
+                            }
+                            
+                        },
+                        Valor = item.Valor,
+                        DataHoraCriacao = item.DataHoraCriacaoContaContabilSaldoIncial,
+                        Empresa = new Empresa { Id = empresaUsuario.Empresa.Id}
+                    }).ToList();
+                }
+
+            listContaContabilSaldoInicialBd = FuncoesContaContabilSaldoInicial.Salvar(listContaContabilSaldoInicialBd);
+
+
+            listContaContabilSaldo.AddRange(listContaContabilSaldoInicialBd.Select(item => new ContaContabilSaldoInicialViewModel
+                {
+                    Id = item.Id,
+                    Valor = item.Valor,
+                    IdEmpresa = item.Empresa.Id,
+                    ContaContabil = item.ContaContabil.CampoNome.Nome,
+                    IdContaContabil = item.ContaContabil.Id,
+                    DataHoraCriacaoContaContabilSaldoIncial = item.DataHoraCriacao
+                }));
+
+            TempData["mensagem"] = "Sados iniciais gravados!";
+
+            return RedirectToAction("Index");
+        }
+
+        [HandleError]
+        public ActionResult ContaContabilSaldoInicial_Read()
+        {
+
+            EmpresaUsuario empresaUsuario =
+                FuncoesEmpresaUsuario.Load(RepositorioWebUsuario.VerificaSeOUsuarioEstaLogado(true).Id);
+
+            var listContaContabil = FuncoesContaContabil.LoadWithSeekByHqlObject().Where(x => x.ExigeSaldoinicial == EnumExigeSaldoinicial.Sim || x.LucroPrejuizoAcumulado == EnumSimNao.Sim);
+
+            var listContaContabilSaldoInicial = FuncoesContaContabilSaldoInicial.LoadByEmpresa(
+                empresaUsuario.Empresa.Id, true);
+
+            foreach (var contaContabil in listContaContabil)
+            {
+                if (listContaContabilSaldoInicial.All(x => x.ContaContabil.Id != contaContabil.Id))
+                {
+                    listContaContabilSaldoInicial.Add(new ContaContabilSaldoInicial
+                    {
+                        ContaContabil = contaContabil,
+                        CampoNome = contaContabil.CampoNome,
+                        Empresa = empresaUsuario.Empresa,
+                        NotaExplicativaContaContabil = contaContabil.NotaExplicativaContaContabil,
+                        Id = contaContabil.Id,
+                        SubGrupoCodigo = contaContabil.SubGrupoCodigo,
+                        SubGrupoNome = contaContabil.SubGrupoNome,
+                        GrupoCodigo = contaContabil.GrupoCodigo,
+                        GrupoNome = contaContabil.GrupoNome,
+                        NotaExplicativaGrupo = contaContabil.NotaExplicativaGrupo,
+                        NotaExplicativaSubGrupo = contaContabil.NotaExplicativaSubGrupo,
+                        CampoHelp = contaContabil.CampoHelp
+                    });
+                }
+            }
+
+            var listContaContabilSaldoInicialViewModel =
+                listContaContabilSaldoInicial.Select(saldoInicial => new ContaContabilSaldoInicialViewModel
+                {
+                    Id = saldoInicial.Id,
+                    Valor = saldoInicial.Valor,
+                    IdEmpresa = saldoInicial.Empresa.Id,
+                    ContaContabil = saldoInicial.ContaContabil.CampoNome.Nome,
+                    IdContaContabil = saldoInicial.ContaContabil.Id,
+                    DataHoraCriacaoContaContabilSaldoIncial = saldoInicial.DataHoraCriacao,
+                    NotaExplicativaContaContabil = saldoInicial.NotaExplicativaContaContabil,
+                    ExigeSaldoinicial = saldoInicial.ExigeSaldoinicial,
+                    LucroPrejuizoAcumulado = saldoInicial.LucroPrejuizoAcumulado,
+                    SubGrupoCodigo = saldoInicial.SubGrupoCodigo,
+                    SubGrupoNome = saldoInicial.SubGrupoNome,
+                    GrupoCodigo = saldoInicial.GrupoCodigo,
+                    GrupoNome = saldoInicial.GrupoNome,
+                    NotaExplicativaGrupo = saldoInicial.NotaExplicativaGrupo,
+                    NotaExplicativaSubGrupo = saldoInicial.NotaExplicativaSubGrupo,
+                    CampoHelp = saldoInicial.CampoHelp,
+                    TipoContaContabil = saldoInicial.TipoContaContabil
+                }).ToList();
+
+
+
+            return View(listContaContabilSaldoInicialViewModel);
+        }
+
+        private List<SelectListItem> ListCategoriaEmpresa(Empresa empresa)
+        {
+            List<CategoriaEmpresa> listCategoriaEmpresa = FuncoesCategoriaEmpresa.Load();
+            var listItemsCategoriaEmpresa = new List<SelectListItem>();
+
+            foreach (var categoriaempresa in listCategoriaEmpresa)
+            {
+                var item = new SelectListItem
+                {
+                    Text = categoriaempresa.CampoNome.Nome,
+                    Value = categoriaempresa.Id.ToString()
+                };
+
+                if (empresa.CategoriaEmpresa != null && categoriaempresa.Id == empresa.CategoriaEmpresa.Id)
+                {
+                    item.Selected = true;
+                }
+
+                listItemsCategoriaEmpresa.Add(item);
+            }
+
+            return listItemsCategoriaEmpresa;
+        }
+
+        private List<SelectListItem> ListNaturezaJuridica(Empresa empresa)
+        {
+            List<CategoriaJuridicaEmpresa> listCategoriaJuridicaEmpresa = FuncoesNaturezaJuridica.Load();
+            var listItemsCategoriaJuridicaEmpresa = new List<SelectListItem>();
+
+            foreach (var categoriaempresa in listCategoriaJuridicaEmpresa)
+            {
+                var item = new SelectListItem
+                {
+                    Text = categoriaempresa.CampoNome.Nome,
+                    Value = categoriaempresa.Id.ToString()
+                };
+
+                if (empresa.CategoriaEmpresa != null && categoriaempresa.Id == empresa.CategoriaEmpresa.Id)
+                {
+                    item.Selected = true;
+                }
+
+                listItemsCategoriaJuridicaEmpresa.Add(item);
+            }
+
+            return listItemsCategoriaJuridicaEmpresa;
+        }
+    }
+}

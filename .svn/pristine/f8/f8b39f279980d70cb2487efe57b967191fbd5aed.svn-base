@@ -1,0 +1,63 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    
+    @Styles.Render("~/css")
+    @Styles.Render("~/css/plugins")
+    @Styles.Render("~/fonts")
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    @Scripts.Render("~/Scripts")
+    @Scripts.Render("~/Scripts/plugins")
+
+
+</head>
+<body>
+    <div id="wrapper" style="height: 100%;">
+        <!-- inicio: Cabeçalho -->
+        <nav class="navbar navbar-default header navbar-fixed-top">
+            <div class="col-md-12 nav-wrapper">
+                <div class="navbar-header" style="padding-top:10px; padding-left: 50px;width:100%;">
+                    <ul class="nav navbar-nav navbar-left">
+                        <img src="../../Images/kalub-logo-home.png" width="200"/>
+                    </ul>
+
+                    <ul class="nav navbar-nav" style="padding-top:20px;padding-left:180px;">
+                        <span class="fa-sitemap fa"></span> @Html.ActionLink("Plano de Contas", "Index", "PlanoContas", null, new { @class = "navbar-brand-menu" })
+                        <span class="fa-random fa"></span> @Html.ActionLink("Eventos", "Index", "Eventos", null, new { @class = "navbar-brand-menu" })
+                        <span class="fa-building fa"></span> @Html.ActionLink("Empresa", "Index", "CadastroEmpresa", null, new { @class = "navbar-brand-menu" })
+                        <span class="fa-building-o fa"></span> @Html.ActionLink("Categoria Empresa", "Index", "CategoriaEmpresa", null, new { @class = "navbar-brand-menu" })
+                        <span class="fa-users fa"></span> @Html.ActionLink("Grupo DRE", "Index", "GrupoDRE", null, new { @class = "navbar-brand-menu" })
+                    </ul>
+
+                    <ul class="nav navbar-nav navbar-right user-nav" style="padding-top:20px;">
+                        <span class="fa fa-power-off"></span > @Html.ActionLink("Sair", "Logout", "Login", null, new { @class = "navbar-brand-menu" })
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <!-- fim: Cabeçalho -->
+
+
+        <section id="content" style="height: 100%">
+
+            <section id="contentrigth" style="width: 100%;position: absolute;top: 0px;">
+                @RenderBody()
+            </section>
+
+        </section>
+
+
+
+        @RenderSection("scripts", required: false)
+
+    </div>
+    <script>
+    $(document).ready(function () {
+        $('.dropdown-toggle').dropdown();
+    });
+    </script>
+</body>
+</html>

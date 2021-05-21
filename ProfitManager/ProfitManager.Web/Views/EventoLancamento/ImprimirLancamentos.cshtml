@@ -1,0 +1,269 @@
+﻿@using ProfitManager.Fabrica.Entidade
+@using System.Linq
+@using ProfitManager.Web.ViewModels
+@model System.Collections.Generic.List<EventoLancamentoViewModel>
+
+@{
+    ViewBag.Title = "KALUB - Impresão Fechamento Caixa";
+    Layout = "~/Views/Shared/_LayoutRelatorios.cshtml";
+    decimal total = 0;
+}
+
+
+<table width="900" style="margin-left: 20px">
+    <tr>
+        <th>
+            <h3>
+                <b>Fechamento Caixa Disponível</b>
+            </h3>
+            Empresa: @ViewBag.Empresa<br/>
+            Data Fechamento: @ViewBag.dataFechamento.ToString("dd/MM/yyyy")<br/>
+            
+        </th>
+        <th style="text-align: right">
+            @if (ViewBag.Logomarca != null)
+            {
+                <img src="~/Images/Logomarcas/@ViewBag.Logomarca" width="160" />
+            }
+            else
+            {
+                <img src="~/Images/kalub-logo-home.png" width="160" />
+            }
+        </th>
+    </tr>
+    <tr><th colspan="2" height="20"></th></tr>
+
+
+    <tr>
+        <td colspan="2">
+
+            <div >
+                <div class="panel">
+                    <div class="panel-body" style="padding-top: 0px;">
+                        <table >
+                        <tr>
+                            <td valign="top">
+                                <table width="460">
+                                    <tr style="border-bottom: 1px solid; border-top: 1px solid; border-left: 1px solid; border-right: 1px solid;">
+                                        <td width="340" style="font-size: 12.8px;">
+                                            <b>&nbsp;&nbsp;Entradas de Dinheiro (R$)</b>
+                                        </td>
+                                        <td style="font-size: 12.8px; text-align: right" width="50" >
+                                            <b>Dia</b>
+                                        </td>
+                                        <td style="font-size: 12.8px; text-align: right">
+                                            <b>Mês</b>&nbsp;&nbsp;
+                                        </td>
+                                    </tr>
+                                </table>
+
+                                <table width="460" style="border-bottom: 1px solid; border-left: 1px solid; border-right: 1px solid;">
+                                    @foreach (var evento in Model.Where(item => item.Area.Codigo == "0001").OrderBy(item => item.Ordem))
+                                    {
+
+                                        <tr>
+                                            <td style="padding-top: 1px; font-size: 12.8px;" width="340">
+                                                <span>&nbsp;&nbsp;</span>@evento.Evento
+                                            </td>
+
+                                            <td style="padding-top: 1px; font-size: 12.8px; text-align: right;">
+                                                @string.Format("{0:#,##0}", evento.ValorDia)
+                                            </td>
+
+                                            <td style="padding-top: 1px; font-size: 12.8px; text-align: right;">
+                                                @string.Format("{0:#,##0}", evento.ValorMes)&nbsp;&nbsp;
+
+                                            </td>
+                                        </tr>
+                                    }
+                                    <tr style="border-bottom: 1px solid; border-top: 1px solid;">
+                                        <td style="padding-top: 2px; font-size: 12.8px;" width="250"><b>&nbsp;&nbsp;Total de entradas</b>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                                        <td style="padding-top: 2px; text-align: right; font-size: 12.8px; font-weight: bold">
+                                            @string.Format("{0:#,##0}", ViewBag.TotalDia)
+                                        </td>
+
+                                        <td style="padding-top: 2px; text-align: right; font-size: 12.8px; font-weight: bold">
+                                            @string.Format("{0:#,##0}", ViewBag.TotalMes)&nbsp;&nbsp;
+                                        </td>
+                                    </tr>
+                                </table>
+                                <br/>
+
+                                <table width="460">
+
+                                    <tr style="border-bottom: 1px solid; border-top: 1px solid; border-left: 1px solid; border-right: 1px solid;">
+                                        <td width="340" style="padding-top: 2px; font-size: 12.8px;">
+                                            &nbsp;&nbsp;<b>Resumo do Fechamento</b>
+                                        </td>
+                                        <td style="padding-top: 2px; text-align: right; font-size: 12.8px;">
+                                            <b>Dia</b>
+                                        </td>
+                                        <td style="padding-top: 2px; text-align: right; font-size: 12.8px;">
+                                            <b>Mês</b>&nbsp;&nbsp;
+                                        </td>
+                                    </tr>
+
+                                    <tr style="border-top: 1px solid; border-left: 1px solid; border-right: 1px solid;">
+                                        <td style="padding-top: 2px; font-size: 12.8px;" width="250">&nbsp;&nbsp;(+) Saldo inicial</td>
+                                        <td style="padding-top: 2px; text-align: right; font-size: 12.8px;">
+                                            @string.Format("{0:#,##0}", ViewBag.TotalSaldoinicialDiaAnteiorContaCaixa)
+                                        </td>
+
+                                        <td style="padding-top: 2px; text-align: right; font-size: 12.8px;">
+                                            @string.Format("{0:#,##0}", ViewBag.TotalSaldoinicialMesAnteriorContaCaixa)&nbsp;&nbsp;
+                                        </td>
+                                    </tr>
+                                    <tr style="border-left: 1px solid; border-right: 1px solid;">
+                                        <td style="padding-top: 2px; font-size: 12.8px;" width="250">&nbsp;&nbsp;(+) Entradas</td>
+                                        <td style="padding-top: 2px; text-align: right; font-size: 12.8px;">
+                                            @string.Format("{0:#,##0}", ViewBag.TotalDia)
+                                        </td>
+
+                                        <td style="padding-top: 2px; text-align: right; font-size: 12.8px;">
+                                            @string.Format("{0:#,##0}", ViewBag.TotalMes)&nbsp;&nbsp;
+                                        </td>
+                                    </tr>
+                                    <tr style="border-left: 1px solid; border-right: 1px solid;">
+                                        <td style="padding-top: 2px; font-size: 12.8px;" width="250">&nbsp;&nbsp;(-) Saídas</td>
+                                        <td style="padding-top: 2px; text-align: right; font-size: 12.8px;">
+                                            @string.Format("{0:#,##0}", ViewBag.TotalDiaSaida)
+                                        </td>
+
+                                        <td style="padding-top: 2px; text-align: right; font-size: 12.8px;">
+                                            @string.Format("{0:#,##0}", ViewBag.TotalMesSaida)&nbsp;&nbsp;
+                                        </td>
+                                    </tr>
+                                    <tr style="border-top: 1px solid;border-bottom: 1px solid; border-left: 1px solid; border-right: 1px solid;">
+                                        <td style="padding-top: 2px; font-size: 12.8px;" width="250"><B>&nbsp;&nbsp;(=) Saldo final</B></td>
+                                        <td style="padding-top: 2px; text-align: right; font-size: 12.8px; font-weight: bold">
+                                            @string.Format("{0:#,##0}", ViewBag.TotalSaldoinicialDiaAnteiorContaCaixa + ViewBag.TotalDia - ViewBag.TotalDiaSaida)
+                                        </td>
+
+                                        <td style="padding-top: 2px; text-align: right; font-size: 12.8px; font-weight: bold">
+                                            @string.Format("{0:#,##0}", ViewBag.TotalSaldoinicialMesAnteriorContaCaixa + ViewBag.TotalMes - ViewBag.TotalMesSaida)&nbsp;&nbsp;
+                                        </td>
+                                    </tr>
+                                </table>
+                                <br/>
+                                <table style="border-bottom: 1px solid; border-top: 1px solid; border-left: 1px solid; border-right: 1px solid;">
+                                    <tr style="border-bottom: 1px solid; ">
+                                        <td style="padding-top: 2px; font-size: 12.8px;">
+                                            &nbsp;&nbsp;<b>Composição do Saldo de Caixa</b>
+                                        </td>
+                                        <td width="15" style="padding-top: 2px;"></td>
+                                        <td style="padding-top: 2px; font-size: 12.8px; text-align: center">
+                                            <b>Dia</b>&nbsp;&nbsp;
+                                        </td>
+                                    </tr>
+                                    
+                                    @foreach (var tipodocumento in (List<FechamentoCaixa>) ViewBag.listaTipoDocumento)
+                                    {
+                                        total = total + tipodocumento.Valor;
+                                        <tr>
+                                            <td style="padding-top: 2px; font-size: 12.8px;" width="236">
+                                                &nbsp;&nbsp;@tipodocumento.TipoDocumentoFechamentoCaixa.CampoNome.Nome
+                                            </td>
+                                            <td width="15"></td>
+                                            <td style="padding-top: 2px; font-size: 12.8px; text-align: right;">
+                                                @string.Format("{0:#,##0}", tipodocumento.Valor)&nbsp;&nbsp;
+                                            </td>
+                                        </tr>
+                                    }
+                                    <tr style="border-bottom: 1px solid; border-top: 1px solid; border-left: 1px solid; border-right: 1px solid;">
+                                        <td style="padding-top: 2px; font-size: 12.8px;" width="236">
+                                            &nbsp;&nbsp;<b>Total</b>
+                                        </td>
+                                        <td width="15"></td>
+                                        <td style="padding-top: 2px; font-size: 12.8px; text-align: right;">
+                                            <b>@string.Format("{0:#,##0}", total)</b>&nbsp;&nbsp;
+                                        </td>
+                                    </tr>
+                                </table>
+
+                                <br/><br/><br/><br/>
+                                <table width="460">
+                                    <tr>
+                                        <td style="text-align: center">
+                                            ___________________________________<br/>
+                                            O Caixa
+                                        </td>
+                                    </tr>
+                                </table>
+                                <br/><br/><br/>
+                                <table width="460">
+                                    <tr>
+                                        <td style="text-align: center">
+                                            ___________________________________<br/>
+                                            Supervisão
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                            <td style="width: 30px;"></td>
+                            <td valign="top">
+                                <table width="400" style="border-bottom: 1px solid; border-top: 1px solid; border-left: 1px solid; border-right: 1px solid;">
+                                    <tr>
+                                        <td width="280" style="font-size: 12.8px;">
+                                            &nbsp;&nbsp;<b>Saídas de Dinheiro (R$)</b>
+                                        </td>
+                                        <td style="font-size: 12.8px; text-align: right">
+                                            <b>Dia</b>
+                                        </td>
+                                        <td style="padding-top: 2px;"></td>
+                                        <td style="font-size: 12.8px; text-align: right">
+                                            <b>Mês</b>&nbsp;&nbsp;
+                                        </td>
+                                    </tr>
+                                </table>
+                                <table width="400" style="border-bottom: 1px solid; border-left: 1px solid; border-right: 1px solid;">
+
+                                    @foreach (var evento in Model.Where(item => item.Area.Codigo == "0002").OrderBy(item => item.Ordem))
+                                    {
+
+                                        <tr>
+                                            <td style="padding-top: 1px; font-size: 12.8px;" width="280">
+                                                <span>&nbsp;&nbsp;</span>@evento.Evento
+                                            </td>
+                                            <td style="padding-top: 1px; font-size: 12.8px; text-align: right" width="50">
+                                                @string.Format("{0:#,##0}", evento.ValorDia)
+                                            </td>
+
+                                            <td style="padding-top: 1px; font-size: 12.8px; text-align: right">
+                                                @string.Format("{0:#,##0}", evento.ValorMes)&nbsp;&nbsp;
+                                            </td>
+                                        </tr>
+                                    }
+                                </table>
+                                <table width="400" style="border-bottom: 1px solid; border-left: 1px solid; border-right: 1px solid;">
+
+                                    <tr>
+                                        <td width="280" style="padding-top: 1px; font-size: 12.8px;">
+                                            &nbsp;&nbsp; <b>Total de saidas</b>
+                                        </td>
+                                        <td width="50" style="padding-top: 2px; font-weight: bold; font-size: 12.8px;text-align: right ">@string.Format("{0:#,##0}", ViewBag.TotalDiaSaida)</td>
+                                        <td style="padding-top: 2px; font-weight: bold; font-size: 12.8px; text-align: right">@string.Format("{0:#,##0}", ViewBag.TotalMesSaida)&nbsp;&nbsp;</td>
+                                    </tr>
+                                </table>
+
+                            </td>
+
+                        </tr>
+                        <tr><td colspan="3" style="height: 20px;"></td></tr>
+                        <tr style="border-top: 1px solid; text-align: right;">
+                            <td colspan="3">
+                                Emissão: @DateTime.Now
+                            </td>
+                        </tr>
+                        </table>
+
+                    </div>
+
+                </div>
+            </div>
+        </td>
+    </tr>
+</table>
+
+
+
+                  

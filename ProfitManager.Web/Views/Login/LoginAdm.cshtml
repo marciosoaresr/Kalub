@@ -1,0 +1,46 @@
+﻿@model HandleErrorInfo
+
+@{
+    ViewBag.Title = "Login Administrador";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+<div id="abrirModalLogin" class="" data-backdrop="static" style="padding-top: 100px;">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="panel-heading2">
+                <h4 class="modal-title"><font color="white">Login Administrador</font></h4>
+            </div>
+            @using (Html.BeginForm("AutenticarAdm", "Login", FormMethod.Post))
+            {
+
+                @Html.Partial("ExceptionNotification")
+
+                <div class="modal-body">
+
+                    <br />
+                    <div class="input-group margin-bottom-sm">
+                        <span class="input-group-addon"><i class="fa fa-envelope-o fa-fw" aria-hidden="true"></i></span>
+                        <input class="form-control" type="text" placeholder="email" id="validate_email" name="email" required>
+                    </div>
+                    <br />
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-key fa-fw" aria-hidden="true"></i></span>
+                        <input class="form-control" type="password" placeholder="senha" id="validate_password" name="senha" required>
+                    </div>
+                    <br />
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" value="Entrar" class="btn btn-primary">Entrar</button>
+                </div>
+
+            }
+        </div>
+    </div>
+</div>
+
+
+
+

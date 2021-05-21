@@ -1,0 +1,391 @@
+﻿@using System.Globalization
+@using ProfitManager.Fabrica.Entidade
+@using ProfitManager.Fabrica.EntidadeAuxiliar
+@using ProfitManager.Fabrica.Enum
+
+@{
+
+    if (ViewBag.Mobile)
+    {
+        Layout = "~/Views/Shared/_LayoutRestritoUserMobile.cshtml";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_LayoutRestritoUser.cshtml";
+    }
+
+    ViewBag.Title = "KALUB - Home";
+    var txt = "";
+
+    if (DateTime.Now.Hour > 12)
+    {
+        txt = "Boa tarde,";
+    }
+    else
+    {
+        txt = "Bom dia,";
+    }
+
+    CultureInfo culture = new CultureInfo("pt-BR");
+    DateTimeFormatInfo dtfi = culture.DateTimeFormat;
+
+    int dia = DateTime.Now.Day;
+    int ano = DateTime.Now.Year;
+    string mes = dtfi.GetMonthName(DateTime.Now.Month);
+    string diasemana = culture.TextInfo.ToTitleCase(dtfi.GetDayName(DateTime.Now.DayOfWeek));
+    string data = diasemana + ", " + dia + " de " + mes + " de " + ano;
+
+    decimal totalEntradasOperacionais = 0;
+    decimal totalEntradasOperacionaisAcumulado = 0;
+    decimal totalSaidasOperacionais = 0;
+    decimal totalSaidasOperacionaisAcumulado = 0;
+    decimal totalEntradasInvestimentos = 0;
+    decimal totalEntradasInvestimentosAcumulado = 0;
+    decimal totalSaidasInvestimentos = 0;
+    decimal totalSaidasInvestimentosAcumulado = 0;
+    decimal totalEntradasFinanciamento = 0;
+    decimal totalEntradasFinanciamentoAcumulado = 0;
+    decimal totalSaidasFinanciamento = 0;
+    decimal totalSaidasFinanciamentoAcumulado = 0;
+
+    decimal totalEntradasOperacionaisMesAnterior = 0;
+    decimal totalSaidasOperacionaisMesAnterior = 0;
+    decimal totalEntradasInvestimentosMesAnterior = 0;
+    decimal totalSaidasInvestimentosMesAnterior = 0;
+    decimal totalEntradasFinanciamentoMesAnterior = 0;
+    decimal totalSaidasFinanciamentoMesAnterior = 0;
+
+    decimal totalEntradasInvestimentosAcumuladoMesAnterior = 0;
+    decimal totalSaidasInvestimentosAcumuladoMesAnterior = 0;
+
+}
+
+
+@if (ViewBag.Mobile)
+{
+    <div class="" style="text-align: center; padding-left: 10px; padding-right: 10px;">
+        <div class="alert alert-danger fade in" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+            Em celulares use para consultar relatórios de resultados.<br/>
+            Para fazer lançamentos somente em computadores.
+        </div>
+    </div>
+    <p class="animated fadeInLeft" style="padding-top: 7%; text-align: center">
+        <span><img src="http://www.kalub.com.br/Images/kalub-logo-mobile.jpg" width="200" /></span><br/>
+        <span style="font-weight: bold; font-size: 14px; color: #fff;">@txt @ViewBag.Empresa!</span><br/>
+    </p>
+    <div class="" style="text-align: center; padding-top: 0%; padding-left: 10px; padding-right: 10px;">
+        <div class="alert alert-primary alert-raised alert-dismissible fade in" role="alert">
+            <span style="color: #fff;">Dinheiro em Caixa</span>
+            <p style="color: #fff;"><span style="font-weight: bold;font-size: 20px;">R$ @string.Format("{0:#,##0}", ViewBag.TotalSaldoinicialDiaAnteiorContaCaixa)</span></p>
+        </div>
+    </div>
+}
+
+@if (!ViewBag.Mobile)
+{
+    <div id="content" style="width: 100%;">
+        <div class="tabs-wrapper text-center">
+            <div class="panel box-shadow-none text-left content-header">
+                <div class="panel-body">
+                    <div class="col-sm-4" style="padding-top: 50px; height: 100px;">
+                        <p class="animated fadeInLeft">
+                            <span style="font-weight: bold; font-size: 16px;">@txt @ViewBag.Empresa!</span><br />
+                            <span>@data</span>
+                        </p>
+                    </div>
+
+                    <div style="text-align: right; padding-top: 43px; padding-left: 86%;">
+                        <table width="190" height="40" border="1px" bordercolor="#fff">
+                            <tr>
+                                <td style="text-align: right; ">
+                                    <span style="padding-right: 20px;">Dinheiro em Caixa</span>
+                                    <p style="padding-top: 10px;"><span style="padding-right: 20px; font-weight: bold;font-size: 20px;">R$ @string.Format("{0:#,##0}", ViewBag.TotalSaldoinicialDiaAnteiorContaCaixa)</span></p>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+
+
+
+@if (ViewBag.TotalSaldoinicialDiaAnteiorContaCaixa == 0 && ViewBag.tipoCadastroProfessor != EnumTipoCadastro.Professor)
+{
+    <div id="modal" class="modal fade hidden-xs" style="padding-top: 40px;">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <table>
+                        <tr>
+                            <td width="150"><img src="../../Images/mascote.jpg"/></td>
+                            <td style="text-align: left; padding-top: 30px; height: 400px;">
+                                <p style="font-size: 30px;">
+                                    Bem vindo ao KALUB!
+                                </p><br />
+
+                                <h4>
+                                    A partir de agora você poderá gerenciar de maneira <strong>profissional</strong> sua gestão financeira e<br/><br/> ganhará tempo utilizando um sistema totalmente automatizado e ágil.
+                                </h4>
+                                <br/>
+                                <h4>
+                                    O KALUB vai aumentar sua <strong>visibilidade</strong> das receitas e gastos, possibilitando uma melhor<br/><br/> tomada de decisões, para que você possa focar no seu negócio e por consequência no <br /><br />seu <strong>crescimento</strong>!</h4>
+                                <br/><Br/>
+                                <h4>Um grande abraço e bons negócios!</h4>
+                                <br/><br/>
+
+                                <button class="btn btn-success btn-lg" type="button" onclick="location.href = '/ContaContabilSaldoInicial'">
+                                    Vamos começar digitando os <b>Saldos Iniciais</b>, clique aqui!
+                                </button>
+                            </td>
+                        </tr>
+                    </table>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+        <script type="text/javascript">$(document).ready(function () { $('#modal').modal('show'); });</script>
+}
+@if (ViewBag.tipoCadastroProfessor == EnumTipoCadastro.Professor && !ViewBag.existeExercicio)
+{
+    <div id="modal" class="modal fade hidden-xs" style="padding-top: 40px;">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <table>
+                        <tr>
+                            <td width="150"><img src="../../Images/mascote.jpg" /></td>
+                            <td style="text-align: left; padding-top: 30px; height: 400px;">
+                                <p style="font-size: 30px;">
+                                    Bem vindo ao KALUB!
+                                </p><br />
+
+                                <h4>
+                                    A partir de agora você poderá gerenciar de maneira <strong>profissional</strong> sua gestão financeira e<br /><br /> ganhará tempo utilizando um sistema totalmente automatizado e ágil.
+                                </h4>
+                                <br />
+                                <h4>
+                                    O KALUB vai aumentar sua <strong>visibilidade</strong> das receitas e gastos, possibilitando uma melhor<br /><br /> tomada de decisões, para que você possa focar no seu negócio e por consequência no <br /><br />seu <strong>crescimento</strong>!
+                                </h4>
+                                <br /><Br />
+                                <h4>Um grande abraço e bons negócios!</h4>
+                                <br /><br />
+
+                                <button class="btn btn-success btn-lg" type="button" onclick="location.href = '/Exercicio'">
+                                    Vamos começar criando os <b>Exercicios</b>, clique aqui!
+                                </button>
+                            </td>
+                        </tr>
+                    </table>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">$(document).ready(function () { $('#modal').modal('show'); });</script>
+}
+
+@if (ViewBag.tipoCadastroProfessor == EnumTipoCadastro.Professor && ViewBag.existeExercicio)
+{
+    <div id="AbreExercicio" class="modal fade hidden-xs" data-backdrop="static" style="padding-top: 40px;">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+
+                <div class="modal-body">
+                    <div style="display: inline-block">
+
+                        <div class="responsive-table" style="max-height: 300px; overflow: auto;">
+                            <h4>Clique no exercicio para realizar os lançamentos.</h4><br />
+                            <table id="datatables-example" class="table table-bordered" style="width: 850px;">
+                                <thead>
+                                    <tr style="color: #fff; background-color: #6A5ACD;">
+                                        <th>
+                                            Titulo
+                                        </th>
+                                        <th>
+                                            Data inicial
+                                        </th>
+                                        <th>
+                                            Data final
+                                        </th>
+                                        <th>
+                                            Categoria
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+
+                                    @foreach (var tipodocumento in (List<Exercicio>)ViewBag.listaExercicio)
+                                    {
+                                            <tr style="height: 20px;" class="linhatabela" onclick="javascript: window.location='../EventoLancamento/VisualizarEventoLancamento?dataLancamentos=@tipodocumento.DataInicio.ToString("MM/dd/yyyy")&idExercicio=@tipodocumento.Id';">
+                                                <td style="width: 150px;align-content: stretch">
+                                                    @tipodocumento.Titulo
+                                                </td>
+                                                <td>
+                                                    @tipodocumento.DataInicio.ToShortDateString()
+                                                </td>
+                                                <td>
+                                                    @tipodocumento.DataFim.ToShortDateString()
+                                                </td>
+                                                <td>
+                                                    @tipodocumento.CategoriaEmpresa.CampoNome.Nome
+                                                </td>
+                                            </tr>
+                                    }
+
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Fechar</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">$(document).ready(function () { $('#AbreExercicio').modal('show'); });</script>
+}
+
+@if (!ViewBag.Mobile)
+{
+    <div class="col-md-12" style="padding-top: 10px;">
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading" style="padding-top: 10px; padding-bottom: 15px;">
+                    <h4>Caixa Disponível - @ViewBag.mesExtAtual</h4>
+                </div>
+                <div class="panel-body" style="padding-left: 100px;">
+                    <table style="width: 80%;">
+                        <tr><th colspan="2" height="10"></th></tr>
+                        <tr>
+                            <td>Saldo Anterior</td>
+                            <td style="text-align: right" width="70">@string.Format("{0:#,##0}", ViewBag.listaSaldoinicialMesAnterior)</td>
+                        </tr>
+                        <tr><th colspan="2" height="10"></th></tr>
+                        <tr style="border-bottom: 1px solid; border-bottom-color: gainsboro;">
+                            <td>&nbsp;&nbsp;&nbsp;&nbsp;(+) Aumentos de saldo</td>
+                            <td style="text-align: right; color: green" width="70">@string.Format("{0:#,##0}", ViewBag.totalAumentoSaldo)</td>
+                        </tr>
+                        <tr><th colspan="2" height="10"></th></tr>
+                        <tr style="border-bottom: 1px solid; border-bottom-color: gainsboro;">
+                            <td>&nbsp;&nbsp;&nbsp;&nbsp;(-) Reduções de saldo</td>
+                            <td style="text-align: right; color: red" width="70">-@string.Format("{0:#,##0}", ViewBag.totalReducaoSaldo)</td>
+                        </tr>
+                        <tr><th colspan="2" height="10"></th></tr>
+                        <tr>
+                            <td>Saldo final</td>
+                            <td style="text-align: right" width="70">@string.Format("{0:#,##0}", ViewBag.saldoFinal)</td>
+                        </tr>
+                        <tr><th colspan="2" height="10"></th></tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- Mês Corrente -->
+        @foreach (var iGrupo in ViewBag.entradasOperacionais)
+        {
+            totalEntradasOperacionais = totalEntradasOperacionais + iGrupo.Saldo;
+            totalEntradasOperacionaisAcumulado = totalEntradasOperacionaisAcumulado + iGrupo.SaldoAcumulado;
+        }
+        @foreach (var iGrupo in ViewBag.saidasOperacionais)
+        {
+            totalSaidasOperacionais = totalSaidasOperacionais + iGrupo.Saldo;
+            totalSaidasOperacionaisAcumulado = totalSaidasOperacionaisAcumulado + iGrupo.SaldoAcumulado;
+        }
+        @foreach (var iGrupo in ViewBag.entradasInvestimentos)
+        {
+            totalEntradasInvestimentos = totalEntradasInvestimentos + iGrupo.Saldo;
+            totalEntradasInvestimentosAcumulado = totalEntradasInvestimentosAcumulado + iGrupo.SaldoAcumulado;
+        }
+        @foreach (var iGrupo in ViewBag.saidasInvestimentos)
+        {
+            totalSaidasInvestimentos = totalSaidasInvestimentos + iGrupo.Saldo;
+            totalSaidasInvestimentosAcumulado = totalSaidasInvestimentosAcumulado + iGrupo.SaldoAcumulado;
+        }
+        @foreach (var iGrupo in ViewBag.entradasFinanciamento)
+        {
+            totalEntradasFinanciamento = totalEntradasFinanciamento + iGrupo.Saldo;
+            totalEntradasFinanciamentoAcumulado = +totalEntradasFinanciamentoAcumulado + iGrupo.SaldoAcumulado;
+        }
+        @foreach (var iGrupo in ViewBag.saidasFinanciamento)
+        {
+            totalSaidasFinanciamento = totalSaidasFinanciamento + iGrupo.Saldo;
+            totalSaidasFinanciamentoAcumulado = totalSaidasFinanciamentoAcumulado + iGrupo.SaldoAcumulado;
+        }
+
+        <!-- Mês Anterior -->
+        @foreach (var iGrupoMesAnterior in ViewBag.entradasOperacionaisMesAnterior)
+        {
+            totalEntradasOperacionaisMesAnterior = totalEntradasOperacionaisMesAnterior + iGrupoMesAnterior.Saldo;
+        }
+        @foreach (var iGrupoMesAnterior in ViewBag.saidasOperacionaisMesAnterior)
+        {
+            totalSaidasOperacionaisMesAnterior = totalSaidasOperacionaisMesAnterior + iGrupoMesAnterior.Saldo;
+        }
+        @foreach (var iGrupoMesAnterior in ViewBag.entradasInvestimentosMesAnterior)
+        {
+            totalEntradasInvestimentosMesAnterior = totalEntradasInvestimentosMesAnterior + iGrupoMesAnterior.Saldo;
+            totalEntradasInvestimentosAcumuladoMesAnterior = totalEntradasInvestimentosAcumuladoMesAnterior + iGrupoMesAnterior.SaldoAcumulado;
+
+        }
+        @foreach (var iGrupoMesAnterior in ViewBag.saidasInvestimentosMesAnterior)
+        {
+            totalSaidasInvestimentosMesAnterior = totalSaidasInvestimentosMesAnterior + iGrupoMesAnterior.Saldo;
+            totalSaidasInvestimentosAcumuladoMesAnterior = totalSaidasInvestimentosAcumuladoMesAnterior + iGrupoMesAnterior.SaldoAcumulado;
+
+        }
+        @foreach (var iGrupoMesAnterior in ViewBag.entradasFinanciamentoMesAnterior)
+        {
+            totalEntradasFinanciamentoMesAnterior = totalEntradasFinanciamentoMesAnterior + iGrupoMesAnterior.Saldo;
+        }
+        @foreach (var iGrupoMesAnterior in ViewBag.saidasFinanciamentoMesAnterior)
+        {
+            totalSaidasFinanciamentoMesAnterior = totalSaidasFinanciamentoMesAnterior + iGrupoMesAnterior.Saldo;
+        }
+        <div class="col-md-6">
+            <div class="panel" style="height: 350px;">
+                <div class="panel-heading panel-heading-white text-center" style="padding-top: 10px; padding-bottom: 15px;">
+                    <h4><span class="fa fa-pie-chart"></span> Fluxos de Caixa - @ViewBag.mesExtAtual</h4>
+                </div>
+                <div class="">
+                    <div id="bar-chart" style="padding-bottom: 210px;padding-left: 20px;width: 96%"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    Morris.Bar({
+        element: 'bar-chart',
+        data: [
+          { x: 'Mês Anterior', y: "@string.Format("{0:#,##0}", totalEntradasOperacionaisMesAnterior - totalSaidasOperacionaisMesAnterior)", z: "@string.Format("{0:#,##0}", totalEntradasInvestimentosMesAnterior - totalSaidasInvestimentosMesAnterior)", a: "@string.Format("{0:#,##0}", totalEntradasFinanciamentoMesAnterior - totalSaidasFinanciamentoMesAnterior)" },
+          { x: '@ViewBag.mesExtAtual', y: "@string.Format("{0:#,##0}", totalEntradasOperacionais - totalSaidasOperacionais)", z: "@string.Format("{0:#,##0}", totalEntradasInvestimentos - totalSaidasInvestimentos)", a: "@string.Format("{0:#,##0}", totalEntradasFinanciamento - totalSaidasFinanciamento)" },
+          { x: 'Acum.Ano', y: "@string.Format("{0:#,##0}", totalEntradasOperacionaisAcumulado - totalSaidasOperacionaisAcumulado)",z: "@string.Format("{0:#,##0}", totalEntradasInvestimentosAcumulado - totalSaidasInvestimentosAcumulado)",a: "@string.Format("{0:#,##0}", totalEntradasFinanciamentoAcumulado - totalSaidasFinanciamentoAcumulado)" }
+    ],
+        xkey: 'x',
+        ykeys: ['y','z','a'],
+        labels: ['Saldo de caixa operacional', 'Saldo de caixa de investimentos', 'Saldo de caixa de financiamentos'],
+        barColors: ['#44a9df', '#73AD21','purple']
+    }).on('click', function (i, row) {
+        console.log(i, row);
+    });
+
+
+
+    </script>
+}

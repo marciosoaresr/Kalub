@@ -1,0 +1,38 @@
+﻿@model ProfitManager.Fabrica.Entidade.Relatorio
+
+<div id="AbreCadastrarEditarRelatorio" class="modal fade" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="panel-heading2">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Relatório</h4>
+            </div>
+
+           @using (Html.BeginForm("CadastrarEditarRelatorio", "Relatorio", FormMethod.Post))
+            {
+                <div class="modal-body">
+                    <div style="display: inline-block">
+                        @Html.AntiForgeryToken()
+                        @Html.ValidationSummary(true)
+
+                        @Html.HiddenFor(x => x.Id)
+                        @Html.HiddenFor(x => x.DataHoraCriacao)
+
+                        <div class="col-sm-5" style="padding-top:2px;">@Html.LabelFor(x => x.Codigo):</div>
+                        <div class="col-sm-6" style="padding-top:2px;">@Html.TextBoxFor(x => x.Codigo)</div>
+                        @Html.ValidationMessageFor(x => x.Codigo)
+                        <br /><br />
+                        <div class="col-sm-5" style="padding-top:2px;">@Html.LabelFor(x => x.Nome):</div>
+                        <div class="col-sm-6" style="padding-top:2px;">@Html.TextBoxFor(x => x.Nome)</div>
+                        @Html.ValidationMessageFor(x => x.Nome)
+                    </div>
+
+                </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+                        <button type="submit" value="Salvar" class="btn btn-primary">Salvar</button>
+                    </div>
+            }
+        </div>
+    </div>
+</div>

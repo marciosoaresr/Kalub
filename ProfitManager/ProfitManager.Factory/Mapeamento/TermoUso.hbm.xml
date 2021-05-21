@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+  <class name="ProfitManager.Fabrica.Entidade.TermoUso, ProfitManager.Fabrica" table="TermoUso" lazy="true">
+    <cache usage="read-write"/>
+    <id name="Id">
+      <column name="Id"/>
+      <generator class="native">
+        <param name="sequence">TermoUso_</param>
+      </generator>
+    </id>
+    <property name="DataHoraCriacao" column= "DataHoraCriacao" type="Timestamp"/>
+    <property name="DataHoraAlteracao" column= "DataHoraAlteracao" type="Timestamp"/>
+
+    <property name="Texto" column= "Texto" type="StringClob"/>
+
+
+  </class>
+</hibernate-mapping>

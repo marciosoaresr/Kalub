@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+  <class name="ProfitManager.Fabrica.Entidade.Evento, ProfitManager.Fabrica" table="Evento" lazy="true">
+    <cache usage="read-write"/>
+    <id name="Id">
+      <column name="Id"/>
+      <generator class="native">
+        <param name="sequence">Evento_</param>
+      </generator>
+    </id>
+    <property name="DataHoraCriacao" column= "DataHoraCriacao" type="Timestamp"/>
+    <property name="DataHoraAlteracao" column= "DataHoraAlteracao" type="Timestamp"/>
+
+    <property name="Codigo" column= "Codigo" type="String" />
+    <many-to-one name="Area" column="Area" class="ProfitManager.Fabrica.Entidade.Area, ProfitManager.Fabrica" fetch="join" />
+    <many-to-one name="CampoNome" column="CampoNome" class="ProfitManager.Fabrica.Entidade.Campo, ProfitManager.Fabrica" fetch="join" />
+    <many-to-one name="CampoHelp" column="CampoHelp" class="ProfitManager.Fabrica.Entidade.Campo, ProfitManager.Fabrica" fetch="join" />
+    <property name="TipoEventoLancamento" column= "TipoEventoLancamento" type="NHibernate.Type.EnumCharType`1[[ProfitManager.Fabrica.Enum.EnumTipoEventoLancamento, ProfitManager.Fabrica]], NHibernate" length="1"/>
+    <property name="RestringeCategoriaEmpresa" column= "RestringeCategoriaEmpresa" type="bool" />
+    <property name="MaisUsado" column= "MaisUsado" type="NHibernate.Type.EnumCharType`1[[ProfitManager.Fabrica.Enum.EnumMaisUsado, ProfitManager.Fabrica]], NHibernate" length="1" />
+    <property name="TipoDFC" column= "TipoDFC" type="NHibernate.Type.EnumCharType`1[[ProfitManager.Fabrica.Enum.EnumTipoDFC, ProfitManager.Fabrica]], NHibernate" length="1"/>
+    <property name="ApuracaoResultado" column= "ApuracaoResultado" type="NHibernate.Type.EnumCharType`1[[ProfitManager.Fabrica.Enum.EnumSimNao, ProfitManager.Fabrica]], NHibernate" length="1" />
+    <property name="Help" column= "Help" type="String" length="3000"/>
+    
+    <!--Lista de Evento Operação-->
+    <bag name="_ListEventoOperacao" inverse="true" lazy="true" order-by="Id" cascade="none" access="field" >
+      <key column="Evento" />
+      <one-to-many class="ProfitManager.Fabrica.Entidade.EventoOperacao, ProfitManager.Fabrica" />
+    </bag>
+    
+    <!--Lista de Evento Categoria Empresa-->
+    <bag name="_ListEventoCategoriaEmpresa" inverse="true" lazy="true" order-by="Id" cascade="none" access="field" >
+      <key column="Evento" />
+      <one-to-many class="ProfitManager.Fabrica.Entidade.EventoCategoriaEmpresa, ProfitManager.Fabrica" />
+    </bag>
+    
+  </class>
+</hibernate-mapping>

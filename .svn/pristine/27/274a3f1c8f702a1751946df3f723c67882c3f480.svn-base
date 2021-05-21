@@ -1,0 +1,11 @@
+﻿@{
+    ViewBag.Title = "Principal";
+    Layout = "~/Views/Shared/_LayoutRestrito.cshtml";
+}
+
+@*@Html.ActionLink("Dados da empresa", "Index", "Empresa")
+@Html.ActionLink("Plano de contas", "Index", "PlanoContas")
+@Html.ActionLink("Eventos", "Index", "Eventos")*@
+
+@*<img src="../../Images/charticon.png" />*@
+

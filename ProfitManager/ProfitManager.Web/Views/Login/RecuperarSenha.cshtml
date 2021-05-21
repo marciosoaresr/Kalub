@@ -1,0 +1,100 @@
+﻿@model HandleErrorInfo
+@{
+    ViewBag.Title = "KALUB - Recuperar Senha";
+    Layout = "~/Views/Shared/_LayoutSemCabecalho.cshtml";
+}
+<style>
+    body {
+        background: #dce2e5;
+    }
+</style>
+<div style="padding-top: 50px; text-align: center; color: #2c4970">
+    <a href="/Home"><img src="../../Images/kalub-logo-home.png" alt="Logo KALUB" style="max-width: 170px" class="CToWUd"></a>
+</div>
+<div style="padding-top: 20px; text-align: center;color: #2c4970">
+    <font size="3">Recuperar senha</font>
+</div>
+<br/>
+<div align="center">
+    <div class="panel " style="padding-bottom: 20px; width: 350px;">
+        <div class="panel-body">
+            @using (Html.BeginForm("RecuperarSenha", "Login", FormMethod.Post, new { id = "formRecuperarSenha", name = "formRecuperarSenha" }))
+            {
+
+                @Html.Partial("ExceptionNotification")
+
+                <div class="modal-body" style="text-align: left">
+                    <br/>
+                    <h4>Informe seu email</h4><br/><br/>
+                    <div class="input-group margin-bottom-sm">
+                        <span class="input-group-addon"><i class="fa fa-envelope-o fa-fw" aria-hidden="true"></i></span>
+                        <input class="form-control" type="text" placeholder="email" id="validate_email" name="email">
+                    </div>
+                    <br/>
+                </div>
+                if (ViewBag.msg != null)
+                {
+                    <div class="alert alert-success alert-raised alert-dismissible fade in" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+                        @ViewBag.msg
+                    </div><br/>
+                }
+                if (ViewBag.erro != null)
+                {
+                    <div class="alert alert-danger alert-raised alert-dismissible fade in" role="alert">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+                        @ViewBag.erro
+                    </div><br />
+                }                
+                <div style="text-align: center">
+                    <button type="submit" value="Entrar" onclick="return validaForm()" class="button button-rounded button-caution button-normal"> ENVIAR </button>
+                </div>
+                <br/>
+            }
+
+            <div style="text-align: center; color: #2c4970">
+                <font size="2">
+                    @Html.ActionLink("Voltar", "Login", "Login", new { @style = "color: #2c4970" })
+                </font>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+
+
+        });
+
+        function validaForm() {
+            d = document.formRecuperarSenha;
+            usuario = d.email.value.substring(0, d.email.value.indexOf('@@'));
+            dominio = d.email.value.substring(d.email.value.indexOf('@@') + 1, d.email.value.length);
+            if ((usuario.length >= 1) &&
+                (dominio.length >= 3) &&
+                (usuario.search('@@') == -1) &&
+                (dominio.search('@@') == -1) &&
+                (usuario.search(" ") == -1) &&
+                (dominio.search(" ") == -1) &&
+                (dominio.search(".") != -1) &&
+                (dominio.indexOf(".") >= 1) &&
+                (dominio.lastIndexOf(".") < dominio.length - 1)) {
+                //document.getElementById("msgemail").innerHTML = "E-mail válido";
+                //alert("E-mail valido");
+            }
+            else {
+                $.simplyToast('danger', 'Por favor, informe um E-MAIL válido!');
+                return false;
+            }
+        };
+
+
+
+
+    </script>
+
+}

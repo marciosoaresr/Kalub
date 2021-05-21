@@ -1,0 +1,108 @@
+﻿@using System
+@using ProfitManager.Fabrica.Enum
+@using ProfitManager.Web.RepositorioWeb
+@model ProfitManager.Fabrica.Entidade.EventoLancamento
+
+@{
+    ViewBag.Title = "KALUB - Fechamento Caixa";
+    Layout = "~/Views/Shared/_LayoutRestritoUser.cshtml";
+
+    DateTime dataLancamentoEventoOperacao = RepositorioWebUsuario.GetDateQueryCookie();
+
+    if (dataLancamentoEventoOperacao == Convert.ToDateTime("01/01/0001"))
+    {
+        dataLancamentoEventoOperacao = DateTime.Now;
+    }
+
+}
+
+<style type="text/css">
+    .ui-datepicker-calendar .ui-state-active {
+        background: #2c4970;
+        -webkit-box-shadow: inset 0px 0px 10px 0px rgba(0, 0, 0, .1);
+        -moz-box-shadow: inset 0px 0px 10px 0px rgba(0, 0, 0, .1);
+        box-shadow: inset 0px 0px 10px 0px rgba(0, 0, 0, .1);
+        color: #e0e0e0;
+        text-shadow: 0px 1px 0px #4d7a85;
+        filter: dropshadow(color=#4d7a85, offx=0, offy=1);
+        border: 1px solid #55838f;
+        position: relative;
+        margin: -1px;
+    }
+.ui-datepicker select.ui-datepicker-month,
+.ui-datepicker select.ui-datepicker-year {
+        background: #2c4970;
+        color: #fff;
+	    width: 45%;
+}
+</style>
+
+<!-- inicio: conteudo -->
+<div id="content">
+    <div class="tabs-wrapper text-center">
+        <div class="panel box-shadow-none text-left content-header">
+            <div class="panel-body">
+                <div class="col-sm-4" style="padding-top: 55px;">
+                    <p class="animated fadeInLeft">
+                        <a href="/PrincipalUser" style="font-size: 1.0em !important; color: #fff;">Home</a> <span class="fa-angle-right fa"></span> Fechamento Caixa
+                    </p>
+
+                </div>
+                <div style="text-align: right; padding-top: 38px; padding-left: 86%;">
+                    <table width="190" height="40" border="1px" bordercolor="#fff">
+                        <tr>
+                            <td style="text-align: right; ">
+                                <span style="padding-right: 20px;">Dinheiro em Caixa</span>
+                                <p style="padding-top: 10px;"><span style="padding-right: 20px; font-weight: bold;font-size: 20px;">R$ @string.Format("{0:#,##0}", ViewBag.TotalSaldoinicialDiaAnteiorContaCaixa)</span></p>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- fim: conteudo -->
+
+<br/><Br/>
+<div align="center">
+    <div class="panel " style="padding-bottom: 20px; width: 350px;">
+        <div class="panel-body">
+            <div class="panel-heading2" >
+                <h4 class="modal-title"><font color="white"><b>Fechamento Caixa</b></font></h4>
+            </div>
+            <br/>
+            @using (Html.BeginForm("SetDataFechamentoCaixa", "EventoLancamento", FormMethod.Post, new { target = "_blank" }))
+            {
+                <div style="margin-bottom: 15px">
+                    <h4><span class="fa-calendar fa "></span>&nbsp;&nbsp; Informe a data para fechamento</h4>
+                </div>
+                <div style="width: 50%">
+                    <input id="datepicker" name="Data" type="text" size="20" class="form-control" style="font-size: 25px; text-align: center; color: #2c4970;" value="@dataLancamentoEventoOperacao.ToShortDateString()">
+                </div>
+                <br/><br/>
+                <button class="btn btn-primary btn-lg" id="Buscar" name="Buscar">
+                    Imprimir Fechamento
+                </button>
+            }
+        </div>
+    </div>
+</div>
+
+
+@section Scripts{
+<script>
+        $(document).ready(function () {
+
+            $("#datepicker").datepicker({
+                changeMonth: true,
+                changeYear: true,
+                showButtonPanel: true,
+                dateFormat: 'dd/mm/yy',
+                minDate: new Date(2016, 1 - 1, 1)
+            });
+
+
+        });
+</script>
+}

@@ -1,0 +1,64 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Configuration;
+using System.Linq;
+using System.Text.RegularExpressions;
+using System.Threading;
+using System.Web.Mvc;
+using System.Web.WebPages;
+using Kendo.Mvc.Extensions;
+using ProfitManager.Fabrica.Entidade;
+using ProfitManager.Fabrica.Enum;
+using ProfitManager.Negocio.Implementacao;
+using ProfitManager.Web.RepositorioWeb;
+using ProfitManager.Web.ViewModels;
+
+namespace ProfitManager.Web.Controllers.AcessoRestrito
+{
+    public class BalancoPatrimonialController : Controller
+    {
+
+        public ActionResult Index()
+        {
+            EmpresaUsuario empresaUsuario =
+                FuncoesEmpresaUsuario.Load(RepositorioWebUsuario.VerificaSeOUsuarioEstaLogado(true).Id) ??
+                new EmpresaUsuario();
+
+            ViewBag.Empresa = empresaUsuario.Empresa.NomeFantasia;
+
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult SetDataBalancoPatrimonial(BalancoPatrimonial balanco)
+        {
+            return RedirectToAction("VisualizarBalancoPatrimonial", new { dataAtual = balanco.DataAtual, dataInicial = balanco.DataInicial });
+        }
+
+       
+        public ActionResult VisualizarBalancoPatrimonial(DateTime dataAtual, DateTime dataInicial)
+        {
+            EmpresaUsuario empresaUsuario =
+                FuncoesEmpresaUsuario.Load(RepositorioWebUsuario.VerificaSeOUsuarioEstaLogado(true).Id);
+
+            if (dataInicial == Convert.ToDateTime("01/01/0001"))
+            {
+                dataInicial = dataAtual;
+            }
+
+            List<BalancoPatrimonial> listBalancoPatrimonial = FuncoesBalancoPatrimonial.CarregaBalancoPatrimonial(empresaUsuario.Empresa.Id, dataInicial);
+
+            ViewBag.ListaBalancoPatrimonial = listBalancoPatrimonial;
+            
+            ViewBag.mesAtual = dataInicial.Month + "/" + dataInicial.Year;
+            DateTime dataMesAnterior = dataInicial;
+            dataMesAnterior = dataMesAnterior.AddMonths(-1);
+            dataMesAnterior = new DateTime(dataMesAnterior.Year, dataMesAnterior.Month, DateTime.DaysInMonth(dataMesAnterior.Year, dataMesAnterior.Month));
+            ViewBag.mesAnterior = dataMesAnterior.Month + "/" + dataMesAnterior.Year;
+            ViewBag.Empresa = empresaUsuario.Empresa.NomeFantasia;
+
+            return View();
+        }
+
+    }
+}

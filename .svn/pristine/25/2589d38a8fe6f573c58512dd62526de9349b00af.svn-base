@@ -1,0 +1,124 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+
+    @Styles.Render("~/css")
+    @Styles.Render("~/css/plugins")
+    @Styles.Render("~/fonts")
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    @Scripts.Render("~/Scripts")
+    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+    @Scripts.Render("~/Scripts/plugins")
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
+    <script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('.dropdown-toggle').dropdown();
+            $.datepicker.regional['pt-BR'] = {
+                closeText: 'OK',
+                prevText: '&lt;Anterior',
+                nextText: 'Próximo&gt;',
+                currentText: 'Hoje',
+                monthNamesShort: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+                'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+                dayNamesMin: ['Do', 'Se', 'Te', 'Qu', 'Qu', 'Se', 'Sa'],
+                dateFormat: 'mm/yy',
+                firstDay: 0,
+                isRTL: false,
+                showMonthAfterYear: false,
+                yearSuffix: ''
+            };
+
+            $.datepicker.setDefaults($.datepicker.regional['pt-BR']);
+
+        });
+    </script>
+
+</head>
+<body>
+    <div id="wrapper" style="height: 100%;">
+        <!-- inicio: Cabeçalho -->
+        <nav class="navbar navbar-default header navbar-fixed-top">
+            <div class="col-md-12 nav-wrapper">
+                <div class="navbar-header" style="padding-top:10px; padding-left: 20px;width:100%;">
+                    <ul class="nav navbar-nav">
+                        <img src="../../Images/kalub-logo-home.png" width="200" />
+                    </ul>
+
+                    <ul class="nav navbar-nav" style="padding-top: 20px; padding-left: 250px;">
+                        <span class="fa-dollar fa"></span> @Html.ActionLink("Saldos Iniciais", "Index", "Empresa", null, new { @class = "navbar-brand-menu" })
+                        <span class="fa-money fa"></span> @Html.ActionLink("Lançamentos", "Index", "EventoLancamento", null, new { @class = "navbar-brand-menu" })
+                    </ul>
+
+                    <ul class="nav navbar-nav" style="padding-top:20px;padding-left:0px;">
+                        <li>
+                            <a href="#" class="dropdown-toggle navbar-brand-menu" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><font size="2"><span class="fa-file-text fa"></span> Relatórios</font><span class="caret"></span></a>
+                            <ul class="dropdown-menu" role="menu">
+                                <script language="JavaScript">
+                                    function getCookie(nome) {
+                                        if (document.cookie.length > 0) {
+                                            c_start = document.cookie.indexOf(nome + "=");
+                                            if (c_start != -1) {
+                                                c_start = c_start + nome.length + 1;
+                                                c_end = document.cookie.indexOf("&", c_start);
+                                                if (c_end == -1)
+                                                    c_end = document.cookie.length;
+                                                return unescape(document.cookie.substring(c_start, c_end));
+                                            }
+                                        }
+                                        return null;
+                                    };
+
+                                    var login = getCookie('&Login');
+                                    if (login == 'kalub@kalub.com.br') {
+                                        document.write('<li>@Html.ActionLink("Balancete", "Index", "Balancete")</li>');
+                                    }
+                                </script>
+                                <li>@Html.ActionLink("Extrato de Conta", "Index", "ExtratoConta")</li>
+                                <li>@Html.ActionLink("Demonstração do Resultado (DRE)", "GerarDRE", "GrupoDRE")</li>
+                                <li>@Html.ActionLink("Demonstração do Fluxo de Caixa (DFC)", "Index", "DemonstracaoFluxoCaixa")</li>
+                                <li>@Html.ActionLink("Balanço Patrimonial", "Index", "BalancoPatrimonial")</li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#" class="dropdown-toggle navbar-brand-menu" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><font size="2"><span class="fa-list-alt fa"></span> Cadastros gerais</font><span class="caret"></span></a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li>@Html.ActionLink("Empresa", "CadastarEditarEmpresa", "Empresa")</li>
+                                <li>@Html.ActionLink("Usuario", "CadastarEditarEmpresaUsuario", "Empresa")</li>
+                            </ul>
+                        </li>
+
+                    </ul>
+
+                    <ul class="nav navbar-nav navbar-right user-nav" style="padding-top:20px;">
+                        <span class="fa fa-power-off"></span> @Html.ActionLink("Sair", "Logout", "Login", null, new { @class = "navbar-brand-menu" })
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <!-- fim: Cabeçalho -->
+
+
+
+
+
+        <section id="content" style="height: 100%">
+
+            <section id="contentrigth" style="width: 100%;position: absolute;top: 0px;">
+                @RenderBody()
+            </section>
+
+        </section>
+
+
+
+        @RenderSection("scripts", required: false)
+
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,116 @@
+﻿@using System
+@using System.Collections.Generic
+@using System.Web.Mvc;
+@using ProfitManager.Fabrica.Entidade
+@using ProfitManager.Fabrica.Enum
+@model ProfitManager.Fabrica.Entidade.Exercicio
+
+<style type="text/css">
+    .ui-datepicker-calendar .ui-state-active {
+        background: #2c4970;
+        -webkit-box-shadow: inset 0px 0px 10px 0px rgba(0, 0, 0, .1);
+        -moz-box-shadow: inset 0px 0px 10px 0px rgba(0, 0, 0, .1);
+        box-shadow: inset 0px 0px 10px 0px rgba(0, 0, 0, .1);
+        color: #e0e0e0;
+        text-shadow: 0px 1px 0px #4d7a85;
+        filter: dropshadow(color=#4d7a85, offx=0, offy=1);
+        border: 1px solid #55838f;
+        position: relative;
+        margin: -1px;
+    }
+
+    .ui-datepicker select.ui-datepicker-month,
+    .ui-datepicker select.ui-datepicker-year {
+        background: #2c4970;
+        color: #fff;
+        width: 45%;
+    }
+</style>
+
+<div id="AbreCadastrarEditarExercicio" class="modal fade" data-backdrop="static">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="panel-heading2" style="padding-bottom: 15px;">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title"><b>Compartilhar Exercício</b></h4>
+            </div>
+
+            @using (Html.BeginForm("CompartilharExercicioItem", "Exercicio", FormMethod.Post, new { id = "formCompartilharExercicioItem" }))
+            {
+                <div class="modal-body">
+                    <div style="display: inline-block">
+                        @Html.AntiForgeryToken()
+                        @Html.ValidationSummary(true)
+
+                        @Html.HiddenFor(x => x.Id)
+                        @Html.HiddenFor(x => x.DataHoraCriacao)
+
+                        <table style="width: 850px; ">
+                            <tr>
+                                <td>
+                                    &nbsp;&nbsp;&nbsp;<b>Titulo:</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; @Html.TextBoxFor(x => x.Titulo, new {@style = "width:270px;",@readonly="true"})
+                                </td>
+                                <td>
+                                    <b>Descrição:</b> @Html.TextBoxFor(x => x.Descricao, new {@style = "width:270px;", @readonly = "true" })
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    &nbsp;&nbsp;&nbsp;<b>Data inicial:</b>&nbsp;@Html.TextBoxFor(x => x.DataInicio, new { @style = "width:72px;",@name = "DataInicio", @readonly = "true" })
+                                    
+                                </td>
+                                <td>
+                                    <b>Data final:</b>&nbsp;&nbsp;@Html.TextBoxFor(x => x.DataFim, new { @style = "width:72px;", @name = "DataFim", @readonly = "true" })
+                                </td>
+                            </tr>
+                        </table>
+                        <br/>
+                        <table style="width: 850px;">
+                            <tr>
+                                <td>
+                                    <div id="operacoes" class="col-sm-12">
+                                        @Html.Partial("ExercicioOperacao", Model)
+                                    </div>
+
+                                </td>
+                            </tr>
+                        </table>
+
+                            <br /><br />
+
+                        </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+                        <input type="submit" value="Compartilhar" name="enviar" id="compartilharexercicio" class="btn btn-success">
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+</div>
+
+
+<div id="abrirModalProcessando" class="modal fade modal-v2" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body" align=center>
+                <img src="../../Images/loading_2x.gif" width="300">
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    $(document).ready(function() {
+
+
+        $("#compartilharexercicio").click(function () {
+            $('#abrirModalProcessando').modal('show');
+        });
+
+    });
+
+
+</script>

@@ -1,0 +1,153 @@
+﻿@model ProfitManager.Fabrica.Entidade.ContaContabil
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutRestritoUser.cshtml";
+
+    int ano = DateTime.Now.Year;
+    int mes = DateTime.Now.Month;
+
+}
+
+<style type="text/css">
+    .ui-datepicker-calendar {
+        display: none;
+    }
+.ui-datepicker select.ui-datepicker-month,
+.ui-datepicker select.ui-datepicker-year {
+        background: #2c4970;
+        color: #fff;
+	    width: 45%;
+}
+</style>
+
+<div id="content">
+    <div class="tabs-wrapper text-center">
+        <div class="panel box-shadow-none text-left content-header">
+            <div class="panel-body">
+                <div class="col-sm-4" style="padding-top: 35px;">
+                    <p class="animated fadeInLeft">
+                        <a href="/PrincipalUser" style="font-size: 1.0em !important; color: #fff;">Home</a> <span class="fa-angle-right fa"></span> Relatórios/Extrato de Conta
+                    </p>
+                </div>
+                <div class="col-sm-4" style="text-align: left; padding-top: 42px; padding-left: 100px;">
+                    Empresa: @ViewBag.Empresa
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="abrirModalLogin" class="" data-backdrop="static" style="padding-top: 20px;">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="panel-heading2">
+                <h4 class="modal-title"><font color="white">Extrato de Conta</font></h4>
+            </div>
+            @using (Html.BeginForm("SetDataBalancete", "ExtratoConta", FormMethod.Post, new { target = "_blank" }))
+            {
+
+                @Html.Partial("ExceptionNotification")
+
+                <div class="modal-body">
+
+                    <div style="margin-bottom: 15px">
+                        <span class="fa-calendar fa fa-2x"></span>&nbsp;&nbsp; <span style="font-size: 18px;">Informe mês/ano</span>
+                    </div>
+
+                    <div class="form-animate-radio">
+                        <label class="radio">
+                            <input id="radio1" value="01/@mes/@ano" type="radio" name="DataInicial" onclick="ResetFormValues(); document.getElementById('exibeoutromes').style.display = 'none';"/>
+                            <span class="outer">
+                                <span class="inner"></span>
+                            </span> Mês Atual (@mes/@ano)
+                        </label>
+                        <label class="radio">
+                            <input id="radio2" type="radio" value="" name="DataInicial" onclick="javascript: exibe('exibeoutromes');"/>
+                            <span class="outer">
+                                <span class="inner"></span>
+                            </span> Outro Mês
+                        </label>
+                    </div>
+
+                    <div class="form-group" style="display: none;" id="exibeoutromes" name="exibeoutromes">
+                        <select name="DataAtual" style="width: 270px;" >
+                            <option value="">Selecione mês e ano</option>
+                            <option value="01/01/@ano">Janeiro/@ano</option>
+                            <option value="01/02/@ano">Fevereiro/@ano</option>
+                            <option value="01/03/@ano">Março/@ano</option>
+                            <option value="01/04/@ano">Abril/@ano</option>
+                            <option value="01/05/@ano">Maio/@ano</option>
+                            <option value="01/06/@ano">Junho/@ano</option>
+                            <option value="01/07/@ano">Julho/@ano</option>
+                            <option value="01/08/@ano">Agosto/@ano</option>
+                            <option value="01/09/@ano">Setembro/@ano</option>
+                            <option value="01/10/@ano">Outubro/@ano</option>
+                            <option value="01/11/@ano">Novembro/@ano</option>
+                            <option value="01/12/@ano">Dezembro/@ano</option>
+                        </select>
+                    </div>
+
+                    <div style="margin-bottom: 15px; padding-top: 10px;">
+                        @Html.DropDownList("IdConta", (IEnumerable<SelectListItem>)ViewBag.ListaContaContabil, "Selecione uma conta", new { @style = "width:270px;", required = "required" })
+                    </div>
+
+
+                </div>
+                <div class="modal-footer">
+
+                    <button type="submit" value="Entrar" id="Entrar" class="btn btn-success">Gerar Extrato</button>
+
+                </div>
+
+            }
+        </div>
+    </div>
+</div>
+
+
+@section Scripts{
+<script>
+        $(document).ready(function () {
+
+            $("#datepicker").datepicker({
+                changeMonth: true,
+                changeYear: true,
+                showButtonPanel: true,
+                dateFormat: 'mm/yy',
+                onClose: function (dateText, inst) {
+                    var month = $("#ui-datepicker-div .ui-datepicker-month :selected").val();
+                    var year = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
+                    $(this).datepicker('setDate', new Date(year, month, 1));
+                }
+            });
+
+            $(".select2-A").select2({
+                //placeholder: "Selecione mês e ano",
+                allowClear: true
+            });
+
+        });
+
+        function exibe(id) {
+            if (document.getElementById(id).style.display == "none") {
+                document.getElementById(id).style.display = "inline";
+            }
+            else {
+                document.getElementById(id).style.display = "none";
+            }
+        }
+
+        function ResetFormValues() {
+            $("select").each(function () {
+                $('DataAtual').val("");
+                $('DataAtual').value = "";
+            });
+        }
+
+
+</script>
+
+}

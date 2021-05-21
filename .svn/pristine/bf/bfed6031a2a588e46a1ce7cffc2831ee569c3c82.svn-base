@@ -1,0 +1,87 @@
+﻿@model HandleErrorInfo
+@{
+    ViewBag.Title = "KALUB - Login";
+    Layout = "~/Views/Shared/_LayoutSemCabecalho.cshtml";
+}
+<style>
+    body {
+        background: #dce2e5;
+    }
+</style>
+<div style="padding-top: 50px; text-align: center; color: #2c4970">
+    <a href="/Home"><img src="../../Images/kalub-logo-home.png" alt="Logo KALUB" style="max-width: 170px" class="CToWUd"></a>
+</div>
+<div style="padding-top: 20px; text-align: center;color: #2c4970">
+    <font size="3">Acesse o sistema Kalub</font>
+</div>
+<br/>
+
+<div align="center">
+    <div class="panel " style="padding-bottom: 20px; width: 350px;">
+        <div class="panel-body">
+            @using (Html.BeginForm("Autenticar", "Login", FormMethod.Post, new { id = "formLogin", name = "formLogin" }))
+            {
+
+                @Html.Partial("ExceptionNotification")
+
+                <div class="modal-body">
+                    <br />
+                    <div class="input-group margin-bottom-sm">
+                        <span class="input-group-addon"><i class="fa fa-envelope-o fa-fw" aria-hidden="true"></i></span>
+                        <input class="form-control" type="text" placeholder="email" id="validate_email" name="email">
+                    </div>
+                    <br />
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="fa fa-key fa-fw" aria-hidden="true"></i></span>
+                        <input class="form-control" type="password" placeholder="senha" id="validate_password" name="senha">
+                    </div>
+                    <br />
+                </div>
+                <div class="modal-footer" style="text-align: center">
+                    <button type="submit" value="Entrar" onclick="return validaForm()" class="button button-rounded button-caution button-normal"> LOGIN </button>
+                </div>
+
+            }
+
+            <div class="" style="text-align: center; color: #2c4970">
+                <font size="2">
+                    @Html.ActionLink("Esqueci minha senha", "RecuperarSenha", "Login", new { @style = "color: #2c4970" })<br />
+                </font>
+            </div>
+        </div>
+    </div>
+</div>
+
+<br/>
+<div class="hidden-xs" style="text-align: center; color: #2c4970">
+    <font size="2">
+    <b>Novo no KALUB? </b>@Html.ActionLink("Crie uma conta", "Registrar", "Login", new {@style = "color: #2c4970"})
+        </font>
+</div>
+
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+
+
+        });
+
+        function validaForm() {
+            d = document.formLogin;
+            if (d.email.value == "") {
+                $.simplyToast('danger', 'O email não foi informado!');
+                return false;
+            }
+            if (d.senha.value == "") {
+                $.simplyToast('danger', 'A senha não foi informada!');
+                return false;
+            }
+        };
+
+
+
+
+    </script>
+
+}

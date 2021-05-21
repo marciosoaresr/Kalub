@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+  <class name="ProfitManager.Fabrica.Entidade.RelatorioItem, ProfitManager.Fabrica" table="RelatorioItem" lazy="true">
+    <cache usage="read-write"/>
+    <id name="Id">
+      <column name="Id"/>
+      <generator class="native">
+        <param name="sequence">RelatorioItem_</param>
+      </generator>
+    </id>
+    <property name="DataHoraCriacao" column= "DataHoraCriacao" type="Timestamp"/>
+    <property name="DataHoraAlteracao" column= "DataHoraAlteracao" type="Timestamp"/>
+
+    <property name="Codigo" column= "Codigo" type="String" length="50"/>
+    <property name="Nome" column= "Nome" type="String" length="200"/>
+    
+    <many-to-one name="Parent" column="Parent" class="ProfitManager.Fabrica.Entidade.RelatorioItem, ProfitManager.Fabrica" fetch="join" />
+    <many-to-one name="Relatorio" column="Relatorio" class="ProfitManager.Fabrica.Entidade.Relatorio, ProfitManager.Fabrica" fetch="join" />
+
+    <property name="Condicional" column= "Condicional" type="NHibernate.Type.EnumCharType`1[[ProfitManager.Fabrica.Enum.EnumSimNao, ProfitManager.Fabrica]], NHibernate" length="1"/>
+    <property name="Negrito" column= "Negrito" type="NHibernate.Type.EnumCharType`1[[ProfitManager.Fabrica.Enum.EnumSimNao, ProfitManager.Fabrica]], NHibernate" length="1"/>
+
+
+    <!--Lista de Evento Operação-->
+    <bag name="_ListContaContabilRelatorioItem" inverse="true" lazy="true" order-by="Id" cascade="none" access="field" >
+      <key column="RelatorioItem" />
+      <one-to-many class="ProfitManager.Fabrica.Entidade.ContaContabilRelatorioItem, ProfitManager.Fabrica" />
+    </bag>
+
+  </class>
+</hibernate-mapping>

@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+  <class name="ProfitManager.Fabrica.Entidade.Empresa, ProfitManager.Fabrica" table="Empresa" lazy="true">
+    <cache usage="read-write"/>
+    <id name="Id">
+      <column name="Id"/>
+      <generator class="native">
+        <param name="sequence">Empresa_</param>
+      </generator>
+    </id>
+    <property name="DataHoraCriacao" column= "DataHoraCriacao" type="Timestamp"/>
+    <property name="DataHoraAlteracao" column= "DataHoraAlteracao" type="Timestamp"/>
+
+    <property name="DataAbertura" column= "DataAbertura" type="Timestamp"/>
+    <property name="Nome" column= "Nome" type="String" length="100"/>
+    <property name="NomeFantasia" column= "NomeFantasia" type="String" length="100"/>
+    <property name="Cnpj" column= "Cnpj" type="String" length="20"/>
+    <property name="Logradouro" column= "Logradouro" type="String" length="200"/>
+    <property name="Numero" column= "Numero" type="String" length="20"/>
+    <property name="Complemento" column= "Complemento" type="String" length="100"/>
+    <property name="Bairro" column= "Bairro" type="String" length="100"/>
+    <property name="Cep" column= "Cep" type="String" length="15"/>
+    <property name="Email" column= "Email" type="String" length="100"/>
+    <property name="Telefone1" column= "Telefone1" type="String" length="15"/>
+    <property name="Telefone2" column= "Telefone2" type="String" length="15"/>
+    <property name="PeriodoGratis" column= "PeriodoGratis" type="String" length="15" />
+    <property name="PeriodoUsoVencido" column= "PeriodoUsoVencido" type="String" length="10" />
+    <property name="CupomPromocional" column= "CupomPromocional" type="int" />
+    <property name="Status" column= "Status" type="NHibernate.Type.EnumCharType`1[[ProfitManager.Fabrica.Enum.EnumEmpresaStatus, ProfitManager.Fabrica]], NHibernate" length="1"/>
+    <many-to-one name="Cidade" column="Cidade" class="ProfitManager.Fabrica.Entidade.Cidade, ProfitManager.Fabrica" fetch="join" />
+    <many-to-one name="CategoriaEmpresa" column="CategoriaEmpresa" class="ProfitManager.Fabrica.Entidade.CategoriaEmpresa, ProfitManager.Fabrica" fetch="join" />
+    <many-to-one name="CategoriaEmpresaSecundaria" column="CategoriaEmpresaSecundaria" class="ProfitManager.Fabrica.Entidade.CategoriaEmpresaSecundaria, ProfitManager.Fabrica" fetch="join" />
+    <many-to-one name="CategoriaJuridicaEmpresa" column="CategoriaJuridicaEmpresa" class="ProfitManager.Fabrica.Entidade.CategoriaJuridicaEmpresa, ProfitManager.Fabrica" fetch="join" />
+    <property name="SimplesNacional" column= "SimplesNacional" type="decimal(10,2)" />
+    <property name="CustoVenda" column= "CustoVenda" type="decimal(10,2)" />
+
+    <property name="DataAtivacao" column= "DataAtivacao" type="Timestamp"/>
+    <property name="DataUltimaAtivacao" column= "DataUltimaAtivacao" type="Timestamp"/>
+    <property name="DiaVencimento" column= "DiaVencimento" type="int" />
+    <property name="Logomarca" column= "Logomarca" type="String" length="200"/>
+    <property name="TipoPlano" column= "TipoPlano" type="int" />
+    <property name="IdAssinatura" column= "IdAssinatura" type="String" length="200"/>
+
+
+  </class>
+</hibernate-mapping>

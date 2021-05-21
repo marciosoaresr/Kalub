@@ -1,0 +1,120 @@
+﻿@using ProfitManager.Fabrica.Entidade
+@using ProfitManager.Fabrica.Enum
+@model ProfitManager.Fabrica.Entidade.EmpresaUsuario
+
+
+<div id="AbreCadastrarEditarEmpresaUsuario" class="modal fade" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="panel-heading2" style="padding-bottom: 15px;">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title"><b>Editar Usuario</b></h4>
+            </div>
+
+            @using (Html.BeginForm("CadastrarEditarEmpresaUsuario", "Empresa", FormMethod.Post, new { id = "formEditarEmpresaUsuario", name = "formEditarEmpresaUsuario" }))
+            {
+                <div class="modal-body">
+                    <div style="display: inline-block">
+                        @Html.AntiForgeryToken()
+                        @Html.ValidationSummary(true)
+
+                        @Html.HiddenFor(x => x.Id)
+                        @Html.HiddenFor(x => x.DataHoraCriacao)
+
+                        <div class="col-sm-5">@Html.LabelFor(x => x.Nome):</div>
+                        <div class="col-sm-5" style="padding-top: 2px;">@Html.TextBoxFor(x => x.Nome, new { @style = "width:270px;" })</div>
+                        @Html.ValidationMessageFor(x => x.Nome)
+                        <br />
+
+                        <div class="col-sm-5">@Html.LabelFor(x => x.Login):</div>
+                        <div class="col-sm-5" style="padding-top: 2px;">@Html.TextBoxFor(x => x.Login, new { @style = "width:150px;" })</div>
+                        @Html.ValidationMessageFor(x => x.Login)
+                        <br />
+
+                        <div class="col-sm-5">@Html.LabelFor(x => x.Email):</div>
+                        <div class="col-sm-5" style="padding-top: 2px;">@Html.TextBoxFor(x => x.Email, new { @style = "width:270px;" })</div>
+                        @Html.ValidationMessageFor(x => x.Email)
+                        <br />
+
+                        <div class="col-sm-5">@Html.LabelFor(x => x.Senha):</div>
+                        <div class="col-sm-5" style="padding-top: 2px;">@Html.PasswordFor(x => x.Senha, new { @style = "width:150px;" })</div>
+                        @Html.ValidationMessageFor(x => x.Senha)
+                        <br />
+
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default"  data-dismiss="modal">Fechar</button>
+                        <input type="submit" value="Salvar" onclick="return validaForm()" name="salvar" id="salvar" class="btn btn-primary">
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+</div>
+
+
+<div id="abrirModalProcessando" class="modal fade modal-v2" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body" align=center>
+                <img src="../../Images/loading_2x.gif" width="300">
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    $(document).ready(function() {
+
+        //$("#salvar").click(function () {
+        //    $('#abrirModalProcessando').modal('show');
+        //});
+
+
+    });
+
+    function validaForm() {
+        d = document.formEditarEmpresaUsuario;
+        if (d.Nome.value == "") {
+            d.Nome.style.border = "1px solid red";
+            $.simplyToast('danger', 'O nome não foi informado!');
+            return false;
+        }
+        if (d.Login.value == "") {
+            d.Login.style.border = "1px solid red";
+            $.simplyToast('danger', 'O login não foi informado!');
+            return false;
+        }
+        usuario = d.Email.value.substring(0, d.Email.value.indexOf('@@'));
+        dominio = d.Email.value.substring(d.Email.value.indexOf('@@') + 1, d.Email.value.length);
+        if ((usuario.length >= 1) &&
+            (dominio.length >= 3) &&
+            (usuario.search('@@') == -1) &&
+            (dominio.search('@@') == -1) &&
+            (usuario.search(" ") == -1) &&
+            (dominio.search(" ") == -1) &&
+            (dominio.search(".") != -1) &&
+            (dominio.indexOf(".") >= 1) &&
+            (dominio.lastIndexOf(".") < dominio.length - 1)) {
+            //document.getElementById("msgemail").innerHTML = "E-mail válido";
+            //alert("E-mail valido");
+        }
+        else {
+            d.Email.style.border = "1px solid red";
+            $.simplyToast('danger', 'Por favor, informe um E-MAIL válido!');
+            return false;
+        }
+        if (d.Senha.value == "") {
+            d.Senha.style.border = "1px solid red";
+            $.simplyToast('danger', 'A senha não foi informada!');
+            return false;
+        }
+
+        $('#abrirModalProcessando').modal('show');
+        return true;
+
+    };
+</script>

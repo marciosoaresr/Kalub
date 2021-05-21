@@ -1,0 +1,154 @@
+﻿@using App_Code.CustomHelper
+@using ProfitManager.Fabrica.Entidade
+@using PagedList.Mvc;
+@using PagedList;
+@model PagedList.IPagedList<ProfitManager.Fabrica.Entidade.Exercicio>
+
+@{
+    ViewBag.Title = "Exercícios";
+    Layout = "~/Views/Shared/_LayoutRestritoUser.cshtml";
+}
+
+@if (TempData["erro"] != null)
+{
+    <div id="alerta" class="modal fade" data-backdrop="static" style="padding-top: 200px; font-size: 15px;">
+        <div class="modal-dialog">
+            <div class="alert alert-danger alert-raised alert-dismissible fade in" role="alert">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                <br/><strong>ATENÇÃO!</strong><BR />
+                @TempData["erro"]<br/><br/>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">$(document).ready(function() { $('#alerta').modal('show'); });</script>
+}
+
+<!-- inicio: conteudo -->
+<div id="content">
+    <div class="tabs-wrapper text-center">
+       
+            <div class="tabs-wrapper text-center">
+                <div class="panel box-shadow-none text-left content-header">
+                    <div class="panel-body">
+                        <div class="col-sm-3" style="padding-top: 55px;">
+                            <p class="animated fadeInLeft">
+                                <a href="/Principal" style="font-size: 1.0em!important; color: #fff;">Home</a> <span class="fa-angle-right fa"></span> Criar Excercicios
+                            </p>
+                        </div>
+                        <div style="text-align: right; padding-top: 38px; padding-left: 86%;">
+                            <table width="190" height="40" border="1px;" bordercolor="#fff">
+                                <tr>
+                                    <td style="text-align: right; ">
+                                        <span style="padding-right: 20px;">Dinheiro em Caixa</span>
+                                        <p style="padding-top: 10px;"><span style="padding-right: 20px; font-weight: bold;font-size: 20px;">R$ @string.Format("{0:#,##0}", ViewBag.TotalSaldoinicialDiaAnteiorContaCaixa)</span></p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+
+        <div class="col-md-12 top-20 padding-0">
+            <div class="col-md-12">
+                <div class="panel">
+                    <div class="panel-heading" style="padding-left: 20px; padding-right: 30px; padding-top: 5px; padding-bottom: 40px">
+                        <ul class="nav navbar-nav navbar-left" style="padding-top: 10px;color: #2c4970;">
+                            <a href="#" data-toggle="modal" data-placement="bottom" title="Cadastrar Exercício" class="exercicio"><img src="../../Images/file_add.png" width=25 alt="Cadastrar Exercício"> Cadastrar Exercício</a>
+                        </ul>
+                    </div>
+
+                    <div class="panel-body">
+
+                        @GridView.Grid(Model, new string[] { "Titulo", "Data Inicial", "Data Final", "Autor" },
+                        new string[] { "Titulo", "DataInicio", "DataFim", "Usuario" }, typeof(Exercicio))
+
+                        @if (ViewBag.PageCount > 1)
+                        {
+                            <div style="text-align: center">
+                                <div >
+                                    Página: @(ViewBag.PageCount < ViewBag.PageNumber ? 0 : ViewBag.PageNumber) de @ViewBag.PageCount
+                                    @Html.PagedListPager((IPagedList)Model, pageNumber => Url.Action("Index", new { pageNumber, search = ViewBag.Search }))
+                                </div>
+                            </div>
+                        }
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- fim: conteudo -->
+
+
+<div id="conteudoModalExercicio" data-url="@Url.Action("CadastrarEditarExercicio", "Exercicio")">
+</div>
+
+
+@section Scripts{
+
+    <script>
+        
+        $(document).ready(function () {
+
+
+            $('#datatables-example').dataTable({
+                "bLengthChange": false,
+                "iDisplayLength": 152
+
+            });
+            $(".exercicio").click(function (event) {
+                var idExercicio = $(event.target).data("id");
+                var item = $("#conteudoModalExercicio");
+                var url = item.data("url") + "?id=" + idExercicio;
+                item.load(url, abrirModalExercicio);
+            });
+
+        });
+
+        $("body").tooltip({
+            selector: '[data-toggle="tooltip"]'
+        });
+
+        $(function () {
+            $(".deletar").on("click", function () {
+                if (confirm("Tem certeza que deseja excluir?")) {
+                    var valor = $(this).attr("value");
+                    location.href = "Exercicio/Excluir/?id=" + valor;
+                }
+                return false;
+            });
+        });
+
+        $(function () {
+            $(".editar").on("click", function () {
+                var valor = $(this).attr("value");
+                location.href = "Exercicio/CadastrarEditarExercicio/?id=" + valor;
+            });
+        });
+
+        $(function () {
+            $(".visualizarExercicio").on("click", function () {
+                $(this).attr('target', '_blank');
+                var valor = $(this).attr("value");
+                var evLink = document.createElement('a'); evLink.href = 'http://www.kalub.com.br/' + "Exercicio/VisualizarExercicio/?id=" + valor; evLink.target = '_blank'; document.body.appendChild(evLink); evLink.click();
+                //location.href = "Exercicio/VisualizarExercicio/?id=" + valor;
+            });
+        });
+
+        function abrirModalExercicio() {
+            $("#AbreCadastrarEditarExercicio").modal('show');
+        }
+
+        $(function () {
+            $(".lancamentoExercicio").on("click", function () {
+                var valor = $(this).attr("value");
+                location.href = "EventoLancamento/LancamentoExercicio/?id=" + valor;
+            });
+        });
+
+    </script>
+
+}

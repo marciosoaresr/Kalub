@@ -1,0 +1,75 @@
+﻿@using ProfitManager.Fabrica.Entidade
+@using ProfitManager.Fabrica.Enum
+@model ProfitManager.Fabrica.Entidade.Evento
+
+<script src="../../Scripts/ckeditor/ckeditor.js"></script>
+<script src="../../Scripts/ckeditor/adapters/jquery.js"></script>
+<script src="../../Scripts/ckeditor/samples/js/sample.js"></script>
+
+<div id="AbreCadastrarEditarEventoHelp" class="modal fade" data-backdrop="static">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="panel-heading2" style="padding-bottom: 15px;">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title"><b>Cadastrar Help Evento</b></h4>
+            </div>
+
+            @using (Html.BeginForm("CadastrarEditarEventoHelp", "Eventos", FormMethod.Post, new { id = "formCadastrarEditarEventoHelp" }))
+            {
+                <div class="modal-body">
+                    <div style="display: inline-block">
+                        @Html.AntiForgeryToken()
+
+                        @Html.HiddenFor(x => x.Id)
+                        @Html.HiddenFor(x => x.DataHoraCriacao)
+
+                        
+                        <table>
+                            <tr>
+                                <td style="height: 400px;">
+                                    Help:<br />
+                                    @Html.TextAreaFor(x => x.Help, new { @name = "my-textarea", id = "my-textarea", style = "height: 400px;" })
+                                </td>
+                            </tr>
+                        </table>
+
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+                        <input type="submit" value="Salvar" name="enviar" id="salvareventohelp" class="btn btn-primary">
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+</div>
+
+
+<div id="abrirModalProcessando" class="modal fade modal-v2" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body" align=center>
+                <img src="../../Images/loading_2x.gif" width="300">
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    $(document).ready(function() {
+
+        $('#my-textarea').ckeditor();
+
+        $("#salvareventohelp").click(function () {
+            $('#abrirModalProcessando').modal('show');
+        });
+
+    });
+
+
+
+
+</script>

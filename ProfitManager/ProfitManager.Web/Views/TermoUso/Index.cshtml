@@ -1,0 +1,115 @@
+﻿@using App_Code.CustomHelper
+@using ProfitManager.Fabrica.Entidade
+@using PagedList.Mvc;
+@using PagedList;
+@model ProfitManager.Fabrica.Entidade.TermoUso
+
+@{
+    ViewBag.Title = "Termo de Uso";
+    Layout = "~/Views/Shared/_LayoutRestrito.cshtml";
+}
+
+<script src="../../Scripts/ckeditor/ckeditor.js"></script>
+<script src="../../Scripts/ckeditor/adapters/jquery.js"></script>
+<script src="../../Scripts/ckeditor/samples/js/sample.js"></script>
+
+<!-- inicio: conteudo -->
+<div id="content">
+    <div class="tabs-wrapper text-center">
+        <div class="panel box-shadow-none text-left content-header">
+            <div class="panel-body">
+                <div class="col-sm-10" style="padding-top: 35px;">
+                    <p class="animated fadeInLeft">
+                        <a href="/Principal" style="font-size: 1.0em !important; color: #fff;">Home</a> <span class="fa-angle-right fa"></span> Termo de Uso
+                    </p>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="col-md-12 top-20 padding-0">
+            <div class="col-md-12">
+                <div class="panel">
+@using (Html.BeginForm("EditarTermoUso", "TermoUso", FormMethod.Post, new { id = "formEditarTermoUso" }))
+{
+
+                    <div class="panel-heading" style="padding-left: 20px; padding-right: 30px; padding-top: 0px; padding-bottom: 50px">
+                        <ul class="nav navbar-nav navbar-left" style="padding-top: 0px; color: #2c4970;">
+                            <h3>Termo de Uso</h3>
+                        </ul>
+
+                        <ul class="nav navbar-nav navbar-right" align="left" style="padding-top: 10px;color: #2c4970;">
+                            <input type="submit" value="Salvar" name="enviar" id="salvareventohelp" class="btn btn-primary">
+                        </ul>
+                    </div>
+
+    <div class="panel-body">
+
+        <div class="modal-body">
+            <div >
+                @Html.AntiForgeryToken()
+
+                @Html.HiddenFor(x => x.Id)
+                @Html.HiddenFor(x => x.DataHoraCriacao)
+
+
+                <table style="width: 1200px;">
+                    <tr>
+                        <td >
+                            @Html.TextAreaFor(x => x.Texto, new {@name = "my-textarea", id = "my-textarea"})
+                        </td>
+                    </tr>
+                </table>
+
+
+            </div>
+
+        </div>
+
+
+    </div>
+}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- fim: conteudo -->
+
+
+
+
+@section Scripts{
+
+    <script>
+
+        $(document).ready(function () {
+
+            $('#my-textarea').ckeditor({ toolbar: 'Basic', width: 1200, height: 350 });
+        });
+
+
+        $(function () {
+            $(".deletar").on("click", function () {
+                if (confirm("Tem certeza que deseja excluir ? ")) {
+                    var valor = $(this).attr("value");
+                    location.href = "Diagnostico/Excluir/?id=" + valor;
+                }
+                return false;
+            });
+        });
+
+        $(function () {
+            $(".editar").on("click", function () {
+                var valor = $(this).attr("value");
+                location.href = "Diagnostico/CadastrarEditarDiagnostico/?id=" + valor;
+            });
+        });
+
+        function abrirModalDiagnostico() {
+            $("#AbreCadastrarEditarDiagnostico").modal('show');
+        }
+
+    </script>
+
+}

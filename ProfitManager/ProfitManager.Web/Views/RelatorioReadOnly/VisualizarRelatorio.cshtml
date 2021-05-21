@@ -1,0 +1,51 @@
+﻿@using App_Code.CustomHelper
+@model List<ProfitManager.Fabrica.EntidadeAuxiliar.RelatorioItemAuxiliar>
+
+@{
+    ViewBag.Title = "Relatório";
+    Layout = "~/Views/Shared/_LayoutRestritoUser.cshtml";
+}
+
+@{
+    DateTime dataResultado = DateTime.MinValue;
+    if (ViewBag.DataResultado == null)
+    {
+        HttpContext.Current.Response.Redirect("/Principal");
+    }
+    else
+    {
+        dataResultado = (DateTime)ViewBag.DataResultado;
+    }
+}
+
+<div style="padding-left: 10px;padding-right: 10px;height: 40px;">
+
+    <div style="float: left;">
+        <h3>@ViewBag.NomeRelatorio</h3>
+    </div>
+
+    <div style="float: right;position: relative;top: 25px;">
+        @Html.ActionLink(@dataResultado.ToString("MM/yyyy"), "Index", "RelatorioReadOnly", 
+        new { novaData = "new" },
+        new { style = "font-size: 1.2em!important;" })
+    </div>
+</div>
+
+<div style="width: 99%;border-bottom: 1px solid #e5e5e5;height: 10px;margin: 0 auto;"></div>
+
+<div style="padding: 10px; margin-top: 15px;">
+
+    <div>
+        @Report.GridReport(@Model)
+    </div>
+
+</div>
+
+
+
+
+
+    
+    
+
+    

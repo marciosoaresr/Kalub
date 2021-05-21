@@ -1,0 +1,111 @@
+﻿@using App_Code.CustomHelper
+@using ProfitManager.Fabrica.Entidade
+@using PagedList.Mvc;
+@using PagedList;
+@model PagedList.IPagedList<ProfitManager.Fabrica.Entidade.GrupoDRE>
+
+@{
+    ViewBag.Title = "GrupoDRE";
+    Layout = "~/Views/Shared/_LayoutRestrito.cshtml";
+}
+
+
+<!-- inicio: conteudo -->
+<div id="content">
+    <div class="tabs-wrapper text-center">
+        <div class="panel box-shadow-none text-left content-header">
+            <div class="panel-body">
+                <div class="col-sm-10" style="padding-top: 35px;">
+                    <p class="animated fadeInLeft">
+                        <a href="/Principal" style="font-size: 1.0em!important; color: #fff;">Home</a> <span class="fa-angle-right fa"></span> Grupo DRE
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-12 top-20 padding-0">
+            <div class="col-md-12">
+                <div class="panel">
+                    <div class="panel-heading" style="padding-left: 20px; padding-right: 30px; padding-top: 5px; padding-bottom: 40px">
+                        <ul class="nav navbar-nav navbar-left" style="padding-top: 10px;color: #2c4970;">
+                            <a href="#" data-toggle="modal" data-placement="bottom" title="Cadastrar DRE" class="evento"><img src="../../Images/file_add.png" width=25 alt="Cadastrar DRE"> Cadastrar Grupo DRE</a>
+                        </ul>
+                        <ul class="nav navbar-nav navbar-right" align="left" style="padding-top: 10px;color: #2c4970;">
+                            <b>Dicas:</b>
+                            
+                            <img src="../../Images/file_edit.png" width="15"> editar 
+                            -
+                            <img src="../../Images/file_delete.png" width="15"> apagar 
+                        </ul>
+                    </div>
+
+                    <div class="panel-body">
+
+                        @GridView.Grid(Model, new string[] { "Codigo", "Nome DRE", "Totalizador" },
+                        new string[] { "Codigo", "Nome", "Totalizador" }, typeof(GrupoDRE))
+
+                        @if (ViewBag.PageCount > 1)
+                        {
+                            <div style="text-align: center">
+                                <div >
+                                    Página: @(ViewBag.PageCount < ViewBag.PageNumber ? 0 : ViewBag.PageNumber) de @ViewBag.PageCount
+                                    @Html.PagedListPager((IPagedList)Model, pageNumber => Url.Action("Index", new { pageNumber, search = ViewBag.Search }))
+                                </div>
+                            </div>
+                        }
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- fim: conteudo -->
+
+
+<div id="conteudoModalGrupoDRE" data-url="@Url.Action("CadastrarEditarGrupoDRE", "GrupoDRE")">
+</div>
+
+
+@section Scripts{
+
+    <script>
+        
+        $(document).ready(function () {
+
+            $('#datatables-example').DataTable();
+
+            $(".evento").click(function (event) {
+                var id = $(event.target).data("id");
+                var item = $("#conteudoModalGrupoDRE");
+                var url = item.data("url") + "?id=" + id;
+                item.load(url, abrirModalGrupoDRE);
+            });
+
+        });
+
+
+        $(function () {
+            $(".deletar").on("click", function () {
+                if (confirm("Tem certeza que deseja excluir esta DRE? Pode estar vinculado a uma Conta Contabil")) {
+                    var valor = $(this).attr("value");
+                    location.href = "GrupoDRE/Excluir/?id=" + valor;
+                }
+                return false;
+            });
+        });
+
+        $(function () {
+            $(".editar").on("click", function () {
+                var valor = $(this).attr("value");
+                location.href = "GrupoDRE/CadastrarEditarGrupoDRE/?id=" + valor;
+            });
+        });
+
+        function abrirModalGrupoDRE() {
+            $("#AbreCadastrarEditarGrupoDRE").modal('show');
+        }
+
+    </script>
+
+}

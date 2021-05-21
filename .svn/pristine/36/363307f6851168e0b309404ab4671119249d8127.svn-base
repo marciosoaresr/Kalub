@@ -1,0 +1,39 @@
+﻿@model ProfitManager.Fabrica.Entidade.Evento
+
+@for (int i = 0; i < Model.ListEventoCategoriaEmpresa.Length; i++)
+{
+    @Html.HiddenFor(x => x.ListEventoCategoriaEmpresa[i].Id)
+    @Html.HiddenFor(x => x.ListEventoCategoriaEmpresa[i].CategoriaEmpresa.Id)
+}
+
+<div class="responsive-table" style="max-height: 300px; overflow: auto;">
+    <table id="datatables-example" class="table table-bordered">
+        <thead>
+            <tr style="color:#fff; background-color: #6A5ACD;">
+                <th>
+                    Codigo
+                </th>
+                <th>
+                    Categoria Empresa (CNAE)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.ListEventoCategoriaEmpresa)
+            {
+                <tr class="linhatabela">
+                    <td>
+                        @item.CategoriaEmpresa.Codigo
+                    </td>
+                    <td>
+                        @item.CategoriaEmpresa.CampoNome.Nome
+                    </td>
+                    <td style="width: 15%; text-align: center">
+                        <a href="#" class="excluircategoria" type="submit" data-id="@item.GetHashCode()"><img src="../../Images/file_delete.png" data-id="@item.GetHashCode()" width=20 alt="apagar registro"></a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

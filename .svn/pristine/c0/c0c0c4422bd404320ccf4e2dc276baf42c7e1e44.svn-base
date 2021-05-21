@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+  <class name="ProfitManager.Fabrica.Entidade.EmpresaUsuario, ProfitManager.Fabrica" table="EmpresaUsuario" lazy="true">
+    <cache usage="read-write"/>
+    <id name="Id">
+      <column name="Id"/>
+      <generator class="native">
+        <param name="sequence">EmpresaUsuario_</param>
+      </generator>
+    </id>
+    <property name="DataHoraCriacao" column= "DataHoraCriacao" type="Timestamp"/>
+    <property name="DataHoraAlteracao" column= "DataHoraAlteracao" type="Timestamp"/>
+
+    <many-to-one name="Empresa" column="Empresa" class="ProfitManager.Fabrica.Entidade.Empresa, ProfitManager.Fabrica" fetch="join" />
+    <property name="Nome" column= "Nome" type="String" length="100"/>
+    <property name="Cnpj" column= "Cnpj" type="String" length="20"/>
+    <property name="Login" column= "Login" type="String" length="100" unique="true" />
+    <property name="Email" column= "Email" type="String" length="100" unique="true" />
+    <property name="Senha" column= "Senha" type="String" length="100"/>
+
+  </class>
+</hibernate-mapping>

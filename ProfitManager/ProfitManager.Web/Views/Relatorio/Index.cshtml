@@ -1,0 +1,109 @@
+﻿@using App_Code.CustomHelper
+@using PagedList
+@using PagedList.Mvc
+@using ProfitManager.Fabrica.Entidade
+@model PagedList.IPagedList<ProfitManager.Fabrica.Entidade.Relatorio>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutRestrito.cshtml";
+}
+
+<!-- inicio: conteudo -->
+<div id="content">
+    <div class="tabs-wrapper text-center">
+        <div class="panel box-shadow-none text-left content-header">
+            <div class="panel-body">
+                <div class="col-sm-10" style="padding-top: 35px;">
+                    <p class="animated fadeInLeft">
+                        <a href="/Principal" style="font-size: 1.0em!important; color: #fff;">Home</a> <span class="fa-angle-right fa"></span> Relatório
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-12 top-20 padding-0">
+            <div class="col-md-12">
+                <div class="panel">
+                    <div class="panel-heading" style="padding-left: 20px; padding-right: 30px; padding-top: 5px; padding-bottom: 40px">
+                        <ul class="nav navbar-nav navbar-left" style="padding-top: 10px;">
+                            <a href="#" data-toggle="modal" data-placement="bottom" title="Cadastrar Relatório" class="relatorio"><img src="../../Images/file_add.png" width=25 alt="Cadastrar Relatório"> Cadastrar Relatório</a>
+                        </ul>
+                        <ul class="nav navbar-nav navbar-right" align="left" style="padding-top: 10px;color: #2c4970;">
+                            <b>Dicas:</b>
+                            
+                            <img src="../../Images/file_edit.png" width="15"> editar relatório
+                            -
+                            <img src="../../Images/file_delete.png" width="15"> apagar relatório
+                        </ul>
+                    </div>
+
+                    <div class="panel-body">
+
+                        @GridView.Grid(Model, new string[] { "Código", "Nome" }, new string[] { "Codigo", "Nome" }, typeof(Relatorio))
+
+                        @if (ViewBag.PageCount > 1)
+                        {
+                            <div>
+                                <div>
+                                    Página: @(ViewBag.PageCount < ViewBag.PageNumber ? 0 : ViewBag.PageNumber) de @ViewBag.PageCount
+                                    @Html.PagedListPager((IPagedList)Model, pageNumber =>
+                                    Url.Action("Index", new { pageNumber, search = ViewBag.Search }))
+                                </div>
+                            </div>
+                        }
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- fim: conteudo -->
+
+
+<div id="conteudoModalRelatorio" data-url="@Url.Action("CadastrarEditarRelatorio", "Relatorio")">
+</div>
+
+@section Scripts{
+
+    <script>
+        
+        $(document).ready(function () {
+
+            $('#datatables-example').DataTable();
+
+
+            $(".relatorio").click(function (event) {
+                var idEvento = $(event.target).data("id");
+                var item = $("#conteudoModalRelatorio");
+                var url = item.data("url") + "?id=" + idEvento;
+                item.load(url, abrirModalRelatorio);
+            });
+
+        });
+
+        $(function () {
+            $(".deletar").on("click", function () {
+                if (confirm("Tem certeza que deseja excluir?")) {
+                    var valor = $(this).attr("value");
+                    location.href = "Relatorio/Excluir/?id=" + valor;
+                }
+                return false;
+            });
+        });
+
+        $(function () {
+            $(".editar").on("click", function () {
+                var valor = $(this).attr("value");
+                location.href = "Relatorio/CadastrarEditarRelatorio/?idRelatorio=" + valor;
+            });
+        });
+
+        function abrirModalRelatorio() {
+            $("#AbreCadastrarEditarRelatorio").modal('show');
+        }
+
+    </script>
+
+}

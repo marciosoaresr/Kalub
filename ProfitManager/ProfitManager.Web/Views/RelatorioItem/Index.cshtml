@@ -1,0 +1,70 @@
+﻿@using App_Code.CustomHelper
+@using PagedList
+@using PagedList.Mvc
+@using ProfitManager.Fabrica.Entidade
+@model PagedList.IPagedList<ProfitManager.Fabrica.Entidade.RelatorioItem>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutRestrito.cshtml";
+}
+
+<div style="margin-left: 8px">
+    <h3>Itens de relatório</h3>
+    <div style="position: relative;float: left; top: 0.4em">
+        @Html.ActionLink("Cadastrar item de relatório", "CadastrarEditarRelatorioItem", "RelatorioItem")
+    </div>
+
+    <div class="containersearch" style="position: relative;float: right;margin-right: 8px;">
+        @using (Html.BeginForm("Index", "RelatorioItem", FormMethod.Get))
+        {
+            <input type="search" class="input-search placeholder busca-fontcolor"
+                   name="search" placeholder="Buscar" default-placeholder="Buscar"
+                   onblur="this.placeholder = this.getAttribute('default-placeholder');"
+                   onfocus="this.placeholder = '';" autofocus
+                   data-position="header" style="padding-left: 7px !important;" autocomplete="off">
+            <input type="submit" class="search" data-position="header" value="">
+        }
+    </div>
+</div>
+
+<div style="padding: 10px; margin-top: 50px;">
+
+    @GridView.Grid(Model, new string[] { "Código", "Nome", "Relatório", "Parent" },
+        new string[] { "Codigo", "Nome", "Relatorio.Nome", "Parent.Nome" }, typeof(RelatorioItem))
+
+    @if (ViewBag.PageCount > 1)
+    {
+        <div class="row" style="padding: 10px">
+            <div class="offset1 span10 font-small">
+                Página: @(ViewBag.PageCount < ViewBag.PageNumber ? 0 : ViewBag.PageNumber) de @ViewBag.PageCount
+                @Html.PagedListPager((IPagedList)Model, pageNumber =>
+                    Url.Action("Index", new { pageNumber, search = ViewBag.Search }))
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts{
+
+    <script>
+        $(function () {
+            $(".deletar").on("click", function () {
+                if (confirm("Tem certeza que deseja excluir?")) {
+                    var valor = $(this).attr("value");
+                    location.href = "RelatorioItem/Excluir/?id=" + valor;
+                }
+                return false;
+            });
+        });
+
+        $(function () {
+            $(".editar").on("click", function () {
+                var valor = $(this).attr("value");
+                location.href = "RelatorioItem/CadastrarEditarRelatorioItem/?idRelatorioItem=" + valor;
+            });
+        });
+
+    </script>
+
+}

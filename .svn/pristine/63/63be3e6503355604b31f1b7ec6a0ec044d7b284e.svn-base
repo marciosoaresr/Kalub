@@ -1,0 +1,41 @@
+﻿@model ProfitManager.Fabrica.Entidade.EventoLancamento
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutRestritoUser.cshtml";
+}
+
+@using (Html.BeginForm("SetDataRelatorio", "RelatorioReadOnly", FormMethod.Post))
+{
+    <div class="formcadeidt">
+        <div>
+            <h3 style="border-bottom: 1px solid #e5e5e5">Período dos resultados</h3>
+
+            <div style="margin-top: 20px">
+
+                @(Html.Kendo().DatePickerFor(x => x.Data)
+                   .Depth(CalendarView.Year)
+                   .Start(CalendarView.Year)
+                   .Format("MMMM yyyy")
+                   .Culture("pt-BR")
+                )
+
+                @Html.Kendo().Button().Name("Buscar").Content("Buscar").HtmlAttributes(new
+                   {
+                       style = "height:34px; margin-left:10px;",
+                       @class = "btn btn-primary"
+                   }
+                )
+
+            </div>
+
+
+        </div>
+    </div>
+}
+
+<style>
+    .k-icon, .k-tool-icon, .k-grouping-dropclue, .k-drop-hint, .k-column-menu .k-sprite, .k-grid-mobile .k-resize-handle-inner:before, .k-grid-mobile .k-resize-handle-inner:after {
+        background-image: url('../../Content/kendo/Default/sprite.png');
+    }
+</style>

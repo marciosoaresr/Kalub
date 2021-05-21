@@ -1,0 +1,115 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using NHibernate;
+using ProfitManager.Fabrica.Entidade;
+using ProfitManager.Fabrica.Enum;
+using ProfitManager.Negocio.Repositorio;
+
+namespace ProfitManager.Negocio.Implementacao
+{
+    public class FuncoesEmpresa
+    {
+        public static Empresa Salvar(Empresa empresa)
+        {
+            using (var repositorio = SessionFactory.CreateRepositorio())
+            {
+                repositorio.Session.BeginTransaction();
+                try
+                {
+                    repositorio.Salvar(empresa);
+                    Thread.Sleep(800);
+                    repositorio.Session.Transaction.Commit();
+
+                    return empresa;
+                }
+                catch (Exception err)
+                {
+                    repositorio.Session.Transaction.Rollback();
+                    throw;
+                }
+            }
+        }
+
+        public static List<Empresa> Load(string nomeEmpresa)
+        {
+            using (var repositorio = SessionFactory.CreateRepositorio())
+            {
+                try
+                {
+                    var parameters = new List<HqlParameter>();
+                    parameters.Add(new HqlParameter("nomeEmpresa", nomeEmpresa));
+                    string hql = " FROM Empresa e " +
+                                 " WHERE UPPER(TRIM(e.Nome)) = :nomeEmpresa" +
+                                 " OR UPPER(TRIM(e.Nome)) LIKE '%" + nomeEmpresa + "%'";
+
+                    var listEmpresa = repositorio.Buscar<Empresa>(hql, parameters).ToList();
+
+                    return listEmpresa;
+                }
+                catch (Exception err)
+                {
+                    throw err;
+                }
+            }
+        }
+
+        public static List<Empresa> Load()
+        {
+            using (var repositorio = SessionFactory.CreateRepositorio())
+            {
+                try
+                {
+                    const string hql = "FROM Empresa ";
+
+                    var listEmpresa = repositorio.Buscar<Empresa>(hql, null).ToList();
+
+                    return listEmpresa;
+                }
+                catch (Exception err)
+                {
+                    throw err;
+                }
+            }
+        }
+
+        public static Empresa Load(int id)
+        {
+            using (var repositorio = SessionFactory.CreateRepositorio())
+            {
+                try
+                {
+                    var Empresa = repositorio.BuscarId<Empresa>(id);
+
+                    return Empresa;
+                }
+                catch (Exception err)
+                {
+                    throw err;
+                }
+            }
+        }
+
+        public static void Excluir(int id)
+        {
+            using (var repositorio = SessionFactory.CreateRepositorio())
+            {
+                repositorio.Session.BeginTransaction();
+                try
+                {
+                    var empresa = repositorio.BuscarId<Empresa>(id);
+
+                    repositorio.Deletar(empresa);
+
+                    repositorio.Session.Transaction.Commit();
+                }
+                catch (Exception err)
+                {
+                    repositorio.Session.Transaction.Rollback();
+                    throw;
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,224 @@
+﻿@using ProfitManager.Fabrica.Entidade
+@using ProfitManager.Fabrica.Enum
+@model ProfitManager.Fabrica.Entidade.Evento
+
+
+<div id="AbreCadastrarEditarEvento" class="modal fade" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="panel-heading2">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Evento</h4>
+            </div>
+
+            @using (Html.BeginForm("CadastrarEditarEvento", "Eventos", FormMethod.Post, new { id = "formCadastrarEditarEvento" }))
+            {
+                <div class="modal-body">
+                    <div style="display: inline-block">
+                        @Html.AntiForgeryToken()
+                        @Html.ValidationSummary(true)
+
+                        @Html.HiddenFor(x => x.Id)
+                        @Html.HiddenFor(x => x.DataHoraCriacao)
+
+                        <div class="col-sm-5" style="padding-top:5px;">@Html.LabelFor(x => x.Area):<br /></div>
+                        <div class="col-sm-5"> @Html.DropDownListFor(x => x.Area.Id, (IEnumerable<SelectListItem>)ViewBag.ListaArea, "Selecione um área", new { @style = "width:270px;" })</div>
+                        @Html.ValidationMessageFor(x => x.Area)
+                        <br/>
+
+                        <div class="col-sm-5">@Html.LabelFor(x => x.Codigo):</div>
+                        <div class="col-sm-5" style="padding-top: 2px;">@Html.TextBoxFor(x => x.Codigo, new { @style = "width:270px;" })</div>
+                        @Html.ValidationMessageFor(x => x.Codigo)
+                        <br/><br/>
+
+                        <div class="col-sm-5">@Html.LabelFor(x => x.CampoNome.Nome):</div>
+                        <div class="col-sm-5" style="padding-top: 2px;">@Html.TextBoxFor(x => x.CampoNome.Nome, new { @style = "width:270px;" })</div>
+                        @Html.ValidationMessageFor(x => x.CampoNome.Nome)
+                        <br />
+
+                        <div class="col-sm-5">@Html.LabelFor(x => x.CampoHelp):</div>
+                        <div class="col-sm-5" style="padding-top: 2px;">@Html.TextBoxFor(x => x.CampoHelp.Nome, new { @style = "width:270px;" })</div>
+                        @Html.ValidationMessageFor(x => x.CampoHelp.Nome)
+                        <br/>
+
+                        <div class="col-sm-5">@Html.LabelFor(x => x.TipoEventoLancamento):</div>
+                        <div class="col-sm-5" style="padding-top: 2px;">@Html.EnumDropDownListFor(x => x.TipoEventoLancamento, new { @style = "width:100px;" })</div>
+                        @Html.ValidationMessageFor(x => x.TipoEventoLancamento)
+
+                        <div class="col-sm-5">@Html.LabelFor(x => x.MaisUsado):</div>
+                        <div class="col-sm-5" style="padding-top: 2px;">@Html.EnumDropDownListFor(x => x.MaisUsado, new { @style = "width:70px;" })</div>
+                        @Html.ValidationMessageFor(x => x.MaisUsado)
+
+                        <div class="col-sm-5">@Html.LabelFor(x => x.TipoDFC):</div>
+                        <div class="col-sm-5" style="padding-top: 2px;">@Html.EnumDropDownListFor(x => x.TipoDFC, new { @style = "width:180px;" })</div>
+                        @Html.ValidationMessageFor(x => x.TipoDFC)
+
+                        <div class="col-sm-5">@Html.LabelFor(x => x.RestringeCategoriaEmpresa):</div>
+                        <div class="col-sm-5" style="padding-top: 2px;">@Html.CheckBoxFor(x => x.RestringeCategoriaEmpresa, new { onclick = "ExibeDiv('conteudoRestringeCategoria')" })</div>
+                        @Html.ValidationMessageFor(x => x.RestringeCategoriaEmpresa)
+
+                        @if (Model.RestringeCategoriaEmpresa)
+                        {
+                            <div id="conteudoRestringeCategoria">
+                                <div class="col-sm-12">
+                                    @Html.DropDownList("categoriaEmpresa", (IEnumerable<SelectListItem>) ViewBag.ListaCategoriaEmpresa, "Selecione uma categoria CNAE")
+                                    <br/>
+                                    <a href="#" id="add2" style="margin-top: 10px;"><img src="../../Images/file_add.png" width=25 id="add2" alt="Restringir Categoria"> Adicionar restrição</a>
+                                </div>
+                                <div id="categoriasempresa" class="col-sm-12">
+                                    @Html.Partial("EventoCategoriaEmpresa", Model)
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div id="conteudoRestringeCategoria" style="display: none;">
+                                <div class="col-sm-12">
+                                    @Html.DropDownList("categoriaEmpresa", (IEnumerable<SelectListItem>)ViewBag.ListaCategoriaEmpresa, "Selecione uma categoria CNAE")
+                                    <br />
+                                    <a href="#" id="add2" style="margin-top: 10px;"><img src="../../Images/file_add.png" width=25 id="add2" alt="Restringir Categoria"> Adicionar restrição</a>
+                                </div>
+                                <div id="categoriasempresa" class="col-sm-12">
+                                    @Html.Partial("EventoCategoriaEmpresa", Model)
+                                </div>
+                            </div>
+                        }
+
+
+
+                        <div class="col-sm-12" style="margin-bottom: 0px">
+                            @Html.Label("Operações"):<br/>
+                        </div>
+                        <div class="col-sm-12" style="margin-bottom: 0px">
+                            <select id="tipoOperacao" style="width: 28%" name="tipoOperacao">
+                                <option value="">Selecione o tipo</option>
+                                <option value="D">Debitar</option>
+                                <option value="C">Creditar</option>
+                            </select>
+                            @Html.DropDownList("nameConta", (IEnumerable<SelectListItem>)ViewBag.ListaContaContabil, "Selecione uma conta", new { @style = "width:350px;" })
+                            <br />
+                            <a href="#" id="add" style="margin-top: 10px;"><img src="../../Images/file_add.png" width=25 id="add" alt="Adicionar operação"> Adicionar operação</a>
+                        </div>
+                        <br/><br/>
+                        <div id="operacoes" class="col-sm-12">
+                            @Html.Partial("EventoOperacao", Model)
+                        </div>
+
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+                        <input type="submit" value="Salvar" name="enviar" id="salvarevento" class="btn btn-primary">
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+</div>
+
+
+<div id="abrirModalProcessando" class="modal fade modal-v2" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body" align=center>
+                <img src="../../Images/loading_2x.gif" width="300">
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    $(document).ready(function() {
+
+
+        $("#add").click(function() {
+            var form = $("#formCadastrarEditarEvento");
+            var dataSerialize = form.serialize();
+            var campo = $('<input />').attr('type', 'hidden').attr('name', "adicionar").attr('value', "1");
+            var all = dataSerialize + "&" + campo.serialize();
+
+            $.ajax({
+                url: '@Url.Action("CadastrarEditarEvento", "Eventos")',
+                type: "POST",
+                data: all,
+                async: true,
+                success: function(partiaViewResult) {
+                    $("#operacoes").empty();
+                    $("#operacoes").append(partiaViewResult);
+                }
+            });
+        });
+
+        $("#add2").click(function () {
+            var form = $("#formCadastrarEditarEvento");
+            var dataSerialize = form.serialize();
+            var campo = $('<input />').attr('type', 'hidden').attr('name', "adicionarCategoria").attr('value', "1");
+            var all = dataSerialize + "&" + campo.serialize();
+
+            $.ajax({
+                url: '@Url.Action("CadastrarEditarEvento", "Eventos")',
+                type: "POST",
+                data: all,
+                async: true,
+                success: function (partiaViewResult) {
+                    $("#categoriasempresa").empty();
+                    $("#categoriasempresa").append(partiaViewResult);
+                }
+            });
+        });
+
+        $(".excluiroperacao").click(function(e) {
+            var form = $("#formCadastrarEditarEvento");
+            var value = e.target.getAttribute("data-id");
+            var dataSerialize = form.serialize();
+            var campo = $('<input />').attr('type', 'hidden').attr('name', "excluirItem").attr('value', value);
+            var all = dataSerialize + "&" + campo.serialize();
+
+            $.ajax({
+                url: '@Url.Action("CadastrarEditarEvento", "Eventos")',
+                type: "POST",
+                data: all,
+                async: true,
+                success: function(partiaViewResult) {
+                    $("#operacoes").empty();
+                    $("#operacoes").append(partiaViewResult);
+                }
+            });
+        });
+
+        $(".excluircategoria").click(function (e) {
+            var form = $("#formCadastrarEditarEvento");
+            var value = e.target.getAttribute("data-id");
+            var dataSerialize = form.serialize();
+            var campo = $('<input />').attr('type', 'hidden').attr('name', "excluirItemCategoria").attr('value', value);
+            var all = dataSerialize + "&" + campo.serialize();
+
+            $.ajax({
+                url: '@Url.Action("CadastrarEditarEvento", "Eventos")',
+                type: "POST",
+                data: all,
+                async: true,
+                success: function (partiaViewResult) {
+                    $("#categoriasempresa").empty();
+                    $("#categoriasempresa").append(partiaViewResult);
+                }
+            });
+        });
+
+        $("#salvarevento").click(function () {
+            $('#abrirModalProcessando').modal('show');
+        });
+
+    });
+
+    function ExibeDiv(el) {
+        var display = document.getElementById(el).style.display;
+        if (display == "none")
+            document.getElementById(el).style.display = 'block';
+        else
+            document.getElementById(el).style.display = 'none';
+    }
+
+</script>

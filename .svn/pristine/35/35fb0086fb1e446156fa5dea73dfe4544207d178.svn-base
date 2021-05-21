@@ -1,0 +1,1168 @@
+﻿@using System.Activities.Statements
+@using ProfitManager.Fabrica.Entidade
+@using ProfitManager.Fabrica.Enum
+@using ProfitManager.Web.ViewModels
+@model List<EventoLancamentoViewModel>
+
+
+@{
+    ViewBag.Title = "Evento Lançamento";
+    Layout = "~/Views/Shared/_LayoutRestritoUser.cshtml";
+}
+
+
+@{
+    int idAreaLancamento = 0;
+    DateTime dataLancamentoEventoOperacao = DateTime.MinValue;
+    if (ViewBag.DataLancamento == null)
+    {
+        @Url.Action("Index", "Principal")
+    }
+    else
+    {
+        dataLancamentoEventoOperacao = (DateTime)ViewBag.DataLancamento;
+    }
+    if (ViewBag.IdAreaLancamento != null)
+    {
+        idAreaLancamento = (int)ViewBag.IdAreaLancamento;
+    }
+    bool temSaldoInicial = false;
+    if (ViewBag.TotalSaldoinicialDiaAnteiorContaCaixa == 0)
+    {
+        temSaldoInicial = false;
+    }
+    else
+    {
+        temSaldoInicial = true;
+    }
+
+}
+
+<!-- inicio: conteudo -->
+<div id="content">
+    <div class="tabs-wrapper text-center">
+        <div class="panel box-shadow-none text-left content-header">
+            <div class="panel-body">
+                <div class="col-sm-4" style="padding-top: 45px;">
+                    <p class="animated fadeInLeft">
+                        <a href="../PrincipalUser/" style="font-size: 1.0em !important; color: #fff;">Home</a> <span class="fa-angle-right fa"></span> Registro de Operações
+                    </p>
+                </div>
+                <div class="col-sm-4" style="text-align: left; padding-top: 55px; padding-left: 100px;">
+                    Empresa: @ViewBag.Empresa
+                </div>
+                <div class="col-sm-4" style="text-align: right; padding-top: 25px; padding-left: 260px;">
+                    <table width="190" height="50">
+                        <tr>
+                            <td style="background-color: red; text-align: center">
+                                Data lançamento:<br/> @Html.ActionLink(@dataLancamentoEventoOperacao.ToString("dd/MM/yyyy"), "Index", "EventoLancamento", new { novaData = "new" }, new { style = "font-size: 28px!important; color: #fff;" })
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<!-- fim: conteudo -->
+
+
+@if (TempData["mensagem"] != null)
+{
+    <script>$.simplyToast('salva', 'Lançamentos gravados com sucesso!');</script>
+}
+
+@using (Html.BeginForm("Editing_Update", "EventoLancamento", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    @Html.Hidden("dataLancamento", dataLancamentoEventoOperacao)
+
+    <div class="col-md-12 top-20 padding-0">
+        <div class="col-md-8">
+            <div class="panel">
+                <div class="panel-heading" style="padding-left: 10px; padding-right: 30px; padding-bottom: 50px">
+                    <ul class="nav navbar-nav navbar-left" style="color: #2c4970;">
+                        <h4><b>Movimentação Financeira</b></h4>
+                    </ul>
+                </div>
+
+                <div class="panel-body" style="padding-top: 10px;">
+                    <div class="col-md-6">
+                        <table width="420">
+                            <tr>
+                                <td width="60%" style="background-color: #2c4970; color: #fff; padding-top: 2px;">
+                                    &nbsp;&nbsp;<b>ENTRADAS DE DINHEIRO</b>
+                                </td>
+                                <td width="15%" style="background-color: #2c4970; color: #fff; padding-top: 2px; text-align: center">
+                                    <b>Dia</b>
+                                </td>
+                                <td style="background-color: #2c4970; color: #fff; padding-top: 2px;"></td>
+                                <td width="15%" style="background-color: #2c4970; color: #fff; padding-top: 2px; text-align: center">
+                                    <b>Mês</b>
+                                </td>
+                            </tr>
+                        </table>
+                    <table>
+                        @foreach (var evento in Model.Where(item => item.Area.Codigo == "0001"))
+                        {
+
+                            var dia = "";
+                            var mes = "M" + evento.IdEvento;
+
+                            var diaFixo = "DF" + evento.IdEvento;
+                            var mesFixo = "MF" + evento.IdEvento;
+
+                            var exibeImagem = "";
+                            var titulo = "";
+                            bool liberaDigitacaoDiario = false;
+                            bool liberaDigitacaoMensal = false;
+
+                            var tipoEventoLancamento = evento.TipoEventoLancamento;
+                            if (tipoEventoLancamento == EnumTipoEventoLancamento.Diario)
+                            {
+                                dia = "D" + evento.IdEvento;
+                                liberaDigitacaoDiario = true;
+                            }
+                            else
+                            {
+                                dia = "M" + evento.IdEvento;
+                                liberaDigitacaoMensal = true;
+                            }
+
+
+                            if (evento.NotaExplicativa != null)
+                            {
+                                exibeImagem = "../../Images/nota.gif";
+                                titulo = evento.NotaExplicativa;
+                            }
+                            else
+                            {
+                                exibeImagem = "../../Images/add.gif";
+                                titulo = "Adicionar nota explicativa";
+                            }
+
+
+                            <input type="hidden" id="@diaFixo" value="@string.Format("{0:#,##0}", evento.ValorDia)"/>
+                            <input type="hidden" id="@mesFixo" value="@string.Format("{0:#,##0}", evento.ValorMes)"/>
+
+                            int eventoTamanho = evento.Evento.Length;
+                            string eventoNovo;
+                            <tr>
+                                @if (eventoTamanho > 39)
+                                {
+                                    eventoTamanho = eventoTamanho - 38;
+                                    eventoNovo = evento.Evento.Remove(38, eventoTamanho) + "...";
+                                    <td style="padding-top: 1px;" width="250">
+                                        &nbsp;&nbsp;<span title="@evento.Evento" data-toggle='tooltip'>@eventoNovo</span>
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td style="padding-top: 1px;" width="250">
+                                        &nbsp;&nbsp;@evento.Evento
+                                    </td>
+                                }
+
+                                <td style="padding-top: 1px; text-align: right;">
+                                    @if (liberaDigitacaoDiario)
+                                    {
+                                        if (temSaldoInicial)
+                                        {
+                                            <input maxlength="10" data-tipso="@evento.EventoHelper" data-id="@evento.IdEvento" class="animate text-right campodiaEntradas" size="6" type="text" id="@dia" name="@dia" value="@string.Format("{0:#,##0}", evento.ValorDia)" onkeydown="mascara(this, valor);" onblur="this.style.backgroundColor = '#ffffff'">
+                                        }
+                                        else
+                                        {
+                                            <input data-toggle='tooltip' maxlength="10" disabled="disabled" data-placement='left' title="@evento.EventoHelper" data-id="@evento.IdEvento" class="text-right campodiaEntradas" size="6" type="text" id="@dia" name="@dia" value="@string.Format("{0:#,##0}", evento.ValorDia)" onkeydown="mascara(this, valor);" onblur="this.style.backgroundColor = '#ffffff'">
+                                        }
+                                    }
+                                </td>
+                                <td>
+                                    <a href="#" data-id="@evento.IdEvento" class="eventolancamento" data-toggle='tooltip' data-placement='top' title="@titulo">&nbsp;<img data-id="@evento.IdEvento" src="@exibeImagem" width='8' title="@titulo"/>&nbsp;</a>
+                                </td>
+                                <td style="padding-top: 1px; text-align: right;">
+                                    @if (liberaDigitacaoMensal)
+                                    {
+                                        <input data-tipso="@evento.EventoHelper" maxlength="10" id="@mes" name="@mes" data-id="@evento.IdEvento" class="animate text-right campomesEntradas" size="6" type="text" value="@string.Format("{0:#,##0}", evento.ValorMes)" onkeydown="mascara(this, valor);" onblur="this.style.backgroundColor = '#ffffff'">
+                                    }
+                                    else
+                                    {
+                                        <input class="text-right" size="6" type="text" id="@mes" disabled="disabled" maxlength="10" value="@string.Format("{0:#,##0}", evento.ValorMes)">
+                                    }
+                                </td>
+                            </tr>
+                        }
+
+                        <tr>
+                            <td style="padding-top: 2px;">&nbsp;<b>Total de entradas</b></td>
+                            <td style="padding-top: 2px;">
+                                <input id="TD501" disabled="disabled" size="6" type="text" class="text-right " style="color: white; background-color: #6A5ACD;" value="@string.Format("{0:#,##0}", ViewBag.TotalDia)"/>
+                            </td>
+                            <td></td>
+                            <td style="padding-top: 2px;">
+                                <input id="TM502" disabled="disabled" size="6" type="text" class="text-right " style="color: white; background-color: #6A5ACD;" value="@string.Format("{0:#,##0}", ViewBag.TotalMes)"/>
+                            </td>
+                        </tr>
+
+                    </table>
+                            <nav class="navbar navbar-default header navbar-fixed-bottom" style="background-color: #6A5ACD; color: #fff;">
+                                <div class="col-md-12 nav-wrapper">
+                                    <div class="navbar-header" style="width:100%;padding-left: 30px;">
+                                        <table style="text-align: center; " width="95%">
+                                            <tr>
+                                                <td><h3>SALDO DE CAIXA - </h3></td>
+                                                <td style="text-align: right;"><br/>(+) Saldo inicial</td>
+                                                <td >
+                                                    Dia<br/>
+                                                    <input id="TD513" disabled="disabled" size="6" type="text" class="text-right " style="color: black; background-color: #fff; font-weight: bold;" value="@string.Format("{0:#,##0}", ViewBag.TotalSaldoinicialDiaAnteiorContaCaixa)"/>
+                                                </td>
+                                                <td >
+                                                    Mês<br/>
+                                                    <input id="TM514" disabled="disabled" size="6" type="text" class="text-right " style="color: black; background-color: #fff; font-weight: bold;" value="@string.Format("{0:#,##0}", ViewBag.TotalSaldoinicialMesAnteriorContaCaixa)"/>
+                                                </td>
+
+                                                <td style="text-align: right;"><br/>&nbsp;&nbsp;(+) Entradas</td>
+                                                <td >
+                                                    Dia<br/>
+                                                    <input id="TD507" disabled="disabled" size="6" type="text" class="text-right " style="color: black; background-color: #fff; font-weight: bold;" value="@string.Format("{0:#,##0}", ViewBag.TotalDia)"/>
+                                                </td>
+                                                <td >
+                                                    Mês<br/>
+                                                    <input id="TM508" disabled="disabled" size="6" type="text" class="text-right " style="color: black; background-color: #fff; font-weight: bold;" value="@string.Format("{0:#,##0}", ViewBag.TotalMes)"/>
+                                                </td>
+
+                                                <td style="text-align: right;"><br/>&nbsp;&nbsp;(-) Saídas</td>
+                                                <td >
+                                                    Dia<br/>
+                                                    <input id="TD509" disabled="disabled" size="6" type="text" class="text-right" style="color: black; background-color: #fff; font-weight: bold;" value="@string.Format("{0:#,##0}", ViewBag.TotalDiaSaida)"/>
+                                                </td>
+                                                <td >
+                                                    Mês<br/>
+                                                    <input id="TM510" disabled="disabled" size="6" type="text" class="text-right " style="color: black; background-color: #fff; font-weight: bold;" value="@string.Format("{0:#,##0}", ViewBag.TotalMesSaida)"/>
+                                                </td>
+
+                                                <td style="text-align: right;"><br/><B>&nbsp;&nbsp;(=) Saldo final</B></td>
+                                                <td >
+                                                    Dia<br/>
+                                                    <input id="TD511" disabled="disabled" size="6" type="text" class="text-right " style="color: black; background-color: #fff; font-weight: bold;" value="@string.Format("{0:#,##0}", ViewBag.TotalSaldoinicialDiaAnteiorContaCaixa + ViewBag.TotalDia - ViewBag.TotalDiaSaida)"/>
+                                                </td>
+                                                <td >
+                                                    Mês<br/>
+                                                    <input id="TM512" disabled="disabled" size="6" type="text" class="text-right " style="color: black; background-color: #fff; font-weight: bold;" value="@string.Format("{0:#,##0}", ViewBag.TotalSaldoinicialMesAnteriorContaCaixa + ViewBag.TotalMes - ViewBag.TotalMesSaida)"/>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </nav>
+
+
+                        
+
+                        <table>
+                            <tr>
+                                <td style="background-color: #2c4970; color: #fff; padding-top: 2px;">
+                                    &nbsp;&nbsp;<b>COMPOSIÇÃO DO SALDO DE CAIXA</b>
+                                </td>
+                                <td width="15" style="background-color: #2c4970; color: #fff; padding-top: 2px;"></td>
+                                <td style="background-color: #2c4970; color: #fff; padding-top: 2px;text-align: center">
+                                    <b>Dia</b>
+                                </td>
+                            </tr>
+
+                        @foreach (var tipodocumento in (List<FechamentoCaixa>)ViewBag.listaTipoDocumento)
+                        {
+                            var dia = "FD" + tipodocumento.TipoDocumentoFechamentoCaixa.Id;
+                            <tr>
+                                <td style="padding-top: 2px;">
+                                    &nbsp;&nbsp;@tipodocumento.TipoDocumentoFechamentoCaixa.CampoNome.Nome
+                                </td>
+                                <td width="15"></td>
+                                <td style="padding-top: 2px; text-align: right;">
+                                    @if (temSaldoInicial)
+                                    {
+                                        <input data-toggle='tooltip' maxlength="10" data-placement='left' data-id="@tipodocumento.TipoDocumentoFechamentoCaixa.Id" class="text-right" size="6" type="text" id="@dia" name="@dia" value="@string.Format("{0:#,##0}", tipodocumento.Valor)" onkeydown="mascara(this, valor);" onblur="this.style.backgroundColor = '#ffffff'">
+                                    }
+                                    else
+                                    {
+                                        <input data-toggle='tooltip' disabled="disabled" maxlength="10" data-placement='left' data-id="@tipodocumento.TipoDocumentoFechamentoCaixa.Id" class="text-right" size="6" type="text" id="@dia" name="@dia" value="@string.Format("{0:#,##0}", tipodocumento.Valor)" onkeydown="mascara(this, valor);" onblur="this.style.backgroundColor = '#ffffff'">
+                                    }
+                                </td>
+                            </tr>
+                        }
+
+                        @if (ViewBag.TotalDiaFechamentoCaixa != 0)
+                        {
+                            var saldoFinalDia = ViewBag.TotalSaldoinicialDiaAnteiorContaCaixa + ViewBag.TotalDia - ViewBag.TotalDiaSaida;
+                            var saldoTotalFechamento = ViewBag.TotalDiaFechamentoCaixa;
+                            var saldoFinalFechamento = saldoTotalFechamento - saldoFinalDia;
+
+                            if (saldoTotalFechamento < saldoFinalDia)
+                            {
+
+                                
+                                <div class="col-md-12">
+                                    <div class="alert alert-danger alert-raised alert-dismissible fade in" role="alert">
+                                        <strong>Atenção!</strong> Consolidação não fechou com Saldo Final.<br/>
+                                        DIFERENÇA: <strong>@saldoFinalFechamento</strong>
+                                    </div>
+                                </div>
+
+
+                                <div id="alerta" class="modal fade" data-backdrop="static" style="padding-top: 200px; font-size: 15px;">
+                                    <div class="modal-dialog">
+                                        <div class="alert alert-danger alert-raised alert-dismissible fade in" role="alert">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                            <strong>ATENÇÃO!</strong><BR/>
+                                            CONSOLIDAÇÃO NÃO FECHOU COM SALDO FINAL. FAVOR VERIFICAR.<br/>
+                                            DIFERENÇA: <strong>@saldoFinalFechamento</strong>
+                                        </div>
+                                    </div>
+                                </div>
+                                <script type="text/javascript">$(document).ready(function() { $('#alerta').modal('show'); });</script>
+
+                            }
+                        }
+
+                        </table>
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <table width="420">
+                            <tr>
+                                <td width="60%" style="background-color: #2c4970; color: #fff; padding-top: 2px;">
+                                    &nbsp;&nbsp;<b>SAÍDA DE DINHEIRO</b>
+                                </td>
+                                <td width="15%" style="background-color: #2c4970; color: #fff; padding-top: 2px; text-align: center">
+                                    <b>Dia</b>
+                                </td>
+                                <td style="background-color: #2c4970; color: #fff; padding-top: 2px;"></td>
+                                <td width="15%" style="background-color: #2c4970; color: #fff; padding-top: 2px; text-align: center">
+                                    <b>Mês</b>
+                                </td>
+                            </tr>
+                        </table>
+                        <table>
+                            @foreach (var evento in Model.Where(item => item.Area.Codigo == "0002"))
+                            {
+                                var dia = "";
+                                var mes = "M" + evento.IdEvento;
+
+                                var diaFixo = "DF" + evento.IdEvento;
+                                var mesFixo = "MF" + evento.IdEvento;
+
+                                var exibeImagem = "";
+                                var titulo = "";
+                                bool liberaDigitacaoDiario = false;
+                                bool liberaDigitacaoMensal = false;
+
+                                var tipoEventoLancamento = evento.TipoEventoLancamento;
+                                if (tipoEventoLancamento == EnumTipoEventoLancamento.Diario)
+                                {
+                                    dia = "D" + evento.IdEvento;
+                                    liberaDigitacaoDiario = true;
+                                }
+                                else
+                                {
+                                    dia = "M" + evento.IdEvento;
+                                    liberaDigitacaoMensal = true;
+                                }
+
+
+                                if (evento.NotaExplicativa != null)
+                                {
+                                    exibeImagem = "../../Images/nota.gif";
+                                    titulo = evento.NotaExplicativa;
+                                }
+                                else
+                                {
+                                    exibeImagem = "../../Images/add.gif";
+                                    titulo = "Adicionar nota explicativa";
+                                }
+
+                                <input type="hidden" id="@diaFixo" value="@string.Format("{0:#,##0}", evento.ValorDia)"/>
+                                <input type="hidden" id="@mesFixo" value="@string.Format("{0:#,##0}", evento.ValorMes)"/>
+
+                                int eventoTamanho = evento.Evento.Length;
+                                string eventoNovo;
+                                <tr>
+                                    @if (eventoTamanho > 39)
+                                    {
+                                        eventoTamanho = eventoTamanho - 38;
+                                        eventoNovo = evento.Evento.Remove(38, eventoTamanho) + "...";
+                                        <td style="padding-top: 1px;" width="250">
+                                            &nbsp;&nbsp;<span title="@evento.Evento" data-toggle='tooltip'>@eventoNovo</span>
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td style="padding-top: 1px;" width="250">
+                                            &nbsp;&nbsp;@evento.Evento
+                                        </td>
+                                    }
+
+                                    <td style="padding-top: 1px;">
+                                        @if (liberaDigitacaoDiario)
+                                        {
+                                            if (temSaldoInicial)
+                                            {
+                                                <input maxlength="10" data-tipso="@evento.EventoHelper" data-id="@evento.IdEvento" class="animate text-right campodiaSaidas" size="6" type="text" id="@dia" name="@dia" value="@string.Format("{0:#,##0}", evento.ValorDia)" onkeydown="mascara(this, valor);" onblur="this.style.backgroundColor = '#ffffff'">
+                                            }
+                                            else
+                                            {
+                                                <input maxlength="10" data-toggle='tooltip' disabled="disabled" data-placement='left' title="@evento.EventoHelper" data-id="@evento.IdEvento" class="text-right campodiaSaidas" size="6" type="text" id="@dia" name="@dia" value="@string.Format("{0:#,##0}", evento.ValorDia)" onkeydown="mascara(this, valor);" onblur="this.style.backgroundColor = '#ffffff'">
+                                            }
+                                        }
+                                    </td>
+                                    <td >
+                                        <a href="#" data-id="@evento.IdEvento" class="eventolancamento" data-toggle='tooltip' data-placement='top' title="@titulo">&nbsp;<img data-id="@evento.IdEvento" src="@exibeImagem" width='8' title="@titulo"/>&nbsp;</a>
+                                    </td>
+                                    <td style="padding-top: 1px;">
+                                        @if (liberaDigitacaoMensal)
+                                        {
+                                            <input data-tipso="@evento.EventoHelper" maxlength="10" id="@mes" name="@mes" data-id="@evento.IdEvento" class="animate text-right campomesSaidas" size="6" type="text" value="@string.Format("{0:#,##0}", evento.ValorMes)" onkeydown="mascara(this, valor);" onblur="this.style.backgroundColor = '#ffffff'">
+                                        }
+                                        else
+                                        {
+                                            <input class="text-right" size="6" type="text" id="@mes" disabled="disabled" value="@string.Format("{0:#,##0}", evento.ValorMes)">
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                            <tr>
+                                <td >
+                                    <b>Total de saidas</b>
+                                </td>
+                                <td style="padding-top: 2px;"><input id="TD503" disabled="disabled" size="6" type="text" class="text-right " style="color: white; background-color: #6A5ACD;" value="@string.Format("{0:#,##0}", ViewBag.TotalDiaSaida)"/></td>
+                                <td style="display: inherit">
+                                </td>
+                                <td style="padding-top: 2px;"><input id="TM504" disabled="disabled" size="6" type="text" class="text-right " style="color: white; background-color: #6A5ACD;" value="@string.Format("{0:#,##0}", ViewBag.TotalMesSaida)"/></td>
+                            </tr>
+
+
+                        </table>
+                        <br/><br/><br/><br/>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            @if (ViewBag.TotalSaldoinicialDiaAnteiorContaCaixa == 0)
+            {
+            <div style="padding-bottom: 10px;">
+                    <div id="alerta2" class="modal fade" data-backdrop="static" style="padding-top: 200px;; font-size: 15px;">
+                        <div class="modal-dialog">
+                            <div class="alert alert-danger alert-raised alert-dismissible fade in" role="alert">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                <strong>ATENÇÃO:</strong> Você ainda não lançou os saldos iniciais. <BR/>
+                                <span style="padding-left: 82px;">O lançamento de movimentações foi bloqueado.<br /></span>
+                            </div>
+                        </div>
+                    </div>
+                    <script type="text/javascript">$(document).ready(function () { $('#alerta2').modal('show'); });</script>
+
+            </div>
+            }
+
+
+            <div class="panel">
+                <div class="panel-heading" style="padding-left: 10px; padding-right: 30px; padding-bottom: 49px">
+                    <ul class="nav navbar-nav navbar-left" style="color: #2c4970;">
+                        <h4><b>Movimentação Econômica</b></h4>
+                    </ul>
+                </div>
+
+                <div class="panel-body" style="padding-top: 10px;">
+
+                    <table width="420">
+                        <tr>
+                            <td width="60%" style="background-color: #2c4970; color: #fff; padding-top: 2px;">
+                                
+                            </td>
+                            <td width="15%" style="background-color: #2c4970; color: #fff; padding-top: 2px; text-align: center">
+                                <b>Dia</b>
+                            </td>
+                            <td style="background-color: #2c4970; color: #fff; padding-top: 2px;"></td>
+                            <td width="15%" style="background-color: #2c4970; color: #fff; padding-top: 2px; text-align: center">
+                                <b>Mês</b>
+                            </td>
+                        </tr>
+                    </table>
+                    <table>
+                        <tr>
+                            <td>
+                                <table>
+                                    @foreach (var evento in Model.Where(item => item.Area.Codigo == "0003" && item.MaisUsado == EnumMaisUsado.Sim))
+                                    {
+
+                                        var dia = "";
+                                        var mes = "M" + evento.IdEvento;
+
+                                        var diaFixo = "DF" + evento.IdEvento;
+                                        var mesFixo = "MF" + evento.IdEvento;
+                                        var exibeImagem = "";
+                                        var titulo = "";
+
+                                        bool liberaDigitacaoDiario = false;
+                                        bool liberaDigitacaoMensal = false;
+
+                                        var tipoEventoLancamento = evento.TipoEventoLancamento;
+                                        if (tipoEventoLancamento == EnumTipoEventoLancamento.Diario)
+                                        {
+                                            dia = "D" + evento.IdEvento;
+                                            liberaDigitacaoDiario = true;
+                                        }
+                                        else
+                                        {
+                                            dia = "M" + evento.IdEvento;
+                                            liberaDigitacaoMensal = true;
+                                        }
+
+                                        if (evento.NotaExplicativa != null)
+                                        {
+                                            exibeImagem = "../../Images/nota.gif";
+                                            titulo = evento.NotaExplicativa;
+                                        }
+                                        else
+                                        {
+                                            exibeImagem = "../../Images/add.gif";
+                                            titulo = "Adicionar nota explicativa";
+                                        }
+
+                                        <input type="hidden" id="@diaFixo" value="@string.Format("{0:#,##0}", evento.ValorDia)"/>
+                                        <input type="hidden" id="@mesFixo" value="@string.Format("{0:#,##0}", evento.ValorMes)"/>
+                                        <tr>
+                                            <td width="250" style="padding-top: 1px;">
+                                                &nbsp;&nbsp;@evento.Evento
+                                            </td>
+                                            <td style="padding-top: 1px;">
+                                                @if (liberaDigitacaoDiario)
+                                                {
+                                                    if (temSaldoInicial)
+                                                    {
+                                                        <input maxlength="10" data-tipso="@evento.EventoHelper" data-id="@evento.IdEvento" class="animate text-right campodiaMovEconomica" size="6" type="text" id="@dia" name="@dia" value="@string.Format("{0:#,##0}", evento.ValorDia)" onkeydown="mascara(this, valor);" onblur="this.style.backgroundColor = '#ffffff'">
+                                                    }
+                                                    else
+                                                    {
+                                                        <input maxlength="10" data-toggle='tooltip' disabled="disabled" data-placement='left' title="@evento.EventoHelper" data-id="@evento.IdEvento" class="text-right campodiaMovEconomica" size="6" type="text" id="@dia" name="@dia" value="@string.Format("{0:#,##0}", evento.ValorDia)" onkeydown="mascara(this, valor);" onblur="this.style.backgroundColor = '#ffffff'">
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                                }
+                                            </td>
+                                            <td>
+                                                <a href="#" data-id="@evento.IdEvento" class="eventolancamento" data-toggle='tooltip' data-placement='top' title="@titulo">&nbsp;<img data-id="@evento.IdEvento" src="@exibeImagem" width='8'/>&nbsp;</a>
+                                            </td>
+                                            <td style="padding-top: 1px;">
+                                                @if (liberaDigitacaoMensal)
+                                                {
+                                                    if (temSaldoInicial)
+                                                    {
+                                                        <input data-tipso="@evento.EventoHelper" maxlength="10" id="@mes" name="@mes" data-id="@evento.IdEvento" class="animate text-right campomesMovEconomica" size="6" type="text" value="@string.Format("{0:#,##0}", evento.ValorMes)" onkeydown="mascara(this, valor);" onblur="this.style.backgroundColor = '#ffffff'">
+                                                    }
+                                                    else
+                                                    {
+                                                        <input title="@evento.EventoHelper" disabled="disabled" data-toggle='tooltip' data-placement='left' maxlength="10" id="@mes" name="@mes" data-id="@evento.IdEvento" class="text-right campomesMovEconomica" size="6" type="text" value="@string.Format("{0:#,##0}", evento.ValorMes)" onkeydown="mascara(this, valor);" onblur="this.style.backgroundColor = '#ffffff'">
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    <input class="text-right" size="6" type="text" id="@mes" disabled="disabled" value="@string.Format("{0:#,##0}", evento.ValorMes)">
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                    <tr>
+                                        <td colspan="4">
+                                            &nbsp;&nbsp;<a href="#" onclick="javascript: exibe('maiseventos');" data-toggle='tooltip' data-placement='right' title="mais eventos"><b><span style="color: red;font-size: 20px" class="fa-share fa"></span></b></a>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr style="display: none" id="maiseventos" name="maiseventos">
+                            <td>
+                                <table>
+                                    @foreach (var evento in Model.Where(item => item.Area.Codigo == "0003" && item.MaisUsado == EnumMaisUsado.Nao))
+                                    {
+
+                                        var dia = "";
+                                        var mes = "M" + evento.IdEvento;
+
+                                        var diaFixo = "DF" + evento.IdEvento;
+                                        var mesFixo = "MF" + evento.IdEvento;
+                                        var exibeImagem = "";
+                                        var titulo = "";
+
+                                        bool liberaDigitacaoDiario = false;
+                                        bool liberaDigitacaoMensal = false;
+
+                                        var tipoEventoLancamento = evento.TipoEventoLancamento;
+                                        if (tipoEventoLancamento == EnumTipoEventoLancamento.Diario)
+                                        {
+                                            dia = "D" + evento.IdEvento;
+                                            liberaDigitacaoDiario = true;
+                                        }
+                                        else
+                                        {
+                                            dia = "M" + evento.IdEvento;
+                                            liberaDigitacaoMensal = true;
+                                        }
+
+                                        if (evento.NotaExplicativa != null)
+                                        {
+                                            exibeImagem = "../../Images/nota.gif";
+                                            titulo = evento.NotaExplicativa;
+                                        }
+                                        else
+                                        {
+                                            exibeImagem = "../../Images/add.gif";
+                                            titulo = "Adicionar nota explicativa";
+                                        }
+
+                                        <input type="hidden" id="@diaFixo" value="@string.Format("{0:#,##0}", evento.ValorDia)" />
+                                        <input type="hidden" id="@mesFixo" value="@string.Format("{0:#,##0}", evento.ValorMes)" />
+                                        <tr>
+                                            <td width="250" style="padding-top: 1px;">
+                                                &nbsp;&nbsp;@evento.Evento
+                                            </td>
+                                            <td style="padding-top: 1px;">
+                                                @if (liberaDigitacaoDiario)
+                                                {
+                                                    if (temSaldoInicial)
+                                                    {
+                                                        <input maxlength="10" data-tipso="@evento.EventoHelper" data-id="@evento.IdEvento" class="animate text-right campodiaMovEconomica" size="6" type="text" id="@dia" name="@dia" value="@string.Format("{0:#,##0}", evento.ValorDia)" onkeydown="mascara(this, valor);" onblur="this.style.backgroundColor = '#ffffff'">
+                                                    }
+                                                    else
+                                                    {
+                                                        <input maxlength="10" data-toggle='tooltip' disabled="disabled" data-placement='left' title="@evento.EventoHelper" data-id="@evento.IdEvento" class="text-right campodiaMovEconomica" size="6" type="text" id="@dia" name="@dia" value="@string.Format("{0:#,##0}", evento.ValorDia)" onkeydown="mascara(this, valor);" onblur="this.style.backgroundColor = '#ffffff'">
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                                }
+
+                                            </td>
+                                            <td>
+                                                <a href="#" data-id="@evento.IdEvento" class="eventolancamento" data-toggle='tooltip' data-placement='top' title="@titulo">&nbsp;<img data-id="@evento.IdEvento" src="@exibeImagem" width='8' />&nbsp;</a>
+                                            </td>
+                                            <td style="padding-top: 1px;">
+                                                @if (liberaDigitacaoMensal)
+                                                {
+                                                    if (temSaldoInicial)
+                                                    {
+                                                        <input data-tipso="@evento.EventoHelper" maxlength="10" id="@mes" name="@mes" data-id="@evento.IdEvento" class="animate text-right campomesMovEconomica" size="6" type="text" value="@string.Format("{0:#,##0}", evento.ValorMes)" onkeydown="mascara(this, valor);" onblur="this.style.backgroundColor = '#ffffff'">
+                                                    }
+                                                    else
+                                                    {
+                                                        <input title="@evento.EventoHelper" disabled="disabled" data-toggle='tooltip' data-placement='left' maxlength="10" id="@mes" name="@mes" data-id="@evento.IdEvento" class="text-right campomesMovEconomica" size="6" type="text" value="@string.Format("{0:#,##0}", evento.ValorMes)" onkeydown="mascara(this, valor);" onblur="this.style.backgroundColor = '#ffffff'">
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    <input class="text-right" size="6" type="text" id="@mes" disabled="disabled" value="@string.Format("{0:#,##0}", evento.ValorMes)">
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                    <tr>
+                                        <td>
+                                            &nbsp;&nbsp;<b>Total Movimentações</b>
+                                        </td>
+                                        <td style="padding-top: 2px;"><input id="TD505" disabled="disabled" size="6" type="text" class="text-right " style="color: white; background-color: #6A5ACD;" value="@string.Format("{0:#,##0}", ViewBag.TotalDiaMovimento)"/></td>
+                                        <td style="display: inherit"></td>
+                                        <td style="padding-top: 2px;"><input id="TM506" disabled="disabled" size="6" type="text" class="text-right " style="color: white; background-color: #6A5ACD;" value="@string.Format("{0:#,##0}", ViewBag.TotalMesMovimento)"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="4">
+                                            &nbsp;&nbsp;<a href="#" onclick="javascript: exibe('maiseventos');" data-toggle='tooltip' data-placement='right' title="menos eventos"><b><span style="color: red;font-size: 20px" class="fa-reply fa"></span></b></a>
+                                        </td>
+                                    </tr>
+
+                                </table>
+                            </td>
+                        </tr>
+
+                    </table>
+                </div>
+
+            </div>
+            <div style="padding-top: 20px;">
+                @if (ViewBag.TotalSaldoinicialDiaAnteiorContaCaixa == 0)
+                {
+                    <button class="btn btn-success btn-lg" type="submit" disabled="disabled" name="salvaroperacao" id="salvaroperacao" value="1">
+                        Salvar Operações
+                    </button>
+                }
+                else {
+                    <button class="btn btn-success btn-lg" type="submit" name="salvaroperacao" id="salvaroperacao" value="1">
+                        Salvar Operações
+                    </button>
+
+                }
+            </div>
+        </div>
+
+    </div>
+}
+
+<div id="abrirModalProcessando" class="modal fade modal-v2" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body" align=center>
+                <img src="../../Images/loading_2x.gif" width="300">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="conteudoModalEvento" data-url="@Url.Action("CadastrarEditarNotaExplicativa", "EventoLancamento")">
+</div>
+
+<div id="alerta-desconto-recebivel" class="modal fade" data-backdrop="static" style="padding-top: 200px; font-size: 15px;">
+    <div class="modal-dialog">
+        <div class="alert alert-danger alert-raised alert-dismissible fade in" role="alert">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+            <strong>ATENÇÃO!</strong><BR/>
+            FAVOR LANÇAR IMEDIATAMENTE OS JUROS COBRADOS NA MOVIMENTAÇÃO ECONÔMICA.<br/>
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+
+    <script>
+
+        $(document).ready(function () {
+
+            $(document).on('click', 'input[type=text]', function () { this.select(); this.style.backgroundColor = '#FFFF00'; });
+
+            $(".eventolancamento").click(function (event) {
+                var idEvento = $(event.target).data("id");
+                var item = $("#conteudoModalEvento");
+                var url = item.data("url") + "?id=" + idEvento;
+                item.load(url, abrirModalEvento);
+            });
+
+            $("#salvaroperacao").click(function () {
+                $('#abrirModalProcessando').modal('show');
+            });
+
+            $(".campodiaEntradas").on("blur", function (event) {
+
+                var valorDigitadoDia = event.target.value;
+
+                var idEvento = $("#" + event.target.id).data("id");
+
+                if (idEvento == "132") {
+                    $('#alerta-desconto-recebivel').modal('show');
+                }
+
+                var campoMes = "#M" + idEvento;
+                var campoFixoDia = "#DF" + idEvento;
+                var campoFixoMes = "#MF" + idEvento;
+                var campoFixoTotalDiaEntrada = "#TD501";
+                var campoFixoTotalMesEntrada = "#TM502";
+                var campoFixoSaldoTotalDiaEntrada = "#TD507";
+                var campoFixoSaldoTotalMesEntrada = "#TM508";
+                var campoFixoSaldoFinalTotalDia = "#TD511";
+                var campoFixoSaldoFinalTotalMes = "#TM512";
+
+                var valorDiaFixo = $(campoFixoDia).val();
+
+                //---- ATUALIZA CAMPO FIXO ENTRADA E SAIDA NO MES
+                var valorMesFixo = $(campoFixoMes).val();
+                var valorFinalMes = parseFloat(valorMesFixo.replace(".", "")) - parseFloat(valorDiaFixo.replace(".", "")) + parseFloat(valorDigitadoDia.replace(".", ""));
+                $(campoMes).val(valor(valorFinalMes)); 
+
+                //---- ATUALIZA CAMPO FIXO TOTAL DE ENTRADAS NO DIA
+                var valorFixoTotalDia = $(campoFixoTotalDiaEntrada).val();
+                var valorEntradaTotalDia = parseFloat(valorFixoTotalDia.replace(".", "")) - parseFloat(valorDiaFixo.replace(".", "")) + parseFloat(valorDigitadoDia.replace(".", ""));
+                $(campoFixoTotalDiaEntrada).val(valor(valorEntradaTotalDia));
+
+                //---- ATUALIZA CAMPO FIXO TOTAL DE ENTRADAS NO MES
+                var valorFixoTotalMes = $(campoFixoTotalMesEntrada).val();
+                var valorEntradaTotalMes = parseFloat(valorFixoTotalMes.replace(".", "")) - parseFloat(valorDiaFixo.replace(".", "")) + parseFloat(valorDigitadoDia.replace(".", ""));
+                $(campoFixoTotalMesEntrada).val(valor(valorEntradaTotalMes));
+
+                //---- ATUALIZA CAMPO FIXO SALDO TOTAL DE ENTRADAS NO DIA
+                var valorFixoSaldoTotalDia = $(campoFixoSaldoTotalDiaEntrada).val();
+                var valorEntradaSaldoTotalDia = parseFloat(valorFixoSaldoTotalDia.replace(".", "")) - parseFloat(valorDiaFixo.replace(".", "")) + parseFloat(valorDigitadoDia.replace(".", ""));
+                $(campoFixoSaldoTotalDiaEntrada).val(valor(valorEntradaSaldoTotalDia));
+
+                //---- ATUALIZA CAMPO FIXO SALDO TOTAL DE ENTRADAS NO MES
+                var valorFixoSaldoTotalMes = $(campoFixoSaldoTotalMesEntrada).val();
+                var valorEntradaSaldoTotalMes = parseFloat(valorFixoSaldoTotalMes.replace(".", "")) - parseFloat(valorDiaFixo.replace(".", "")) + parseFloat(valorDigitadoDia.replace(".", ""));
+                $(campoFixoSaldoTotalMesEntrada).val(valor(valorEntradaSaldoTotalMes));
+
+
+                //---- ATUALIZA CAMPO FIXO SALDO FINAL NO DIA ENTRADAS
+                var valorFixoSaldoFinalTotalDia = $(campoFixoSaldoFinalTotalDia).val();
+                var valorEntradaSaldoFinalTotalDia = parseFloat(valorFixoSaldoFinalTotalDia.replace(".", "")) - parseFloat(valorDiaFixo.replace(".", "")) + parseFloat(valorDigitadoDia.replace(".", ""));
+                $(campoFixoSaldoFinalTotalDia).val(valor(valorEntradaSaldoFinalTotalDia));
+
+                //---- ATUALIZA CAMPO FIXO SALDO FINAL NO MES ENTRADAS
+                var valorFixoSaldoFinalTotalMes = $(campoFixoSaldoFinalTotalMes).val();
+                var valorEntradaSaldoFinalTotalMes = parseFloat(valorFixoSaldoFinalTotalMes.replace(".", "")) - parseFloat(valorDiaFixo.replace(".", "")) + parseFloat(valorDigitadoDia.replace(".", ""));
+                $(campoFixoSaldoFinalTotalMes).val(valor(valorEntradaSaldoFinalTotalMes));
+
+
+            });
+            $(".campomesEntradas").on("blur", function (event) {
+
+                var valorDigitadoDia = event.target.value;
+
+                var idEvento = $("#" + event.target.id).data("id");
+
+                var campoFixoMes = "#MF" + idEvento;
+                var campoFixoTotalMesEntrada = "#TM502";
+                var campoFixoSaldoTotalMesEntrada = "#TM508";
+                var campoFixoSaldoFinalTotalMes = "#TM512";
+
+                var valorDiaFixo = $(campoFixoMes).val();
+
+                //---- ATUALIZA CAMPO FIXO TOTAL DE ENTRADAS NO MES
+                var valorFixoTotalMes = $(campoFixoTotalMesEntrada).val();
+                var valorEntradaTotalMes = parseFloat(valorFixoTotalMes.replace(".", "")) - parseFloat(valorDiaFixo.replace(".", "")) + parseFloat(valorDigitadoDia.replace(".", ""));
+                $(campoFixoTotalMesEntrada).val(valor(valorEntradaTotalMes));
+
+                //---- ATUALIZA CAMPO FIXO SALDO TOTAL DE ENTRADAS NO MES
+                var valorFixoSaldoTotalMes = $(campoFixoSaldoTotalMesEntrada).val();
+                var valorEntradaSaldoTotalMes = parseFloat(valorFixoSaldoTotalMes.replace(".", "")) - parseFloat(valorDiaFixo.replace(".", "")) + parseFloat(valorDigitadoDia.replace(".", ""));
+                $(campoFixoSaldoTotalMesEntrada).val(valor(valorEntradaSaldoTotalMes));
+
+                //---- ATUALIZA CAMPO FIXO SALDO FINAL NO MES ENTRADAS
+                var valorFixoSaldoFinalTotalMes = $(campoFixoSaldoFinalTotalMes).val();
+                var valorEntradaSaldoFinalTotalMes = parseFloat(valorFixoSaldoFinalTotalMes.replace(".", "")) - parseFloat(valorDiaFixo.replace(".", "")) + parseFloat(valorDigitadoDia.replace(".", ""));
+                $(campoFixoSaldoFinalTotalMes).val(valor(valorEntradaSaldoFinalTotalMes));
+
+            });
+
+            $(".campodiaSaidas").on("blur", function (event) {
+
+                var valorDigitadoDia = event.target.value;
+
+                var idEvento = $("#" + event.target.id).data("id");
+
+                var campoMes = "#M" + idEvento;
+                var campoFixoDia = "#DF" + idEvento;
+                var campoFixoMes = "#MF" + idEvento;
+                var campoFixoTotalDiaEntrada = "#TD503";
+                var campoFixoTotalMesEntrada = "#TM504";
+                var campoFixoSaldoTotalDiaSaida = "#TD509";
+                var campoFixoSaldoTotalMesSaida = "#TM510";
+                var campoFixoSaldoFinalTotalDia = "#TD511";
+                var valorDiaFixo = $(campoFixoDia).val();
+                var campoFixoSaldoFinalTotalMes = "#TM512";
+
+                //---- ATUALIZA CAMPO FIXO ENTRADA E SAIDA NO MES
+                var valorMesFixo = $(campoFixoMes).val();
+                var valorFinalMes = parseFloat(valorMesFixo.replace(".", "")) - parseFloat(valorDiaFixo.replace(".", "")) + parseFloat(valorDigitadoDia.replace(".", ""));
+                $(campoMes).val(valor(valorFinalMes));
+
+                //---- ATUALIZA CAMPO FIXO TOTAL DE ENTRADAS NO DIA
+                var valorFixoTotalDia = $(campoFixoTotalDiaEntrada).val();
+                var valorSaidaTotalDia = parseFloat(valorFixoTotalDia.replace(".", "")) - parseFloat(valorDiaFixo.replace(".", "")) + parseFloat(valorDigitadoDia.replace(".", ""));
+                $(campoFixoTotalDiaEntrada).val(valor(valorSaidaTotalDia));
+
+                //---- ATUALIZA CAMPO FIXO TOTAL DE ENTRADAS NO MES
+                var valorFixoTotalMes = $(campoFixoTotalMesEntrada).val();
+                var valorEntradaTotalMes = parseFloat(valorFixoTotalMes.replace(".", "")) - parseFloat(valorDiaFixo.replace(".", "")) + parseFloat(valorDigitadoDia.replace(".", ""));
+                $(campoFixoTotalMesEntrada).val(valor(valorEntradaTotalMes));
+
+                //---- ATUALIZA CAMPO FIXO SALDO TOTAL DE SAIDAS NO DIA
+                var valorFixoSaldoTotalDia = $(campoFixoSaldoTotalDiaSaida).val();
+                var valorSaidaSaldoTotalDia = parseFloat(valorFixoSaldoTotalDia.replace(".", "")) - parseFloat(valorDiaFixo.replace(".", "")) + parseFloat(valorDigitadoDia.replace(".", ""));
+                $(campoFixoSaldoTotalDiaSaida).val(valor(valorSaidaSaldoTotalDia));
+
+                //---- ATUALIZA CAMPO FIXO SALDO TOTAL DE SAIDAS NO MES
+                var valorFixoSaldoTotalMes = $(campoFixoSaldoTotalMesSaida).val();
+                var valorSaidaSaldoTotalMes = parseFloat(valorFixoSaldoTotalMes.replace(".", "")) - parseFloat(valorDiaFixo.replace(".", "")) + parseFloat(valorDigitadoDia.replace(".", ""));
+                $(campoFixoSaldoTotalMesSaida).val(valor(valorSaidaSaldoTotalMes));
+
+                //---- ATUALIZA CAMPO FIXO SALDO FINAL NO DIA ENTRADAS
+                var valorFixoSaldoFinalTotalDia = $(campoFixoSaldoFinalTotalDia).val();
+                var valorEntradaSaldoFinalTotalDia = parseFloat(valorFixoSaldoFinalTotalDia.replace(".", "")) - parseFloat(valorDiaFixo.replace(".", "")) - parseFloat(valorDigitadoDia.replace(".", ""));
+                $(campoFixoSaldoFinalTotalDia).val(valor(valorEntradaSaldoFinalTotalDia));
+
+                //---- ATUALIZA CAMPO FIXO SALDO FINAL NO MES SAIDAS
+                var valorFixoSaldoFinalTotalMes = $(campoFixoSaldoFinalTotalMes).val();
+                var valorEntradaSaldoFinalTotalMes = parseFloat(valorFixoSaldoFinalTotalMes.replace(".", "")) - parseFloat(valorDiaFixo.replace(".", "")) - parseFloat(valorDigitadoDia.replace(".", ""));
+                $(campoFixoSaldoFinalTotalMes).val(valor(valorEntradaSaldoFinalTotalMes));
+
+
+            });
+            $(".campomesSaidas").on("blur", function (event) {
+
+                var valorDigitadoDia = event.target.value;
+
+                var idEvento = $("#" + event.target.id).data("id");
+
+                var campoFixoMes = "#MF" + idEvento;
+                var campoFixoTotalMesSaida = "#TM504";
+                var campoFixoSaldoTotalMesSaida = "#TM510";
+                var campoFixoSaldoFinalTotalMes = "#TM512";
+                var valorDiaFixo = $(campoFixoMes).val();
+
+                //---- ATUALIZA CAMPO FIXO TOTAL DE ENTRADAS NO MES
+                var valorFixoTotalMes = $(campoFixoTotalMesSaida).val();
+                var valorSaidaTotalMes = parseFloat(valorFixoTotalMes.replace(".", "")) - parseFloat(valorDiaFixo.replace(".", "")) + parseFloat(valorDigitadoDia.replace(".", ""));
+                $(campoFixoTotalMesSaida).val(valor(valorSaidaTotalMes));
+
+                //---- ATUALIZA CAMPO FIXO SALDO TOTAL DE SAIDAS NO MES
+                var valorFixoSaldoTotalMes = $(campoFixoSaldoTotalMesSaida).val();
+                var valorSaidaSaldoTotalMes = parseFloat(valorFixoSaldoTotalMes.replace(".", "")) - parseFloat(valorDiaFixo.replace(".", "")) + parseFloat(valorDigitadoDia.replace(".", ""));
+                $(campoFixoSaldoTotalMesSaida).val(valor(valorSaidaSaldoTotalMes));
+
+                //---- ATUALIZA CAMPO FIXO SALDO FINAL NO MES SAIDAS
+                var valorFixoSaldoFinalTotalMes = $(campoFixoSaldoFinalTotalMes).val();
+                var valorEntradaSaldoFinalTotalMes = parseFloat(valorFixoSaldoFinalTotalMes.replace(".", "")) - parseFloat(valorDiaFixo.replace(".", "")) - parseFloat(valorDigitadoDia.replace(".", ""));
+                $(campoFixoSaldoFinalTotalMes).val(valor(valorEntradaSaldoFinalTotalMes));
+
+            });
+
+            $(".campodiaMovEconomica").on("blur", function (event) {
+
+                var valorDigitadoDia = event.target.value;
+
+                var idEvento = $("#" + event.target.id).data("id");
+
+                var campoMes = "#M" + idEvento;
+                var campoFixoDia = "#DF" + idEvento;
+                var campoFixoMes = "#MF" + idEvento;
+                var campoFixoTotalDiaEntrada = "#TD505";
+                var campoFixoTotalMesEntrada = "#TM506";
+
+                var valorDiaFixo = $(campoFixoDia).val();
+
+                //---- ATUALIZA CAMPO FIXO ENTRADA E SAIDA NO MES
+                var valorMesFixo = $(campoFixoMes).val();
+                var valorFinalMes = parseFloat(valorMesFixo.replace(".", "")) - parseFloat(valorDiaFixo.replace(".", "")) + parseFloat(valorDigitadoDia.replace(".", ""));
+                $(campoMes).val(valor(valorFinalMes));
+
+                //---- ATUALIZA CAMPO FIXO TOTAL DE ENTRADAS NO DIA
+                var valorFixoTotalDia = $(campoFixoTotalDiaEntrada).val();
+                var valorMovTotalDia = parseFloat(valorFixoTotalDia.replace(".", "")) - parseFloat(valorDiaFixo.replace(".", "")) + parseFloat(valorDigitadoDia.replace(".", ""));
+                $(campoFixoTotalDiaEntrada).val(valor(valorMovTotalDia));
+
+                //---- ATUALIZA CAMPO FIXO TOTAL DE ENTRADAS NO MES
+                var valorFixoTotalMes = $(campoFixoTotalMesEntrada).val();
+                var valorEntradaTotalMes = parseFloat(valorFixoTotalMes.replace(".", "")) - parseFloat(valorDiaFixo.replace(".", "")) + parseFloat(valorDigitadoDia.replace(".", ""));
+                $(campoFixoTotalMesEntrada).val(valor(valorEntradaTotalMes));
+
+            });
+            $(".campomesMovEconomica").on("blur", function (event) {
+
+                var valorDigitadoDia = event.target.value;
+
+                var idEvento = $("#" + event.target.id).data("id");
+
+                var campoFixoMes = "#MF" + idEvento;
+                var campoFixoTotalMesEntrada = "#TM506";
+
+                var valorDiaFixo = $(campoFixoMes).val();
+
+                //---- ATUALIZA CAMPO FIXO TOTAL DE ENTRADAS NO MES
+                var valorFixoTotalMes = $(campoFixoTotalMesEntrada).val();
+                var valorEntradaTotalMes = parseFloat(valorFixoTotalMes.replace(".", "")) - parseFloat(valorDiaFixo.replace(".", "")) + parseFloat(valorDigitadoDia.replace(".", ""));
+                $(campoFixoTotalMesEntrada).val(valor(valorEntradaTotalMes));
+
+            });
+
+
+        });
+
+        $('.tipso').tipso();
+
+        jQuery(document).ready(function () {
+            // Position Tipso
+            jQuery('.right').tipso({
+                position: 'right',
+                background: 'rgba(0,0,0,0.8)',
+                useTitle: false,
+            });
+            jQuery('.left').tipso({
+                position: 'left',
+                background: 'tomato',
+                useTitle: false,
+            });
+            jQuery('.bottom').tipso({
+                position: 'bottom',
+                background: '#2574A9',
+                useTitle: false,
+            });
+            jQuery('.top, .destroy, .update, .update-tipso-content').tipso({
+                position: 'top',
+                background: '#F62459',
+                useTitle: false,
+            });
+            // Tooltip Hover
+            jQuery('.hover-tipso-tooltip').tipso({
+                position: 'top',
+                background: '#000',
+                useTitle: false,
+                width: false,
+                maxWidth: 300,
+                tooltipHover: true,
+                content: function () {
+                    return 'You can <a href="javascript:;">CLICK ME</a> now!';
+                }
+            });
+
+            jQuery('.top-right').tipso({
+                position: 'top-right',
+                background: 'rgba(0,0,0,0.8)',
+                titleBackground: 'tomato',
+                titleContent: 'Some title',
+                useTitle: false,
+                tooltipHover: true
+            });
+
+            jQuery('.top-left').tipso({
+                position: 'top-left',
+                background: 'rgba(0,0,0,0.8)',
+                titleBackground: 'blue',
+                titleContent: '     Ajuda',
+                useTitle: false,
+                tooltipHover: true
+            });
+
+            jQuery('.bottom-right').tipso({
+                position: 'bottom-right',
+                background: 'rgba(0,0,0,0.8)',
+                titleBackground: 'tomato',
+                titleContent: 'Some title',
+                useTitle: false,
+                tooltipHover: true
+            });
+
+            jQuery('.bottom-left').tipso({
+                position: 'bottom-left',
+                background: 'rgba(0,0,0,0.8)',
+                titleBackground: 'tomato',
+                titleContent: 'Some title',
+                useTitle: false,
+                tooltipHover: true
+            });
+
+            // Use Title For Tipso Content
+            jQuery('.title-tipso').tipso({
+                useTitle: true
+            });
+            // Tipso for Image
+            jQuery('.img-tipso').tipso({
+                useTitle: false,
+                background: 'rgba(0,0,0,0.8)'
+            });
+            // Show - Hide Tipso on Click
+            jQuery('.show-hide').tipso({
+                background: 'tomato',
+                useTitle: false
+            });
+            jQuery('.show-hide-tipso').on('click', function (e) {
+                if (jQuery(this).hasClass('clicked')) {
+                    jQuery(this).removeClass('clicked');
+                    jQuery('.show-hide').tipso('hide');
+                } else {
+                    jQuery(this).addClass('clicked');
+                    jQuery('.show-hide').tipso('show');
+                }
+                e.preventDefault();
+            });
+            // Before show
+            jQuery('.beforeShow').tipso({
+                background: 'tomato',
+                useTitle: false,
+                onBeforeShow: function (element, tips) {
+                    element.tipso('update', 'content', 'the title is a random number');
+                    element.tipso('update', 'titleContent', Math.random());
+                }
+            });
+            jQuery('.beforeShow-tipso').on('click', function (e) {
+                if (jQuery(this).hasClass('clicked')) {
+                    jQuery(this).removeClass('clicked');
+                    jQuery('.beforeShow').tipso('hide');
+                } else {
+                    jQuery(this).addClass('clicked');
+                    jQuery('.beforeShow').tipso('show');
+                }
+                e.preventDefault();
+            });
+
+            // Animate Tipso
+            jQuery('.animate').tipso({
+                animationIn: 'bounceIn',
+                animationOut: 'bounceOut',
+                background: 'ForestGreen',
+                titleBackground: 'black',
+                titleContent: 'Ajuda',
+                position: 'top',
+                useTitle: false,
+                tooltipHover: true
+            });
+            jQuery('.animationIn').on('change', function (e) {
+                var $this = jQuery(this);
+                jQuery('.animate').tipso('update', 'animationIn', $this.val());
+            });
+            jQuery('.animationOut').on('change', function (e) {
+                var $this = jQuery(this);
+                jQuery('.animate').tipso('update', 'animationOut', $this.val());
+            });
+
+        });
+        jQuery(window).load(function () {
+            // Show Tipso on Load
+            jQuery('.page-load').tipso('show');
+        });
+
+        function exibe(id) {
+            if (document.getElementById(id).style.display == "none") {
+                document.getElementById(id).style.display = "inline";
+            }
+            else {
+                document.getElementById(id).style.display = "none";
+            }
+        }
+
+
+        function abrirModalEvento() {
+            $("#AbreCadastrarEditarNotaExplicativa").modal('show');
+        }
+
+        $("body").tooltip({
+            selector: '[data-toggle="tooltip"]'
+        });
+
+        function mascara(o, f) {
+            v_obj = o;
+            v_fun = f;
+            setTimeout("execmascara()", 1);
+        }
+
+        function execmascara() {
+            v_obj.value = v_fun(v_obj.value);
+        }
+
+        function valor(v) {
+            v = v.toString().replace(/\D/g, "");
+            v = v.replace(/[0-9]{16}/, "inválido");
+            v = v.replace(/(\d{1})(\d{11})$/, "$1.$2"); // coloca ponto antes dos ultimos 11 digitos
+            v = v.replace(/(\d{1})(\d{6})$/, "$1.$2"); // coloca ponto antes dos ultimos 6 digitos
+            v = v.replace(/(\d{1})(\d{3})$/, "$1.$2"); // coloca ponto antes dos ultimos 5 digitos
+            return v;
+        }
+
+
+    </script>
+}

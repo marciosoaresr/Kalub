@@ -1,0 +1,129 @@
+﻿@using ProfitManager.Web.ViewModels
+@model ProfitManager.Fabrica.Entidade.EmpresaUsuario
+@{
+    ViewBag.Title = "Empresa Usuario";
+    Layout = "~/Views/Shared/_LayoutRestritoUser.cshtml";
+
+}
+
+
+<div id="content">
+    <div class="tabs-wrapper text-center">
+        <div class="panel box-shadow-none text-left content-header">
+            <div class="panel-body">
+                <div class="col-sm-4" style="padding-top: 35px;">
+                    <p class="animated fadeInLeft">
+                        <a href="/PrincipalUser" style="font-size: 1.0em !important; color: #fff;">Home</a> <span class="fa-angle-right fa"></span> Empresa Usuario
+                    </p>
+                </div>
+                <div class="col-sm-8" style="text-align: left; padding-top: 42px; padding-left: 100px;">
+                    Empresa:  @Model.Nome
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="abrirModalLogin" class="" data-backdrop="static">
+    <div class="modal-dialog ">
+        <div class="modal-content">
+            <div class="panel-heading2">
+                <h4 class="modal-title"><font color="white">Dados Usuario</font></h4>
+            </div>
+            @using (Html.BeginForm("CadastarEditarEmpresaUsuario", "Empresa", FormMethod.Post, new { id = "form", name = "form" }))
+            {
+
+                <div class="modal-body">
+
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true)
+
+                    @Html.HiddenFor(x => x.Id)
+                    @Html.HiddenFor(x => x.DataHoraCriacao)
+                    @Html.HiddenFor(x => x.Cnpj)
+
+
+                    <div class="col-sm-3">@Html.LabelFor(x => x.Nome):</div>
+                    <div class="col-sm-7" style="padding-top: 2px;">@Html.TextBoxFor(x => x.Nome, new { @style = "width:270px;", @onblur = "this.style.backgroundColor = '#ffffff'" })</div>
+                    @Html.ValidationMessageFor(x => x.Nome)
+                    <br />
+
+                    <div class="col-sm-3">@Html.LabelFor(x => x.Login):</div>
+                    <div class="col-sm-7" style="padding-top: 2px;">@Html.TextBoxFor(x => x.Login, new { @style = "width:150px;", @onblur = "this.style.backgroundColor = '#ffffff'" })</div>
+                    @Html.ValidationMessageFor(x => x.Login)
+                    <br />
+
+                    <div class="col-sm-3">@Html.LabelFor(x => x.Email):</div>
+                    <div class="col-sm-7" style="padding-top: 2px;">@Html.TextBoxFor(x => x.Email, new { @style = "width:270px;", @onblur = "this.style.backgroundColor = '#ffffff'" })</div>
+                    @Html.ValidationMessageFor(x => x.Email)
+                    <br />
+
+                    <div class="col-sm-3">@Html.LabelFor(x => x.Senha):</div>
+                    <div class="col-sm-7" style="padding-top: 2px;">@Html.PasswordFor(x => x.Senha, new { @style = "width:150px;", @onblur = "this.style.backgroundColor = '#ffffff'" })</div>
+                    @Html.ValidationMessageFor(x => x.Senha)
+                    <br />
+                    <br/>
+                    <br/>
+                </div>
+                <div class="modal-footer" style="padding-top: 10px;">
+                    <button type="submit" value="1" name="salvaroperacao" id="salvaroperacao" class="btn btn-success">Salvar Dados</button>
+                </div>
+
+            }
+        </div>
+    </div>
+</div>
+
+
+<div id="abrirModalProcessando" class="modal fade modal-v2" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body" align=center>
+                <img src="../../Images/loading_2x.gif" width="300">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="alerta" class="modal fade" data-backdrop="static" style="padding-top: 200px; font-size: 15px;">
+    <div class="modal-dialog">
+        <div class="alert alert-danger alert-raised alert-dismissible fade in" role="alert">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+            <strong>ATENÇÃO!</strong><BR/>
+            FAVOR PREENCHER TODOS OS CAMPOS.
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+
+            $(document).on('click', 'input[type=text]', function () { this.select(); this.style.backgroundColor = '#FFFF00'; });
+
+
+            $("#salvaroperacao").click(function (e) {
+                debugger;
+                // bloqueando envio do form
+                e.preventDefault();
+                var erros = 0;
+                $("#form input").each(function () {
+                    if ($(this).val() == 0 || $(this).val() == "") {
+                        erros = erros + 1;
+                    }
+                });
+                erros = erros - 1;
+                if (erros > 0 || document.getElementById("Senha").value == "" || document.getElementById("Nome").value == "" || document.getElementById("Login").value == "" || document.getElementById("Email").value == "") {
+                    $('#alerta').modal('show');
+                } else {
+                    $('#abrirModalProcessando').modal('show');
+                    $("#form").submit();
+                }
+            });
+        });
+
+
+
+    </script>
+
+}

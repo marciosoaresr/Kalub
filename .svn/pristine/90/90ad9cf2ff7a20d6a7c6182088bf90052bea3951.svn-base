@@ -1,0 +1,108 @@
+﻿@using ProfitManager.Web.RepositorioWeb
+@model ProfitManager.Fabrica.Entidade.EventoLancamento
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutRestritoUser.cshtml";
+
+    DateTime dataLancamentoEventoOperacao = RepositorioWebUsuario.GetDateQueryCookie();
+
+    if (dataLancamentoEventoOperacao != null)
+    {
+        dataLancamentoEventoOperacao = RepositorioWebUsuario.GetDateQueryCookie();
+    }
+    else
+    {
+        dataLancamentoEventoOperacao = DateTime.Now;
+    }
+}
+
+<style type="text/css">
+    .ui-datepicker-calendar .ui-state-active {
+        background: #2c4970;
+        -webkit-box-shadow: inset 0px 0px 10px 0px rgba(0, 0, 0, .1);
+        -moz-box-shadow: inset 0px 0px 10px 0px rgba(0, 0, 0, .1);
+        box-shadow: inset 0px 0px 10px 0px rgba(0, 0, 0, .1);
+        color: #e0e0e0;
+        text-shadow: 0px 1px 0px #4d7a85;
+        filter: dropshadow(color=#4d7a85, offx=0, offy=1);
+        border: 1px solid #55838f;
+        position: relative;
+        margin: -1px;
+    }
+.ui-datepicker select.ui-datepicker-month,
+.ui-datepicker select.ui-datepicker-year {
+        background: #2c4970;
+        color: #fff;
+	    width: 45%;
+}
+</style>
+
+<!-- inicio: conteudo -->
+<div id="content">
+    <div class="tabs-wrapper text-center">
+        <div class="panel box-shadow-none text-left content-header">
+            <div class="panel-body">
+                <div class="col-sm-4" style="padding-top: 35px;">
+                    <p class="animated fadeInLeft">
+                        <a href="/PrincipalUser" style="font-size: 1.0em !important; color: #fff;">Home</a> <span class="fa-angle-right fa"></span> Registro de Operações
+                    </p>
+                </div>
+                <div class="col-sm-4" style="text-align: left; padding-top: 42px; padding-left: 100px;">
+                    Empresa: @ViewBag.Empresa
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- fim: conteudo -->
+
+<div class="modal-v1">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-body">
+                @using (Html.BeginForm("SetDataEventoLancamento", "EventoLancamento", FormMethod.Post))
+                {
+                    <div style="margin-bottom: 15px">
+                        <span class="fa-calendar fa fa-1x"></span>&nbsp;&nbsp; Informe a data de lançamento
+                    </div>
+                    <input id="datepicker" readonly name="Data" type="text" size="5%" class="form-control" style="font-size: 25px; text-align: center; color: #2c4970;"  value="@dataLancamentoEventoOperacao.ToShortDateString()">
+                    <br/><br/>
+                    <button class="btn btn-success btn-lg" id="Buscar" name="Buscar">
+                        Fazer lançamento
+                    </button>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="abrirModalProcessando" class="modal fade modal-v2" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body" align=center>
+                <img src="../../Images/loading_2x.gif" width="300">
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+<script>
+        $(document).ready(function () {
+
+            $("#datepicker").datepicker({
+                changeMonth: true,
+                changeYear: true,
+                showButtonPanel: true,
+                dateFormat: 'dd/mm/yy',
+                minDate: new Date(2016, 1 - 1, 1)
+            });
+
+            $("#Buscar").click(function () {
+                $('#abrirModalProcessando').modal('show');
+            });
+        });
+</script>
+}

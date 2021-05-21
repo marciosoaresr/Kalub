@@ -1,0 +1,75 @@
+﻿@using ProfitManager.Fabrica.Entidade
+@using ProfitManager.Fabrica.Enum
+@model ProfitManager.Fabrica.Entidade.Evento
+
+
+<div id="AbreCadastrarEditarEventoHelp" class="modal fade" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="panel-heading2">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Cadastrar Help Evento</h4>
+            </div>
+
+            @using (Html.BeginForm("CadastrarEditarEventoHelp", "Eventos", FormMethod.Post, new { id = "formCadastrarEditarEventoHelp" }))
+            {
+                <div class="modal-body">
+                    <div style="display: inline-block">
+                        @Html.AntiForgeryToken()
+
+                        @Html.HiddenFor(x => x.Id)
+                        @Html.HiddenFor(x => x.DataHoraCriacao)
+                        <table>
+                        <tr>
+                            <td>
+                                Help:<br />
+                                @Html.TextAreaFor(x => x.Help, new { @name = "textoHelp", id = "textoHelp" })
+                            </td>
+                        </tr>
+                        </table>
+
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+                        <input type="submit" value="Salvar" name="enviar" id="salvareventohelp" class="btn btn-primary">
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+</div>
+
+
+<div id="abrirModalProcessando" class="modal fade modal-v2" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body" align=center>
+                <img src="../../Images/loading_2x.gif" width="300">
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    $(document).ready(function() {
+
+        $('#textoHelp').summernote({
+            focus: true,
+            height: 250,
+            codemirror: {
+                theme: 'united'
+            }
+        });
+
+        $("#salvareventohelp").click(function () {
+            $('#abrirModalProcessando').modal('show');
+        });
+
+    });
+
+
+
+</script>

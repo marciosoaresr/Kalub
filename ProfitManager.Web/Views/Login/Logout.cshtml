@@ -1,0 +1,80 @@
+﻿@using System.Globalization
+@using ProfitManager.Fabrica.EntidadeAuxiliar
+@model List<ProfitManager.Web.ViewModels.EventoLancamentoViewModel>
+@{
+    ViewBag.Title = "KALUB - Logout";
+    Layout = "~/Views/Shared/_LayoutRestritoUser.cshtml";
+    var txt = "";
+
+    if (DateTime.Now.Hour > 12)
+    {
+        txt = "Boa tarde,";
+    }
+    else
+    {
+        txt = "Bom dia,";
+    }
+
+    CultureInfo culture = new CultureInfo("pt-BR");
+    DateTimeFormatInfo dtfi = culture.DateTimeFormat;
+
+    int dia = DateTime.Now.Day;
+    int ano = DateTime.Now.Year;
+    string mes = dtfi.GetMonthName(DateTime.Now.Month);
+    string diasemana = culture.TextInfo.ToTitleCase(dtfi.GetDayName(DateTime.Now.DayOfWeek));
+    string data = diasemana + ", " + dia + " de " + mes + " de " + ano;
+}
+
+
+<div id="content">
+    <div class="tabs-wrapper text-center">
+        <div class="panel box-shadow-none text-left content-header">
+            <div class="panel-body">
+                <div class="col-sm-4" style="padding-top: 50px; height: 100px;">
+                    <p class="animated fadeInLeft">
+                        <span style="font-weight: bold; font-size: 16px;">@txt @ViewBag.Empresa!</span><br />
+                        <span>@data</span>
+                    </p>
+                </div>
+
+                <div style="text-align: right; padding-top: 38px; padding-left: 86%;">
+                    <table class="animated fadeInRight" width="190" height="40" border="1px" bordercolor="#fff">
+                        <tr>
+                            <td style="text-align: right; ">
+                                <span style="padding-right: 20px;">Dinheiro em Caixa</span>
+                                <p style="padding-top: 10px;"><span style="padding-right: 20px; font-weight: bold;font-size: 20px;">R$ @string.Format("{0:#,##0}", ViewBag.TotalSaldoinicialDiaAnteiorContaCaixa)</span></p>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+    <div id="modal" class="modal fade modal" data-backdrop="static" style="padding-top: 40px;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                @using (Html.BeginForm("Logout", "Login", FormMethod.Post))
+                {
+                    <div class="modal-body">
+                        <p style="padding-top: 10px;">
+                            <h3 style="color: #2c4970;">Parabens por utilizar o KALUB!</h3><br/>
+                        </p>
+                        <p>
+                            Você deseja realmente sair?<br/>
+                        </p>
+                    </div>
+                    <div class="modal-footer">
+                        <span style="padding-right: 420px;"><input type="submit" value="Sim" name="enviar" class="btn btn-danger"></span>
+                        <button class="btn btn-primary btn-login" data-dismiss="modal">
+                            Não
+                        </button>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">$(document).ready(function() { $('#modal').modal('show'); });</script>
+

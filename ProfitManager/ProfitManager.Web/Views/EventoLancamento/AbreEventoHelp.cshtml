@@ -1,0 +1,52 @@
+﻿@using System
+@using System.Collections.Generic
+@using System.Linq
+@using ProfitManager.Fabrica.Entidade
+@model ProfitManager.Fabrica.Entidade.EventoLancamento
+
+<div id="AbreEventoHelp" class="modal fade" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="panel-heading2" style="padding-bottom: 15px;">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title"><b>Lançamento - @ViewBag.NomeEvento</b></h4>
+            </div>
+
+            @using (Html.BeginForm("AbreEventoHelp", "EventoLancamento", FormMethod.Post))
+            {
+                <div class="modal-body">
+                    <div style="display: inline-block">
+
+                        <div style="padding-top: 2px;">
+                            @Html.Raw(ViewBag.eventoHelp)
+                            <br/><br/>
+
+                            Essa operação vai:<br/>
+                            @foreach (var conta in (List<EventoOperacao>)ViewBag.contas)
+                            {
+                                <b>@conta.Tipo</b>
+                                <span> </span>
+                                @conta.ContaContabil.CampoNome.Nome<br/>
+                            }
+
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Fechar</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<div id="abrirModalProcessando" class="modal fade modal-v2" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body" align=center>
+                <img src="../../Images/loading_2x.gif" width="300">
+            </div>
+        </div>
+    </div>
+</div>

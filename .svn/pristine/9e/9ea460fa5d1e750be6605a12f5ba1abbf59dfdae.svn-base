@@ -1,0 +1,73 @@
+﻿@using ProfitManager.Fabrica.Entidade
+@using ProfitManager.Fabrica.Enum
+@model ProfitManager.Fabrica.Entidade.GrupoDRE
+
+
+<div id="AbreCadastrarEditarGrupoDRE" class="modal fade" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="panel-heading2">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Grupo DRE</h4>
+            </div>
+
+            @using (Html.BeginForm("CadastrarEditarGrupoDRE", "GrupoDRE", FormMethod.Post, new { id = "formCadastrarEditarGrupoDRE" }))
+            {
+                <div class="modal-body">
+                    <div style="display: inline-block">
+                        @Html.AntiForgeryToken()
+                        @Html.ValidationSummary(true)
+
+                        @Html.HiddenFor(x => x.Id)
+                        @Html.HiddenFor(x => x.DataHoraCriacao)
+
+                        <div class="col-sm-5">@Html.LabelFor(x => x.Codigo):</div>
+                        <div class="col-sm-7" style="padding-top: 2px;">@Html.TextBoxFor(x => x.Codigo, new { @style = "width:50px;" })</div>
+                        @Html.ValidationMessageFor(x => x.Codigo)
+                        <br />
+
+                        <div class="col-sm-5">@Html.LabelFor(x => x.Nome):</div>
+                        <div class="col-sm-7" style="padding-top: 2px;">@Html.TextBoxFor(x => x.Nome, new { @style = "width:350px;" })</div>
+                        @Html.ValidationMessageFor(x => x.Nome)
+                        <br />
+
+                        <div class="col-sm-5" style="padding-top: 5px;">@Html.LabelFor(x => x.Totalizador)</div>
+                        <div class="col-sm-6" style="padding-top: 2px;">@Html.EnumDropDownListFor(x => x.Totalizador, new { @style = "width:70px;"})</div>
+                        <br />
+
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+                        <input type="submit" value="Salvar" name="enviar" id="salvar" class="btn btn-primary">
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+</div>
+
+
+<div id="abrirModalProcessando" class="modal fade modal-v2" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body" align=center>
+                <img src="../../Images/loading_2x.gif" width="300">
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    $(document).ready(function() {
+
+        $("#salvar").click(function () {
+            $('#abrirModalProcessando').modal('show');
+        });
+
+    });
+
+
+</script>

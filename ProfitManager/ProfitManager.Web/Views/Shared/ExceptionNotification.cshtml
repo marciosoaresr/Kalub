@@ -1,0 +1,31 @@
+﻿@using ProfitManager.Fabrica.Enum
+@using ProfitManager.Fabrica.Excecao
+@model HandleErrorInfo
+
+@if (Model != null || ViewBag.Notification != null)
+{
+    var excepetion = (Model == null) ? ViewBag.Notification as NotificationException : Model.Exception as NotificationException;
+
+    string classStyleCssMsg = "";
+    if (excepetion.TypeException == EnumTypeException.Information)
+    {
+        classStyleCssMsg = "info-message";
+    }
+    else if (excepetion.TypeException == EnumTypeException.Error)
+    {
+        classStyleCssMsg = "excepiton-message";
+    }
+    else if (excepetion.TypeException == EnumTypeException.Warnnig)
+    {
+        classStyleCssMsg = "warnning-message";
+    }
+
+
+    <div class="alert alert-danger alert-raised alert-dismissible fade in" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+        @excepetion.Message
+    </div>
+
+}
+
+

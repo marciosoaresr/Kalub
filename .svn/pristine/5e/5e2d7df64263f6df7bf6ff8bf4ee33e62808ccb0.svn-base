@@ -1,0 +1,1194 @@
+﻿@using ProfitManager.Fabrica.Entidade
+@using ProfitManager.Fabrica.EntidadeAuxiliar
+
+
+@{
+    ViewBag.Title = "KALUB - Análise de Resultados";
+    Layout = "~/Views/Shared/_LayoutRelatorios.cshtml";
+
+    double valorLucroMes1 = 0;
+    double valorLucroMes2 = 0;
+    double valorLucroAno1 = 0;
+    double valorLucroAno2 = 0;
+    decimal valorLucroBrutoMes = 0;
+    decimal valorLucroBrutoAno = 0;
+
+    decimal subtotalSaldoatual = 0;
+    decimal subtotalSaldoacumulado = 0;
+
+    decimal totalEntradasOperacionais = 0;
+    decimal totalEntradasOperacionaisAcumulado = 0;
+    decimal totalSaidasOperacionais = 0;
+    decimal totalSaidasOperacionaisAcumulado = 0;
+    decimal totalEntradasInvestimentos = 0;
+    decimal totalEntradasInvestimentosAcumulado = 0;
+    decimal totalSaidasInvestimentos = 0;
+    decimal totalSaidasInvestimentosAcumulado = 0;
+    decimal totalEntradasFinanciamento = 0;
+    decimal totalEntradasFinanciamentoAcumulado = 0;
+    decimal totalSaidasFinanciamento = 0;
+    decimal totalSaidasFinanciamentoAcumulado = 0;
+
+    decimal totalSaldoAtual = 0;
+    decimal totalSaldoAtualObri = 0;
+    decimal valorSaldoatual = 0;
+    decimal valorSaldoObrigacoesatual = 0;
+
+}
+
+<table width="750" style="margin-left: 20px">
+    <tr>
+        <td width="500">
+            <h4>
+                <b>@ViewBag.Empresa</b>
+            </h4>
+            Mês (@ViewBag.mesAtual)
+        </td>
+        <td style="text-align: right">
+            @if (ViewBag.Logomarca != null)
+            {
+                <img src="~/Images/Logomarcas/@ViewBag.Logomarca" width="160"/>
+            }
+            else
+            {
+                <img src="~/Images/kalub-logo-home.png" width="160"/>
+            }
+        </td>
+    </tr>
+    <tr>
+        <td COLSPAN="2"style="border-bottom: 1px solid; font-weight: bold; text-align: center">
+            <h4>
+                <b>- RESULTADOS -</b>
+            </h4>
+        </td>
+    </tr>
+</table>
+<table width="750" style="margin-left: 20px">
+    <tr><th colspan="3" height="10"></th></tr>
+    <tr><th colspan="3" height="5">DEMONSTRAÇÃO DO RESULTADO (DRE)</th></tr>
+</table>
+<table width="750" >
+    <tr style="font-weight: bold;" height="5">
+        <td style="padding-left: 450px;"></td>
+        <td>
+            <table width="140">
+                <tr>
+                    <td style="border-bottom: 1px solid; font-weight: bold; text-align: center">@ViewBag.mesExtAtual</td>
+                </tr>
+            </table>
+        </td>
+        <td style="width: 40px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+        <td>
+            <table width="160">
+                <tr>
+                    <td style="border-bottom: 1px solid; font-weight: bold; text-align: center">Acum. Ano</td>
+                </tr>
+            </table>
+        </td>
+
+    </tr>
+
+</table>
+<table width="750" style="margin-left: 20px">
+    <tr style="font-weight: bold;" height="5">
+        <td width="600">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+        <td style="width: 90px;  font-weight: bold; text-align: center">R$</td>
+        <td style="width: 90px;  font-weight: bold; text-align: center">*AV-%</td>
+        <td style="width: 30px;"></td>
+        <td style="width: 90px; font-weight: bold; text-align: center">R$</td>
+        <td style="width: 90px; font-weight: bold; text-align: center">*AV-%</td>
+    </tr>
+</table>
+<table width="750" style="margin-left: 20px">
+    @foreach (var iGrupo in ((DreAuxiliar)ViewBag.ListaDRE).DreGrupoAuxiliarList.Where(x => x.Codigo == "01"))
+    {
+        valorLucroBrutoMes = Convert.ToInt32(iGrupo.Valor);
+        valorLucroBrutoAno = Convert.ToInt32(iGrupo.ValorAcumulado);
+    }
+    @foreach (var iGrupo in ((DreAuxiliar)ViewBag.ListaDRE).DreGrupoAuxiliarList)
+    {
+        <tr height="5">
+            @if (iGrupo.Nome.StartsWith("(-)") || iGrupo.Codigo.StartsWith("09") || iGrupo.Codigo.StartsWith("12"))
+            {
+                <td width="600">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@iGrupo.Nome.ToLower()</td>
+                <td width="90" style="text-align: right">@string.Format("{0:#,##0}", Convert.ToInt32(iGrupo.Valor))</td>
+                if (iGrupo.Valor != 0 && valorLucroBrutoMes !=0)
+                {
+                    <td width="90" style="text-align: right">@{decimal lucroPercentBrutoMes = (Convert.ToInt32(iGrupo.Valor)/valorLucroBrutoMes)*100;}<span>@string.Format("{0:N2}", lucroPercentBrutoMes)%</span></td>
+                }
+                else
+                {
+                    <td width="90" style="text-align: right">0.00%</td>
+                }
+                <td style="width: 30px;"></td>
+                <td width="90" style="text-align: right">@string.Format("{0:#,##0}", Convert.ToInt32(iGrupo.ValorAcumulado))</td>
+                if (iGrupo.ValorAcumulado != 0 && valorLucroBrutoAno != 0)
+                {
+                    <td width="90" style="text-align: right">@{decimal lucroPercentBrutoAno = (Convert.ToInt32(iGrupo.ValorAcumulado)/ valorLucroBrutoAno) *100;}<span>@string.Format("{0:N2}", lucroPercentBrutoAno)%</span></td>
+                }
+                else
+                {
+                    <td width="90" style="text-align: right">0.00%</td>
+                }
+            }
+            else
+            {
+                <td width="600" style="font-weight: bold;">&nbsp;@iGrupo.Nome</td>
+                <td width="90" style="border-top: 1px solid;font-weight: bold; text-align: right">@string.Format("{0:#,##0}", Convert.ToInt32(iGrupo.Valor))</td>
+                if (iGrupo.Valor != 0 && valorLucroBrutoMes!=0)
+                {
+                    <td width="90" style="border-top: 1px solid; font-weight: bold; text-align: right">@{ decimal lucroPercentBrutoMes = (Convert.ToInt32(iGrupo.Valor)/valorLucroBrutoMes)*100; }<span>@string.Format("{0:N2}", lucroPercentBrutoMes)%</td>
+                }
+                else
+                {
+                    <td width="90" style="border-top: 1px solid; font-weight: bold; text-align: right">0.00%</td>
+                }
+                <td style="width: 30px;"></td>
+                <td width="90" style="border-top: 1px solid;font-weight: bold;text-align: right">@string.Format("{0:#,##0}", Convert.ToInt32(iGrupo.ValorAcumulado))</td>
+                if (iGrupo.ValorAcumulado != 0 && valorLucroBrutoAno!=0)
+                {
+                    <td width="90" style="border-top: 1px solid;font-weight: bold;text-align: right">@{decimal lucroPercentBrutoAno = (Convert.ToInt32(iGrupo.ValorAcumulado)/ valorLucroBrutoAno) *100;}<span>@string.Format("{0:N2}", lucroPercentBrutoAno)%</span></td>
+                }
+                else
+                {
+                    <td width="90" style="border-top: 1px solid;font-weight: bold;text-align: right">0.00%</td>
+                }
+            }
+        </tr>
+    }
+
+</table>
+<br/>
+
+<table width="750" style="text-align: justify">
+    <tr>
+        <td style="padding-left: 50px;padding-right: 110px;">
+            @foreach (var lucratividade in ViewBag.TextoDiagnostico)
+            {
+                if (lucratividade.Codigo == "1")
+                {
+                    @Html.Raw(lucratividade.Texto)
+                }
+            }
+        </td>
+    </tr>
+</table>
+<br/>
+
+<table width="500" style="margin-left: 20px">
+    <tr>
+        <td colspan="4" style="font-weight: bold; font-size: 16px;">LUCRATIVIDADE</td>
+    </tr>
+    <tr>
+        <td></td>
+        <td style="width: 130px; border-bottom: 1px solid; font-weight: bold; text-align: center">@ViewBag.mesExtAtual</td>
+        <td style="width: 30px;"></td>
+        <td style="border-bottom: 1px solid; font-weight: bold; text-align: center">Acum. Ano</td>
+    </tr>
+    <tr><td colspan="4" style="height: 30px;"></td></tr>
+    @foreach (var iGrupo in ((DreAuxiliar) ViewBag.ListaDRE).DreGrupoAuxiliarList.Where(x => x.Codigo == "15"))
+    {
+        valorLucroMes1 = Convert.ToInt32(iGrupo.Valor);
+        valorLucroAno1 = Convert.ToInt32(iGrupo.ValorAcumulado);
+    }
+    <tr >
+        <td style="text-align: right">Lucro líquido (R$)</td>
+        <td style="text-align: right">
+            <span>@string.Format("{0:#,##0}", valorLucroMes1)</span>
+        </td>
+        <td style="width: 30px;"></td>
+        <td style="text-align: right">
+            <span>@string.Format("{0:#,##0}", valorLucroAno1)</span>
+        </td>
+    </tr>
+    @foreach (var iGrupo in ((DreAuxiliar) ViewBag.ListaDRE).DreGrupoAuxiliarList.Where(x => x.Codigo == "01"))
+    {
+        valorLucroMes2 = Convert.ToInt32(iGrupo.Valor);
+        valorLucroAno2 = Convert.ToInt32(iGrupo.ValorAcumulado);
+    }
+    <tr>
+        <td style="text-align: right">Dividido pelo Faturamento Bruto (R$)</td>
+        <td style="border-bottom: 1px solid; text-align: right">
+            <span>@string.Format("{0:#,##0}", valorLucroMes2)</span>
+        </td>
+        <td style="width: 30px;"></td>
+        <td style="border-bottom: 1px solid; text-align: right">
+            <span>@string.Format("{0:#,##0}", valorLucroAno2)</span>
+        </td>
+    </tr>
+    <tr>
+        <td style="text-align: right">É igual a Lucratividade em % >>>>>>>></td>
+        @if (valorLucroMes2 != 0 && valorLucroAno2 != 0)
+        {
+            <td style="text-align: right; font-weight: bold; font-size: 20px;">@{double lucroPercentMes = (valorLucroMes1/valorLucroMes2)*100;}<span>@string.Format("{0:N2}", lucroPercentMes)%</span></td>
+        }
+        else
+        {
+            <td style="text-align: right; font-weight: bold; font-size: 20px;">0.00%</td>
+        }
+        <td style="width: 30px;"></td>
+        @if (valorLucroAno1 != 0 && valorLucroAno2 != 0)
+        {
+            <td style="text-align: right; font-weight: bold; font-size: 20px;">@{double lucroPercentAno = (valorLucroAno1/valorLucroAno2)*100;}<span>@string.Format("{0:N2}", lucroPercentAno)%</span></td>
+        }
+        else
+        {
+            <td style="text-align: right; font-weight: bold; font-size: 20px;">0.00%</td>
+        }
+    </tr>
+</table>
+<br/>
+<table width="750" style="text-align: justify" >
+    <tr>
+        <td style="padding-left: 50px;padding-right: 110px;">
+            @foreach (var lucratividade in ViewBag.TextoDiagnostico)
+            {
+                if (lucratividade.Codigo == "2")
+                {
+                    @Html.Raw(lucratividade.Texto)
+                }
+            }           
+        </td>
+    </tr>
+</table>
+
+<div style="page-break-after: always; text-align: right;">
+    &nbsp;
+</div>
+
+<table width="750" style="margin-left: 20px">
+    <tr>
+        <td width="500">
+            <h4>
+                <b>@ViewBag.Empresa</b>
+            </h4>
+            Mês (@ViewBag.mesAtual)
+        </td>
+        <td style="text-align: right">
+            @if (ViewBag.Logomarca != null)
+            {
+                <img src="~/Images/Logomarcas/@ViewBag.Logomarca" width="160"/>
+            }
+            else
+            {
+                <img src="~/Images/kalub-logo-home.png" width="160"/>
+            }
+        </td>
+    </tr>
+    <tr>
+        <td COLSPAN="2" style="border-bottom: 1px solid; font-weight: bold; text-align: center">
+            <h4>
+                <b>- RESULTADOS -</b>
+            </h4>
+        </td>
+    </tr>
+</table>
+<br/>
+<table width="500" style="margin-left: 20px;">
+    <tr>
+        <td colspan="4" style="font-weight: bold; font-size: 16px;">RENTABILIDADE</td>
+    </tr>
+    <tr>
+        <td></td>
+        <td style="width: 130px; border-bottom: 1px solid; font-weight: bold; text-align: center">@ViewBag.mesExtAtual</td>
+        <td style="width: 30px;"></td>
+        <td style="border-bottom: 1px solid; font-weight: bold; text-align: center">Acum. Ano</td>
+    </tr>
+    <tr><td colspan="4" style="height: 30px;"></td></tr>
+    <tr>
+        <td style="text-align: right">Lucro líquido (R$)</td>
+        <td style="text-align: right">
+            <span>@string.Format("{0:#,##0}", valorLucroMes1)</span>
+        </td>
+        <td style="width: 30px;"></td>
+        <td style="text-align: right">
+            <span>@string.Format("{0:#,##0}", valorLucroAno1)</span>
+        </td>
+    </tr>
+    @foreach (var iGrupo in ((List<BalancoPatrimonial>)ViewBag.ListaPLdiagnostico).Where(x => x.SubGrupoCodigo == "2.03").GroupBy(x => x.GrupoCodigo))
+    {
+        var grupoFirst = iGrupo.FirstOrDefault();
+            foreach (var iSubGrupo in iGrupo.GroupBy(x => x.SubGrupoCodigo))
+            {
+                var subGrupoFirst = iSubGrupo.FirstOrDefault();
+
+                foreach (var balanco in iSubGrupo)
+                {
+                    subtotalSaldoatual = subtotalSaldoatual + balanco.SaldoMes;
+                    subtotalSaldoacumulado = subtotalSaldoacumulado + balanco.SaldoAcumulado;
+                }
+            }
+    }
+    <tr>
+        <td style="text-align: right">Dividido pelo capital investido (PL) (R$)</td>
+        <td style="border-bottom: 1px solid; text-align: right">
+            <span>@string.Format("{0:#,##0}", subtotalSaldoatual)</span>
+        </td>
+        <td style="width: 30px;"></td>
+        <td style="border-bottom: 1px solid; text-align: right">
+            <span>@string.Format("{0:#,##0}", subtotalSaldoacumulado)</span>
+        </td>
+    </tr>
+    <tr>
+        <td style="text-align: right">É igual a Rentabilidade em % >>>>>>>></td>
+        <td style="text-align: right; font-weight: bold; font-size: 20px;">@{double rentaPercentMes = (valorLucroMes1/ Convert.ToDouble(subtotalSaldoatual)) *100;}<span>@string.Format("{0:N2}", rentaPercentMes)%</span></td>
+        <td style="width: 30px;"></td>
+        <td style="text-align: right; font-weight: bold; font-size: 20px;">@{double rentaPercentAno = (valorLucroAno1/ Convert.ToDouble(subtotalSaldoacumulado)) *100;}<span>@string.Format("{0:N2}", rentaPercentAno)%</span></td>
+    </tr>
+</table>
+<br />
+<table width="750" style="text-align: justify">
+    <tr>
+        <td style="padding-left: 50px;padding-right: 110px;">
+            @foreach (var lucratividade in ViewBag.TextoDiagnostico)
+            {
+                if (lucratividade.Codigo == "3")
+                {
+                    @Html.Raw(lucratividade.Texto)
+                }
+            }
+        </td>
+    </tr>
+</table>
+
+<div style="page-break-after: always; text-align: right;">
+    &nbsp;
+</div>
+
+<table width="750" style="margin-left: 20px">
+    <tr>
+        <td width="500">
+            <h4>
+                <b>@ViewBag.Empresa</b>
+            </h4>
+            Mês (@ViewBag.mesAtual)
+        </td>
+        <td style="text-align: right">
+            @if (ViewBag.Logomarca != null)
+            {
+                <img src="~/Images/Logomarcas/@ViewBag.Logomarca" width="160" />
+            }
+            else
+            {
+                <img src="~/Images/kalub-logo-home.png" width="160" />
+            }
+        </td>
+    </tr>
+    <tr>
+        <td COLSPAN="2" style="border-bottom: 1px solid; font-weight: bold; text-align: center">
+            <h4>
+                <b>- RESULTADOS -</b>
+            </h4>
+        </td>
+    </tr>
+</table>
+
+
+<table width="750" style="margin-left: 20px">
+    @foreach (var iGrupo in ((DreAuxiliar) ViewBag.ListaDRE).DreGrupoAuxiliarList.Where(x => x.Codigo == "06" && x.ValorAcumulado != 0))
+    {
+        <tr>
+            <td colspan="5" style="font-weight: bold; font-size: 16px;">DESPESAS VENDAS E MARKETING</td>
+        </tr>
+        <tr style="font-weight: bold;" height="5">
+            <td width="600"></td>
+            <td width="160" align="right" style="border-bottom: 1px solid;">@ViewBag.mesExtAnterior</td>
+            <td width="160" align="right" style="border-bottom: 1px solid;">@ViewBag.mesExtAtual</td>
+            <td width="160" align="right" style="border-bottom: 1px solid;">AH-%</td>
+            <td width="160" align="right" style="border-bottom: 1px solid;">Acum. Ano</td>
+        </tr>
+        <tr><th colspan="5" height="5"></th></tr>
+        decimal total07Mes = 0;
+        decimal total07MesAnterior = 0;
+        decimal total07Acumulado = 0;
+        double ah = 0;
+        double ahTotal = 0;
+        foreach (var conta in iGrupo.DreGrupoItemAuxiliarList)
+        {
+            total07Mes = total07Mes + conta.Valor;
+            total07MesAnterior = total07MesAnterior + conta.ValorMesAnterior;
+            total07Acumulado = total07Acumulado + conta.ValorAcumulado;
+            if (conta.ValorMesAnterior != 0 && conta.ValorMesAnterior != 0)
+            {
+                ah = Convert.ToDouble((conta.Valor - conta.ValorMesAnterior) / conta.ValorMesAnterior);
+                ahTotal = Convert.ToDouble((total07Mes - total07MesAnterior) / total07MesAnterior);
+            }
+            else
+            {
+                ah = 0;
+                //ahTotal = 0;
+            }
+            <tr>
+                <td width="550">&nbsp;&nbsp;&nbsp;&nbsp;@conta.Nome</td>
+                <td width="160" style="text-align: right">@string.Format("{0:#,##0}", conta.ValorMesAnterior)</td>
+                <td width="160" style="text-align: right">@string.Format("{0:#,##0}", conta.Valor)</td>
+                <td width="160" style="text-align: right">@string.Format("{0:P2}", ah)</td>
+                <td width="160" style="text-align: right">@string.Format("{0:#,##0}", conta.ValorAcumulado)</td>
+            </tr>
+        }
+        <tr style="font-weight: bold;">
+            <td>&nbsp;Total</td>
+            <td style="text-align: right; border-bottom: 1px solid; border-top: 1px solid;">@string.Format("{0:#,##0}", Convert.ToInt32(total07MesAnterior))</td>
+            <td style="text-align: right; border-bottom: 1px solid; border-top: 1px solid;">@string.Format("{0:#,##0}", Convert.ToInt32(total07Mes))</td>
+            <td style="text-align: right; border-bottom: 1px solid; border-top: 1px solid;">@string.Format("{0:P2}", ahTotal)</td>
+            <td style="text-align: right; border-bottom: 1px solid; border-top: 1px solid;">@string.Format("{0:#,##0}", Convert.ToInt32(total07Acumulado))</td>
+        </tr>
+    }
+
+</table>
+<br />
+<table width="750" style="text-align: justify">
+    <tr>
+        <td style="padding-left: 50px;padding-right: 110px;">
+            @foreach (var lucratividade in ViewBag.TextoDiagnostico)
+            {
+                if (lucratividade.Codigo == "9")
+                {
+                    @Html.Raw(lucratividade.Texto)
+                }
+            }
+        </td>
+    </tr>
+</table>
+<br/>
+<table width="750" style="margin-left: 20px">
+    @foreach (var iGrupo in ((DreAuxiliar) ViewBag.ListaDRE).DreGrupoAuxiliarList.Where(x => x.Codigo == "07" && x.ValorAcumulado != 0))
+    {
+        <tr>
+            <td colspan="5" style="font-weight: bold; font-size: 16px;">DESPESAS ADMINISTRATIVAS GERAIS</td>
+        </tr>
+        <tr style="font-weight: bold;" height="5">
+            <td width="600"></td>
+            <td width="160" align="right" style="border-bottom: 1px solid;">@ViewBag.mesExtAnterior</td>
+            <td width="160" align="right" style="border-bottom: 1px solid;">@ViewBag.mesExtAtual</td>
+            <td width="160" align="right" style="border-bottom: 1px solid;">AH-%</td>
+            <td width="160" align="right" style="border-bottom: 1px solid;">Acum. Ano</td>
+        </tr>
+        <tr><th colspan="3" height="5"></th></tr>
+        decimal total07Mes = 0;
+        decimal total07MesAnterior = 0;
+        decimal total07Acumulado = 0;
+        double ah = 0;
+        double ahTotal = 0;
+        foreach (var conta in iGrupo.DreGrupoItemAuxiliarList)
+        {
+            total07Mes = total07Mes + conta.Valor;
+            total07MesAnterior = total07MesAnterior + conta.ValorMesAnterior;
+            total07Acumulado = total07Acumulado + conta.ValorAcumulado;
+            if (conta.ValorMesAnterior != 0 && conta.ValorMesAnterior != 0)
+            {
+                ah = Convert.ToDouble((conta.Valor - conta.ValorMesAnterior)/conta.ValorMesAnterior);
+                ahTotal = Convert.ToDouble((total07Mes - total07MesAnterior) / total07MesAnterior);
+            }
+            else
+            {
+                ah=0;
+                //ahTotal = 0;
+            }
+            <tr>
+                <td width="550">&nbsp;&nbsp;&nbsp;&nbsp;@conta.Nome</td>
+                <td width="160" style="text-align: right">@string.Format("{0:#,##0}", conta.ValorMesAnterior)</td>
+                <td width="160" style="text-align: right">@string.Format("{0:#,##0}", conta.Valor)</td>
+                <td width="160" style="text-align: right">@string.Format("{0:P2}", ah)</td>
+                <td width="160" style="text-align: right">@string.Format("{0:#,##0}", conta.ValorAcumulado)</td>
+            </tr>
+        }
+        <tr style="font-weight: bold;">
+            <td>&nbsp;Total</td>
+            <td style="text-align: right; border-bottom: 1px solid; border-top: 1px solid;">@string.Format("{0:#,##0}", Convert.ToInt32(total07MesAnterior))</td>
+            <td style="text-align: right; border-bottom: 1px solid; border-top: 1px solid;">@string.Format("{0:#,##0}", Convert.ToInt32(total07Mes))</td>
+            <td style="text-align: right; border-bottom: 1px solid; border-top: 1px solid;">@string.Format("{0:P2}", ahTotal)</td>
+            <td style="text-align: right; border-bottom: 1px solid; border-top: 1px solid;">@string.Format("{0:#,##0}", Convert.ToInt32(total07Acumulado))</td>
+        </tr>
+    }
+
+</table>
+<br />
+<table width="750" style="text-align: justify">
+    <tr>
+        <td style="padding-left: 50px;padding-right: 110px;">
+            @foreach (var lucratividade in ViewBag.TextoDiagnostico)
+            {
+                if (lucratividade.Codigo == "10")
+                {
+                    @Html.Raw(lucratividade.Texto)
+                }
+            }
+        </td>
+    </tr>
+</table>
+<br/>
+
+
+<div style="page-break-after: always; text-align: right;">
+    &nbsp;
+</div>
+
+<table width="750" style="margin-left: 20px">
+    <tr>
+        <td width="500">
+            <h4>
+                <b>@ViewBag.Empresa</b>
+            </h4>
+            Mês (@ViewBag.mesAtual)
+        </td>
+        <td style="text-align: right">
+            @if (ViewBag.Logomarca != null)
+            {
+                <img src="~/Images/Logomarcas/@ViewBag.Logomarca" width="160"/>
+            }
+            else
+            {
+                <img src="~/Images/kalub-logo-home.png" width="160"/>
+            }
+        </td>
+    </tr>
+    <tr>
+        <td COLSPAN="2" style="border-bottom: 1px solid; font-weight: bold; text-align: center">
+            <h4>
+                <b>- RESULTADOS -</b>
+            </h4>
+        </td>
+    </tr>
+</table>
+<br/>
+<table width="750" style="margin-left: 20px">
+    @foreach (var iGrupo in ((DreAuxiliar) ViewBag.ListaDRE).DreGrupoAuxiliarList.Where(x => x.Codigo == "08" && x.ValorAcumulado != 0))
+    {
+        <tr>
+            <td colspan="5" style="font-weight: bold; font-size: 16px;">DESPESAS EVENTUAIS</td>
+        </tr>
+        <tr style="font-weight: bold;" height="5">
+            <td width="600"></td>
+            <td width="160" align="right" style="border-bottom: 1px solid;">@ViewBag.mesExtAnterior</td>
+            <td width="160" align="right" style="border-bottom: 1px solid;">@ViewBag.mesExtAtual</td>
+            <td width="160" align="right" style="border-bottom: 1px solid;">AH-%</td>
+            <td width="160" align="right" style="border-bottom: 1px solid;">Acum. Ano</td>
+        </tr>
+        <tr><th colspan="3" height="5"></th></tr>
+        decimal total07Mes = 0;
+        decimal total07MesAnterior = 0;
+        decimal total07Acumulado = 0;
+        double ah = 0;
+        double ahTotal = 0;
+        foreach (var conta in iGrupo.DreGrupoItemAuxiliarList)
+        {
+            total07Mes = total07Mes + conta.Valor;
+            total07MesAnterior = total07MesAnterior + conta.ValorMesAnterior;
+            total07Acumulado = total07Acumulado + conta.ValorAcumulado;
+            if (conta.ValorMesAnterior != 0 && conta.ValorMesAnterior != 0)
+            {
+                ah = Convert.ToDouble((conta.Valor - conta.ValorMesAnterior) / conta.ValorMesAnterior);
+                ahTotal = Convert.ToDouble((total07Mes - total07MesAnterior) / total07MesAnterior);
+            }
+            else
+            {
+                ah = 0;
+                //ahTotal = 0;
+            }
+            <tr>
+                <td width="550">&nbsp;&nbsp;&nbsp;&nbsp;@conta.Nome</td>
+                <td width="160" style="text-align: right">@string.Format("{0:#,##0}", conta.ValorMesAnterior)</td>
+                <td width="160" style="text-align: right">@string.Format("{0:#,##0}", conta.Valor)</td>
+                <td width="160" style="text-align: right">@string.Format("{0:P2}", ah)</td>
+                <td width="160" style="text-align: right">@string.Format("{0:#,##0}", conta.ValorAcumulado)</td>
+            </tr>
+        }
+        <tr style="font-weight: bold;">
+            <td>&nbsp;Total</td>
+            <td style="text-align: right; border-bottom: 1px solid; border-top: 1px solid;">@string.Format("{0:#,##0}", Convert.ToInt32(total07MesAnterior))</td>
+            <td style="text-align: right; border-bottom: 1px solid; border-top: 1px solid;">@string.Format("{0:#,##0}", Convert.ToInt32(total07Mes))</td>
+            <td style="text-align: right; border-bottom: 1px solid; border-top: 1px solid;">@string.Format("{0:P2}", ahTotal)</td>
+            <td style="text-align: right; border-bottom: 1px solid; border-top: 1px solid;">@string.Format("{0:#,##0}", Convert.ToInt32(total07Acumulado))</td>
+        </tr>
+    }
+
+</table>
+<br />
+<table width="750" style="text-align: justify">
+    <tr>
+        <td style="padding-left: 50px;padding-right: 110px;">
+            @foreach (var lucratividade in ViewBag.TextoDiagnostico)
+            {
+                if (lucratividade.Codigo == "11")
+                {
+                    @Html.Raw(lucratividade.Texto)
+                }
+            }
+        </td>
+    </tr>
+</table>
+<br />
+<table width="750" style="margin-left: 20px">
+    @foreach (var iGrupo in ((DreAuxiliar) ViewBag.ListaDRE).DreGrupoAuxiliarList.Where(x => x.Codigo == "09" && x.ValorAcumulado != 0))
+    {
+        <tr>
+            <td colspan="5" style="font-weight: bold; font-size: 16px;">RECEITAS EVENTUAIS</td>
+        </tr>
+        <tr style="font-weight: bold;" height="5">
+            <td width="600"></td>
+            <td width="160" align="right" style="border-bottom: 1px solid;">@ViewBag.mesExtAnterior</td>
+            <td width="160" align="right" style="border-bottom: 1px solid;">@ViewBag.mesExtAtual</td>
+            <td width="160" align="right" style="border-bottom: 1px solid;">AH-%</td>
+            <td width="160" align="right" style="border-bottom: 1px solid;">Acum. Ano</td>
+        </tr>
+        <tr><th colspan="3" height="5"></th></tr>
+        decimal total07Mes = 0;
+        decimal total07MesAnterior = 0;
+        decimal total07Acumulado = 0;
+        double ah = 0;
+        double ahTotal = 0;
+        foreach (var conta in iGrupo.DreGrupoItemAuxiliarList)
+        {
+            total07Mes = total07Mes + conta.Valor;
+            total07MesAnterior = total07MesAnterior + conta.ValorMesAnterior;
+            total07Acumulado = total07Acumulado + conta.ValorAcumulado;
+            if (conta.ValorMesAnterior != 0 && conta.ValorMesAnterior != 0)
+            {
+                ah = Convert.ToDouble((conta.Valor - conta.ValorMesAnterior) / conta.ValorMesAnterior);
+                ahTotal = Convert.ToDouble((total07Mes - total07MesAnterior) / total07MesAnterior);
+            }
+            else
+            {
+                ah = 0;
+                //ahTotal = 0;
+            }
+            <tr>
+                <td width="550">&nbsp;&nbsp;&nbsp;&nbsp;@conta.Nome</td>
+                <td width="160" style="text-align: right">@string.Format("{0:#,##0}", conta.ValorMesAnterior)</td>
+                <td width="160" style="text-align: right">@string.Format("{0:#,##0}", conta.Valor)</td>
+                <td width="160" style="text-align: right">@string.Format("{0:P2}", ah)</td>
+                <td width="160" style="text-align: right">@string.Format("{0:#,##0}", conta.ValorAcumulado)</td>
+            </tr>
+        }
+        <tr style="font-weight: bold;">
+            <td>&nbsp;Total</td>
+            <td style="text-align: right; border-bottom: 1px solid; border-top: 1px solid;">@string.Format("{0:#,##0}", Convert.ToInt32(total07MesAnterior))</td>
+            <td style="text-align: right; border-bottom: 1px solid; border-top: 1px solid;">@string.Format("{0:#,##0}", Convert.ToInt32(total07Mes))</td>
+            <td style="text-align: right; border-bottom: 1px solid; border-top: 1px solid;">@string.Format("{0:P2}", ahTotal)</td>
+            <td style="text-align: right; border-bottom: 1px solid; border-top: 1px solid;">@string.Format("{0:#,##0}", Convert.ToInt32(total07Acumulado))</td>
+        </tr>
+    }
+
+</table>
+<br />
+<table width="750" style="text-align: justify">
+    <tr>
+        <td style="padding-left: 50px;padding-right: 110px;">
+            @foreach (var lucratividade in ViewBag.TextoDiagnostico)
+            {
+                if (lucratividade.Codigo == "12")
+                {
+                    @Html.Raw(lucratividade.Texto)
+                }
+            }
+        </td>
+    </tr>
+</table>
+<br />
+<table width="750" style="margin-left: 20px">
+    @foreach (var iGrupo in ((DreAuxiliar) ViewBag.ListaDRE).DreGrupoAuxiliarList.Where(x => x.Codigo == "11" && x.ValorAcumulado != 0))
+    {
+        <tr>
+            <td colspan="5" style="font-weight: bold; font-size: 16px;">DESPESAS FINANCEIRAS</td>
+        </tr>
+        <tr style="font-weight: bold;" height="5">
+            <td width="600"></td>
+            <td width="160" align="right" style="border-bottom: 1px solid;">@ViewBag.mesExtAnterior</td>
+            <td width="160" align="right" style="border-bottom: 1px solid;">@ViewBag.mesExtAtual</td>
+            <td width="160" align="right" style="border-bottom: 1px solid;">AH-%</td>
+            <td width="160" align="right" style="border-bottom: 1px solid;">Acum. Ano</td>
+        </tr>
+        <tr><th colspan="3" height="5"></th></tr>
+        decimal total07Mes = 0;
+        decimal total07MesAnterior = 0;
+        decimal total07Acumulado = 0;
+        double ah = 0;
+        double ahTotal = 0;
+        foreach (var conta in iGrupo.DreGrupoItemAuxiliarList)
+        {
+            total07Mes = total07Mes + conta.Valor;
+            total07MesAnterior = total07MesAnterior + conta.ValorMesAnterior;
+            total07Acumulado = total07Acumulado + conta.ValorAcumulado;
+            if (conta.ValorMesAnterior != 0 && conta.ValorMesAnterior != 0)
+            {
+                ah = Convert.ToDouble((conta.Valor - conta.ValorMesAnterior) / conta.ValorMesAnterior);
+                ahTotal = Convert.ToDouble((total07Mes - total07MesAnterior) / total07MesAnterior);
+            }
+            else
+            {
+                ah = 0;
+                //ahTotal = 0;
+            }
+            <tr>
+                <td width="550">&nbsp;&nbsp;&nbsp;&nbsp;@conta.Nome</td>
+                <td width="160" style="text-align: right">@string.Format("{0:#,##0}", conta.ValorMesAnterior)</td>
+                <td width="160" style="text-align: right">@string.Format("{0:#,##0}", conta.Valor)</td>
+                <td width="160" style="text-align: right">@string.Format("{0:P2}", ah)</td>
+                <td width="160" style="text-align: right">@string.Format("{0:#,##0}", conta.ValorAcumulado)</td>
+            </tr>
+        }
+        <tr style="font-weight: bold;">
+            <td>&nbsp;Total</td>
+            <td style="text-align: right; border-bottom: 1px solid; border-top: 1px solid;">@string.Format("{0:#,##0}", Convert.ToInt32(total07MesAnterior))</td>
+            <td style="text-align: right; border-bottom: 1px solid; border-top: 1px solid;">@string.Format("{0:#,##0}", Convert.ToInt32(total07Mes))</td>
+            <td style="text-align: right; border-bottom: 1px solid; border-top: 1px solid;">@string.Format("{0:P2}", ahTotal)</td>
+            <td style="text-align: right; border-bottom: 1px solid; border-top: 1px solid;">@string.Format("{0:#,##0}", Convert.ToInt32(total07Acumulado))</td>
+        </tr>
+    }
+ 
+</table>
+<br />
+<table width="750" style="text-align: justify">
+    <tr>
+        <td style="padding-left: 50px;padding-right: 110px;">
+            @foreach (var lucratividade in ViewBag.TextoDiagnostico)
+            {
+                if (lucratividade.Codigo == "13")
+                {
+                    @Html.Raw(lucratividade.Texto)
+                }
+            }
+        </td>
+    </tr>
+</table>
+<br />
+<table width="750" style="margin-left: 20px">
+    @foreach (var iGrupo in ((DreAuxiliar) ViewBag.ListaDRE).DreGrupoAuxiliarList.Where(x => x.Codigo == "14" && x.ValorAcumulado != 0))
+    {
+        <tr>q
+            <td colspan="5" style="font-weight: bold; font-size: 16px;">DEDUÇÕES DO LUCRO</td>
+        </tr>
+        <tr style="font-weight: bold;" height="5">
+            <td width="600"></td>
+            <td width="160" align="right" style="border-bottom: 1px solid;">@ViewBag.mesExtAnterior</td>
+            <td width="160" align="right" style="border-bottom: 1px solid;">@ViewBag.mesExtAtual</td>
+            <td width="160" align="right" style="border-bottom: 1px solid;">AH-%</td>
+            <td width="160" align="right" style="border-bottom: 1px solid;">Acum. Ano</td>
+        </tr>
+        <tr><th colspan="3" height="5"></th></tr>
+        decimal total07Mes = 0;
+        decimal total07MesAnterior = 0;
+        decimal total07Acumulado = 0;
+        double ah = 0;
+        double ahTotal = 0;
+        foreach (var conta in iGrupo.DreGrupoItemAuxiliarList)
+        {
+            total07Mes = total07Mes + conta.Valor;
+            total07MesAnterior = total07MesAnterior + conta.ValorMesAnterior;
+            total07Acumulado = total07Acumulado + conta.ValorAcumulado;
+            if (conta.ValorMesAnterior != 0 && conta.ValorMesAnterior != 0)
+            {
+                ah = Convert.ToDouble((conta.Valor - conta.ValorMesAnterior) / conta.ValorMesAnterior);
+                ahTotal = Convert.ToDouble((total07Mes - total07MesAnterior) / total07MesAnterior);
+            }
+            else
+            {
+                ah = 0;
+                //ahTotal = 0;
+            }
+            <tr>
+                <td width="550">&nbsp;&nbsp;&nbsp;&nbsp;@conta.Nome</td>
+                <td width="160" style="text-align: right">@string.Format("{0:#,##0}", conta.ValorMesAnterior)</td>
+                <td width="160" style="text-align: right">@string.Format("{0:#,##0}", conta.Valor)</td>
+                <td width="160" style="text-align: right">@string.Format("{0:P2}", ah)</td>
+                <td width="160" style="text-align: right">@string.Format("{0:#,##0}", conta.ValorAcumulado)</td>
+            </tr>
+        }
+        <tr style="font-weight: bold;">
+            <td>&nbsp;Total</td>
+            <td style="text-align: right; border-bottom: 1px solid; border-top: 1px solid;">@string.Format("{0:#,##0}", Convert.ToInt32(total07MesAnterior))</td>
+            <td style="text-align: right; border-bottom: 1px solid; border-top: 1px solid;">@string.Format("{0:#,##0}", Convert.ToInt32(total07Mes))</td>
+            <td style="text-align: right; border-bottom: 1px solid; border-top: 1px solid;">@string.Format("{0:P2}", ahTotal)</td>
+            <td style="text-align: right; border-bottom: 1px solid; border-top: 1px solid;">@string.Format("{0:#,##0}", Convert.ToInt32(total07Acumulado))</td>
+        </tr>
+    }
+
+</table>
+<br />
+<table width="750" style="text-align: justify">
+    <tr>
+        <td style="padding-left: 50px;padding-right: 110px;">
+            @foreach (var lucratividade in ViewBag.TextoDiagnostico)
+            {
+                if (lucratividade.Codigo == "15")
+                {
+                    @Html.Raw(lucratividade.Texto)
+                }
+            }
+        </td>
+    </tr>
+</table>
+
+
+    <br/><br/><Br/>
+    <table width="750" style="margin-left: 20px">
+        <tr>
+            <td colspan="4" style="font-weight: bold; font-size: 16px;">FLUXOS DE CAIXA</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td style="width: 130px; border-bottom: 1px solid; font-weight: bold; text-align: right">@ViewBag.mesExtAtual</td>
+            <td style="width: 30px;"></td>
+            <td style="border-bottom: 1px solid; font-weight: bold; text-align: right">Acum.Ano</td>
+        </tr>
+        @foreach (var iGrupo in ViewBag.entradasOperacionais)
+        {
+            totalEntradasOperacionais = totalEntradasOperacionais + iGrupo.Saldo;
+            totalEntradasOperacionaisAcumulado = totalEntradasOperacionaisAcumulado + iGrupo.SaldoAcumulado;
+        }
+        @foreach (var iGrupo in ViewBag.saidasOperacionais)
+        {
+            totalSaidasOperacionais = totalSaidasOperacionais+ iGrupo.Saldo;
+            totalSaidasOperacionaisAcumulado = totalSaidasOperacionaisAcumulado + iGrupo.SaldoAcumulado;
+        }
+        <tr>
+            <td style="width: 450px; font-weight: bold; text-align: right">Saldo de caixa operacional (R$)</td>
+            <td style="text-align: right;">@string.Format("{0:#,##0}", totalEntradasOperacionais - totalSaidasOperacionais)</td>
+            <td style="width: 30px;"></td>
+            <td style="text-align: right;">@string.Format("{0:#,##0}", totalEntradasOperacionaisAcumulado - totalSaidasOperacionaisAcumulado)</td>
+        </tr>
+
+        <tr><td colspan="4" style="padding-top: 10px;"></td></tr>
+            <tr width="750" style="margin-left: 20px;text-align: justify">
+                <td colspan="4">
+                    @foreach (var lucratividade in ViewBag.TextoDiagnostico)
+                {
+                    if (lucratividade.Codigo == "4")
+                    {
+                            @Html.Raw(lucratividade.Texto)
+                        }
+                    }
+                </td>
+            </tr>
+        <tr><td colspan="4" style="padding-top: 20px;"></td></tr>
+
+        @foreach (var iGrupo in ViewBag.entradasInvestimentos)
+        {
+            totalEntradasInvestimentos = totalEntradasInvestimentos + iGrupo.Saldo;
+            totalEntradasInvestimentosAcumulado = totalEntradasInvestimentosAcumulado + iGrupo.SaldoAcumulado;
+        }
+        @foreach (var iGrupo in ViewBag.saidasInvestimentos)
+        {
+            totalSaidasInvestimentos = totalSaidasInvestimentos + iGrupo.Saldo;
+            totalSaidasInvestimentosAcumulado = totalSaidasInvestimentosAcumulado + iGrupo.SaldoAcumulado;
+        }
+        <tr>
+            <td style="width: 450px; font-weight: bold; text-align: right">Saldo de caixa de investimentos (R$)</td>
+            <td style="text-align: right;">@string.Format("{0:#,##0}", totalEntradasInvestimentos - totalSaidasInvestimentos)</td>
+            <td style="width: 30px;"></td>
+            <td style="text-align: right;">@string.Format("{0:#,##0}", totalEntradasInvestimentosAcumulado - totalSaidasInvestimentosAcumulado)</td>
+        </tr>
+
+        <tr><td colspan="4" style="padding-top: 10px;"></td></tr>
+        <tr width="750" style="margin-left: 20px;text-align: justify">
+            <td colspan="4">
+                @foreach (var lucratividade in ViewBag.TextoDiagnostico)
+                {
+                    if (lucratividade.Codigo == "5")
+                    {
+                        @Html.Raw(lucratividade.Texto)
+                    }
+                }
+            </td>
+        </tr>
+        <tr><td colspan="4" style="padding-top: 20px;"></td></tr>
+        @foreach (var iGrupo in ViewBag.entradasFinanciamento)
+        {
+            totalEntradasFinanciamento = totalEntradasFinanciamento + iGrupo.Saldo;
+            totalEntradasFinanciamentoAcumulado = +totalEntradasFinanciamentoAcumulado + iGrupo.SaldoAcumulado;
+        }
+        @foreach (var iGrupo in ViewBag.saidasFinanciamento)
+        {
+            totalSaidasFinanciamento = totalSaidasFinanciamento + iGrupo.Saldo;
+            totalSaidasFinanciamentoAcumulado = totalSaidasFinanciamentoAcumulado + iGrupo.SaldoAcumulado;
+        }
+        <tr>
+            <td style="width: 450px; font-weight: bold; text-align: right">Saldo de caixa de financiamentos (R$)</td>
+            <td style="text-align: right;">@string.Format("{0:#,##0}", totalEntradasFinanciamento - totalSaidasFinanciamento)</td>
+            <td style="width: 30px;"></td>
+            <td style="text-align: right;">@string.Format("{0:#,##0}", totalEntradasFinanciamentoAcumulado - totalSaidasFinanciamentoAcumulado)</td>
+        </tr>
+        <tr><td colspan="4" style="padding-top: 10px;"></td></tr>
+        <tr width="750" style="margin-left: 20px;text-align: justify">
+            <td colspan="4">
+                @foreach (var lucratividade in ViewBag.TextoDiagnostico)
+                {
+                    if (lucratividade.Codigo == "6")
+                    {
+                        @Html.Raw(lucratividade.Texto)
+                    }
+                }
+            </td>
+        </tr>
+        <tr><td colspan="4" style="padding-top: 20px;"></td></tr>
+    </table>
+
+
+
+
+
+
+    @*<table width="750" style="margin-left: 20px">
+        <tr><th colspan="3" height="30"></th></tr>
+        <tr><th colspan="3" height="5">SALDO DE BENS E DIREITOS</th></tr>
+    </table>
+    <table width="750" style="margin-left: 20px">
+        <tr style="font-weight: bold;" height="5">
+            <td width="600"></td>
+            <td width="160" align="center" style="border-bottom: 1px solid;">@ViewBag.mesExtAtual</td>
+            <td width="160" align="center" style="border-bottom: 1px solid;">AV-%</td>
+        </tr>
+        <tr><th colspan="3" height="5"></th></tr>
+
+        <tr>
+            <td colspan="3" valign="top">
+                @foreach (var iGrupo in ((List<BalancoPatrimonial>) ViewBag.ListaBalancoPatrimonial).Where(x => x.GrupoCodigo == "1").GroupBy(x => x.GrupoCodigo))
+                {
+                    var grupoFirst = iGrupo.FirstOrDefault();
+                    foreach (var iSubGrupo in iGrupo.GroupBy(x => x.SubGrupoCodigo))
+                    {
+                        var subGrupoFirst = iSubGrupo.FirstOrDefault();
+
+                        foreach (var balanco in iSubGrupo)
+                        {
+                            valorSaldoatual = valorSaldoatual + balanco.SaldoAtual;
+                        }
+                    }
+                }
+
+                @foreach (var iGrupo in ((List<BalancoPatrimonial>) ViewBag.ListaBalancoPatrimonial).Where(x => x.GrupoCodigo == "1").GroupBy(x => x.GrupoCodigo))
+                {
+                    var grupoFirst = iGrupo.FirstOrDefault();
+
+                    <table>
+                        @foreach (var iSubGrupo in iGrupo.GroupBy(x => x.SubGrupoCodigo))
+                        {
+
+                            var subGrupoFirst = iSubGrupo.FirstOrDefault();
+
+                            foreach (var balanco in iSubGrupo)
+                            {
+                                totalSaldoAtual = totalSaldoAtual + balanco.SaldoAtual;
+
+                                <tr>
+                                    <td width="560">&nbsp;&nbsp;&nbsp;&nbsp;@balanco.CampoNome.Nome</td>
+                                    <td width="160" style="text-align: right;">@string.Format("{0:#,##0}", Convert.ToInt32(balanco.SaldoAtual))</td>
+                                    <td width="160" style="text-align: right">@{decimal saldoPercentMes = (Convert.ToInt32(balanco.SaldoAtual)/valorSaldoatual)*100;}<span>@string.Format("{0:N2}", saldoPercentMes)%</span></td>
+                                </tr>
+                            }
+                        }
+                        <tr style="font-weight: bold;">
+                            <td>&nbsp;Total</td>
+                            <td style="text-align: right; border-bottom: 1px solid; border-top: 1px solid;">@string.Format("{0:#,##0}", Convert.ToInt32(totalSaldoAtual))</td>
+                            <td></td>
+                        </tr>
+
+                    </table>
+                }
+
+            </td>
+        </tr>
+        <tr><td colspan="3" style="padding-top: 10px;"></td></tr>
+        <tr width="750" style="margin-left: 20px;text-align: justify">
+            <td colspan="3">
+                @foreach (var lucratividade in ViewBag.TextoDiagnostico)
+                {
+                    if (lucratividade.Codigo == "7")
+                    {
+                        @Html.Raw(lucratividade.Texto)
+                    }
+                }
+            </td>
+        </tr>
+    </table>*@
+
+
+
+
+@*<table width="750" style="margin-left: 20px">
+    <tr><th colspan="3" height="30"></th></tr>
+    <tr><th colspan="3" height="5">SALDO DAS OBRIGAÇÕES</th></tr>
+</table>
+<table width="750" style="margin-left: 20px">
+    <tr style="font-weight: bold;" height="5">
+        <td width="600"></td>
+        <td width="160" align="center" style="border-bottom: 1px solid;">@ViewBag.mesExtAtual</td>
+        <td width="160" align="center" style="border-bottom: 1px solid;">AV-%</td>
+    </tr>
+    <tr><th colspan="3" height="5"></th></tr>
+
+    <tr>
+        <td colspan="3" valign="top">
+            @foreach (var iGrupo in ((List<BalancoPatrimonial>) ViewBag.ListaBalancoPatrimonial).Where(x => x.GrupoCodigo == "2").GroupBy(x => x.GrupoCodigo))
+            {
+                var grupoFirst = iGrupo.FirstOrDefault();
+                foreach (var iSubGrupo in iGrupo.GroupBy(x => x.SubGrupoCodigo))
+                {
+                    var subGrupoFirst = iSubGrupo.FirstOrDefault();
+
+                    foreach (var balanco in iSubGrupo)
+                    {
+                        valorSaldoObrigacoesatual = valorSaldoObrigacoesatual+balanco.SaldoAtual;
+                    }
+                }
+            }
+
+            @foreach (var iGrupo in ((List<BalancoPatrimonial>) ViewBag.ListaBalancoPatrimonial).Where(x => x.GrupoCodigo == "2").GroupBy(x => x.GrupoCodigo))
+            {
+                var grupoFirst = iGrupo.FirstOrDefault();
+
+                <table>
+                    @foreach (var iSubGrupo in iGrupo.GroupBy(x => x.SubGrupoCodigo))
+                    {
+                        var subGrupoFirst = iSubGrupo.FirstOrDefault();
+
+                        foreach (var balanco in iSubGrupo)
+                        {
+                            totalSaldoAtualObri = totalSaldoAtualObri + balanco.SaldoAtual;
+                            <tr>
+                                <td width="560">&nbsp;&nbsp;&nbsp;&nbsp;@balanco.CampoNome.Nome</td>
+                                <td width="160" style="text-align: right;">@string.Format("{0:#,##0}", Convert.ToInt32(balanco.SaldoAtual))</td>
+                                <td width="160" style="text-align: right">@{decimal saldoObrPercentMes = (balanco.SaldoAtual/valorSaldoObrigacoesatual)*100;}<span>@string.Format("{0:N2}", saldoObrPercentMes)%</span></td>
+                            </tr>
+                        }
+                    }
+                    <tr style="font-weight: bold;">
+                        <td>&nbsp;Total</td>
+                        <td style="text-align: right; border-bottom: 1px solid; border-top: 1px solid;">@string.Format("{0:#,##0}", Convert.ToInt32(totalSaldoAtualObri))</td>
+                        <td></td>
+                    </tr>
+
+                </table>
+            }
+
+        </td>
+    </tr>
+    <tr><td colspan="3" style="padding-top: 10px;"></td></tr>
+    <tr width="750" style="margin-left: 20px;text-align: justify">
+        <td colspan="3">
+            @foreach (var lucratividade in ViewBag.TextoDiagnostico)
+            {
+                if (lucratividade.Codigo == "8")
+                {
+                    @Html.Raw(lucratividade.Texto)
+                }
+            }
+        </td>
+    </tr>
+</table>
+<br/><br/>*@
+
+<table width="750" style="margin-left: 20px">
+    <tr>
+        <td valign="top">
+            @foreach (var iGrupo in ((List<BalancoPatrimonial>) ViewBag.ListaBalancoPatrimonial).Where(x => x.GrupoCodigo == "1").GroupBy(x => x.GrupoCodigo))
+            {
+                var grupoFirst = iGrupo.FirstOrDefault();
+                decimal totalSaldoAnterior = 0;
+                <table width="750">
+                    <tr style="font-weight: bold; border-bottom: 1px solid;">
+                        <td>&nbsp;@grupoFirst.GrupoNome</td>
+                        <td style="text-align: right">@ViewBag.mesAnterior</td>
+                        <td style="text-align: right">@ViewBag.mesAtual</td>
+                    </tr>
+                    @foreach (var iSubGrupo in iGrupo.GroupBy(x => x.SubGrupoCodigo))
+                    {
+                        subtotalSaldoatual = 0;
+                        subtotalSaldoacumulado = 0;
+                        var subGrupoFirst = iSubGrupo.FirstOrDefault();
+
+                        <tr style="font-weight: bold">
+                            <td colspan="3">&nbsp;&nbsp;@subGrupoFirst.SubGrupoNome</td>
+                        </tr>
+                        foreach (var balanco in iSubGrupo)
+                        {
+                            totalSaldoAtual = totalSaldoAtual + balanco.SaldoAtual;
+                            totalSaldoAnterior = totalSaldoAnterior + balanco.SaldoAnterior;
+                            subtotalSaldoatual = subtotalSaldoatual + balanco.SaldoAtual;
+                            subtotalSaldoacumulado = subtotalSaldoacumulado + balanco.SaldoAnterior;
+                            <tr>
+                                <td width="350">&nbsp;&nbsp;&nbsp;&nbsp;@balanco.CampoNome.Nome</td>
+                                <td width="100" style="text-align: right;">@string.Format("{0:#,##0}", Convert.ToInt32(balanco.SaldoAnterior))</td>
+                                <td width="100" style="text-align: right;">@string.Format("{0:#,##0}", Convert.ToInt32(balanco.SaldoAtual))</td>
+                            </tr>
+                        }
+                        <tr style="font-weight: bold; border-bottom: 1px solid;">
+                            <td>&nbsp;&nbsp;&nbsp;&nbsp;Sub Total</td>
+                            <td style="text-align: right">@string.Format("{0:#,##0}", Convert.ToInt32(subtotalSaldoacumulado))</td>
+                            <td style="text-align: right">@string.Format("{0:#,##0}", Convert.ToInt32(subtotalSaldoatual))</td>
+                        </tr>
+                        <tr><td colspan="3" height="10"></td></tr>
+                    }
+                    <tr style="font-weight: bold; border-bottom: 1px solid;">
+                        <td>&nbsp;Total de Ativos</td>
+                        <td style="text-align: right">@string.Format("{0:#,##0}", Convert.ToInt32(totalSaldoAnterior))</td>
+                        <td style="text-align: right">@string.Format("{0:#,##0}", Convert.ToInt32(totalSaldoAtual))</td>
+                    </tr>
+
+                </table>
+            }
+
+        </td>
+
+    </tr>
+</table>
+<br/><Br/>
+
+<table width="750" style="margin-left: 20px">
+    <tr>
+        <td valign="top">
+            @foreach (var iGrupo in ((List<BalancoPatrimonial>)ViewBag.ListaBalancoPatrimonial).Where(x => x.GrupoCodigo == "2").GroupBy(x => x.GrupoCodigo))
+            {
+                var grupoFirst = iGrupo.FirstOrDefault();
+                decimal totalSaldoAnterior = 0;
+                totalSaldoAtual=0;
+
+                <table width="750">
+                    <tr style="font-weight: bold; border-bottom: 1px solid;">
+                        <td>&nbsp;@grupoFirst.GrupoNome</td>
+                        <td style="text-align: right">@ViewBag.mesAnterior</td>
+                        <td style="text-align: right">@ViewBag.mesAtual</td>
+                    </tr>
+                    @foreach (var iSubGrupo in iGrupo.GroupBy(x => x.SubGrupoCodigo))
+                    {
+                        subtotalSaldoatual = 0;
+                        subtotalSaldoacumulado = 0;
+                        var subGrupoFirst = iSubGrupo.FirstOrDefault();
+                        <tr style="font-weight: bold">
+                            <td colspan="3">&nbsp;&nbsp;@subGrupoFirst.SubGrupoNome</td>
+                        </tr>
+                        foreach (var balanco in iSubGrupo)
+                        {
+                            totalSaldoAtual = totalSaldoAtual + balanco.SaldoAtual;
+                            totalSaldoAnterior = totalSaldoAnterior + balanco.SaldoAnterior;
+                            subtotalSaldoatual = subtotalSaldoatual + balanco.SaldoAtual;
+                            subtotalSaldoacumulado = subtotalSaldoacumulado + balanco.SaldoAnterior;
+                            <tr>
+                                <td width="350">&nbsp;&nbsp;&nbsp;&nbsp;@balanco.CampoNome.Nome</td>
+                                <td width="100" style="text-align: right;">@string.Format("{0:#,##0}", Convert.ToInt32(balanco.SaldoAnterior))</td>
+                                <td width="100" style="text-align: right;">@string.Format("{0:#,##0}", Convert.ToInt32(balanco.SaldoAtual))</td>
+                            </tr>
+                        }
+                        <tr style="font-weight: bold;border-bottom: 1px solid;">
+                            <td>&nbsp;&nbsp;&nbsp;&nbsp;Sub Total</td>
+                            <td style="text-align: right">@string.Format("{0:#,##0}", Convert.ToInt32(subtotalSaldoacumulado))</td>
+                            <td style="text-align: right">@string.Format("{0:#,##0}", Convert.ToInt32(subtotalSaldoatual))</td>
+                        </tr>
+                        <tr><td colspan="3" height="10"></td></tr>
+                    }
+
+                    <tr style="font-weight: bold;border-bottom: 1px solid; ">
+                        <td>&nbsp;Total de Passivos</td>
+                        <td style="text-align: right">@string.Format("{0:#,##0}", Convert.ToInt32(totalSaldoAnterior))</td>
+                        <td style="text-align: right">@string.Format("{0:#,##0}", Convert.ToInt32(totalSaldoAtual))</td>
+                    </tr>
+
+                </table>
+            }
+
+        </td>
+
+    </tr>
+</table>
+<br /><Br />

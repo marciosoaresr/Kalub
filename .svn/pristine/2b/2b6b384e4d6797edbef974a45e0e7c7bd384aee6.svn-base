@@ -1,0 +1,147 @@
+﻿@using App_Code.CustomHelper
+@using ProfitManager.Fabrica.Entidade
+@using PagedList.Mvc;
+@using PagedList;
+@model PagedList.IPagedList<ProfitManager.Fabrica.Entidade.Evento>
+
+@{
+    ViewBag.Title = "Eventos";
+    Layout = "~/Views/Shared/_LayoutRestrito.cshtml";
+}
+
+
+<!-- inicio: conteudo -->
+<div id="content">
+    <div class="tabs-wrapper text-center">
+        <div class="panel box-shadow-none text-left content-header">
+            <div class="panel-body">
+                <div class="col-sm-10" style="padding-top: 35px;">
+                    <p class="animated fadeInLeft">
+                        <a href="/Principal" style="font-size: 1.0em!important; color: #fff;">Home</a> <span class="fa-angle-right fa"></span> Eventos
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-12 top-20 padding-0">
+            <div class="col-md-12">
+                <div class="panel">
+                    <div class="panel-heading" style="padding-left: 20px; padding-right: 30px; padding-top: 5px; padding-bottom: 40px">
+                        <ul class="nav navbar-nav navbar-left" style="padding-top: 10px;color: #2c4970;">
+                            <a href="#" data-toggle="modal" data-placement="bottom" title="Cadastrar Evento" class="evento"><img src="../../Images/file_add.png" width=25 alt="Cadastrar Evento"> Cadastrar Evento</a>
+                        </ul>
+                        <ul class="nav navbar-nav navbar-right" align="left" style="padding-top: 10px;color: #2c4970;">
+                            <b>Dicas:</b>
+                            
+                            <img src="../../Images/file_edit.png" width="15"> editar evento
+                            -
+                            <img src="../../Images/icon_help.png" width="15"> editar help
+                            -
+                            <img src="../../Images/file_recalc_saldo.png" width="15"> recalcular saldo
+                            -
+                            <img src="../../Images/file_delete.png" width="15"> apagar evento
+                        </ul>
+                    </div>
+
+                    <div class="panel-body">
+
+                        @GridView.Grid(Model, new string[] { "Id", "Código", "Nome", "Área", "Sub Área", "Ordem", "Tipo Evento", "Restringe Categoria" },
+                        new string[] { "Id", "Codigo", "CampoNome.Nome", "Area.CampoNome.Nome", "SubArea.Nome","Ordem", "TipoEventoLancamento", "RestringeCategoriaEmpresa" }, typeof(Evento))
+
+                        @if (ViewBag.PageCount > 1)
+                        {
+                            <div style="text-align: center">
+                                <div >
+                                    Página: @(ViewBag.PageCount < ViewBag.PageNumber ? 0 : ViewBag.PageNumber) de @ViewBag.PageCount
+                                    @Html.PagedListPager((IPagedList)Model, pageNumber => Url.Action("Index", new { pageNumber, search = ViewBag.Search }))
+                                </div>
+                            </div>
+                        }
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- fim: conteudo -->
+
+
+<div id="conteudoModalEvento" data-url="@Url.Action("CadastrarEditarEvento", "Eventos")">
+</div>
+
+<div id="conteudoModalEventoHelp" data-url="@Url.Action("CadastrarEditarEventoHelp", "Eventos")">
+</div>
+
+<div id="conteudoModalEventoRecalcularSaldo" data-url="@Url.Action("EventoRecalcularSaldo", "Eventos")">
+</div>
+
+@section Scripts{
+
+    <script>
+        
+        $(document).ready(function () {
+
+
+            $('#datatables-example').dataTable({
+                "bLengthChange": false,
+                "iDisplayLength": 160
+
+            });
+            $(".evento").click(function (event) {
+                var idEvento = $(event.target).data("id");
+                var item = $("#conteudoModalEvento");
+                var url = item.data("url") + "?id=" + idEvento;
+                item.load(url, abrirModalEvento);
+            });
+
+            $(".help").click(function (event) {
+                var idEvento = $(event.target).data("id");
+                var item = $("#conteudoModalEventoHelp");
+                var url = item.data("url") + "?id=" + idEvento;
+                item.load(url, abrirModalEventoHelp);
+            });
+
+            $(".recalcularsaldoevento").click(function (event) {
+                var idEvento = $(event.target).data("id");
+                var item = $("#conteudoModalEventoRecalcularSaldo");
+                var url = item.data("url") + "?id=" + idEvento;
+                item.load(url, abrirModalEventoRecalcularSaldo);
+            });
+
+        });
+
+        $("body").tooltip({
+            selector: '[data-toggle="tooltip"]'
+        });
+
+        $(function () {
+            $(".deletar").on("click", function () {
+                if (confirm("Tem certeza que deseja excluir?")) {
+                    var valor = $(this).attr("value");
+                    location.href = "Eventos/Excluir/?id=" + valor;
+                }
+                return false;
+            });
+        });
+
+        $(function () {
+            $(".editar").on("click", function () {
+                var valor = $(this).attr("value");
+                location.href = "Eventos/CadastrarEditarEvento/?id=" + valor;
+            });
+        });
+
+        function abrirModalEvento() {
+            $("#AbreCadastrarEditarEvento").modal('show');
+        }
+        function abrirModalEventoHelp() {
+            $("#AbreCadastrarEditarEventoHelp").modal('show');
+        }
+        function abrirModalEventoRecalcularSaldo() {
+            $("#AbreEventoRecalcularSaldo").modal('show');
+        }
+
+    </script>
+
+}

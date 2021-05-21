@@ -1,0 +1,388 @@
+﻿@using System
+@using System.Collections.Generic
+@using ProfitManager.Fabrica.Entidade
+@using ProfitManager.Fabrica.Enum
+@model ProfitManager.Fabrica.Entidade.Empresa
+
+@{
+    DateTime dataAbertura = DateTime.Now;
+}
+
+<style type="text/css">
+    .ui-datepicker-calendar .ui-state-active {
+        background: #2c4970;
+        -webkit-box-shadow: inset 0px 0px 10px 0px rgba(0, 0, 0, .1);
+        -moz-box-shadow: inset 0px 0px 10px 0px rgba(0, 0, 0, .1);
+        box-shadow: inset 0px 0px 10px 0px rgba(0, 0, 0, .1);
+        color: #e0e0e0;
+        text-shadow: 0px 1px 0px #4d7a85;
+        filter: dropshadow(color=#4d7a85, offx=0, offy=1);
+        border: 1px solid #55838f;
+        position: relative;
+        margin: -1px;
+    }
+
+    .ui-datepicker select.ui-datepicker-month,
+    .ui-datepicker select.ui-datepicker-year {
+        background: #2c4970;
+        color: #fff;
+        width: 45%;
+    }
+</style>
+
+
+<div id="AbreCadastrarEditarCadastroEmpresa" class="modal fade" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="panel-heading2" style="padding-bottom: 15px;">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title"><b>Cadastro Empresa</b></h4>
+            </div>
+
+            @using (Html.BeginForm("CadastrarEditarCadastroEmpresa", "CadastroEmpresa", FormMethod.Post, new { id = "formCadastrarEditarEmpresa", name = "formCadastrarEditarEmpresa" }))
+            {
+                <div class="modal-body">
+                    <div style="display: inline-block">
+                        @Html.AntiForgeryToken()
+                        @Html.ValidationSummary(true)
+
+                        @Html.HiddenFor(x => x.Id)
+                        @Html.HiddenFor(x => x.DataHoraCriacao)
+                        @Html.HiddenFor(x => x.Status)
+                        @Html.HiddenFor(x => x.PeriodoGratis)
+                        @Html.HiddenFor(x => x.CupomPromocional)
+                        @Html.HiddenFor(x => x.PeriodoUsoVencido)
+                        @Html.HiddenFor(x => x.DataAtivacao)
+                        @Html.HiddenFor(x => x.DataUltimaAtivacao)
+                        @Html.HiddenFor(x => x.DiaVencimento)
+
+                        <div class="col-sm-5" style="padding-top: 2px;">
+                            <b>Cnpj</b><br />
+                            @Html.TextBoxFor(x => x.Cnpj, new
+                   {
+                       @style = "width:150px;",
+                       @onKeyPress = "MascaraCNPJ(formCadastrarEditarEmpresa.Cnpj);",
+                       @maxlength = "18",
+                       @onblur = "this.style.backgroundColor = '#ffffff'"
+                   })
+                        </div>
+                        <div class="col-sm-4" style="padding-top: 2px;">
+                            <b>Data de Abertura</b><br />
+                            <input id="datepicker" name="DataAbertura" type="text" size="5%" class="form-control" value="@Model.DataAbertura.ToShortDateString()">
+                        </div>
+
+                        <div class="col-sm-12" style="padding-top: 10px;">
+                            <b>Nome Empresarial</b>
+                            @Html.TextBoxFor(x => x.Nome, new { @style = "width:525px;", @onblur = "this.style.backgroundColor = '#ffffff'" })
+                        </div>
+                        <br />
+
+                        <div class="col-sm-12" style="padding-top: 10px;">
+                            <b>Título do Estabelecimento (nome de fantasia)</b><br />
+                            @Html.TextBoxFor(x => x.NomeFantasia, new { @style = "width:525px;", @onblur = "this.style.backgroundColor = '#ffffff'" })
+                        </div>
+                        <br />
+
+                        <div class="col-sm-12" style="padding-top: 10px;">
+                            <b>Atividade econômica principal</b><br />
+                            @Html.DropDownListFor(x => x.CategoriaEmpresa.Id, (IEnumerable<SelectListItem>)ViewBag.ListaCategoriaEmpresa, "Selecione uma CNAE", new { @style = "width:525px;" })
+
+                        </div>
+                        <br />
+
+                        <br />
+
+                        <div class="col-sm-5" style="padding-top: 10px;">
+                            <b>Logradouro</b><br />
+                            @Html.TextBoxFor(x => x.Logradouro, new { @style = "width:200px;", @onblur = "this.style.backgroundColor = '#ffffff'" })
+                        </div>
+                        <div class="col-sm-2" style="padding-top: 10px;">
+                            <b>Numero</b><br />
+                            @Html.TextBoxFor(x => x.Numero, new { @style = "width:40px;", @onblur = "this.style.backgroundColor = '#ffffff'" })
+                        </div>
+                        <div class="col-sm-5" style="padding-top: 10px;">
+                            <b>Complemento</b><br />
+                            @Html.TextBoxFor(x => x.Complemento, new { @style = "width:150px;", @onblur = "this.style.backgroundColor = '#ffffff'" })
+                        </div>
+                        <br />
+
+                        <div class="col-sm-2" style="padding-top: 10px;">
+                            <b>Cep</b><br />
+                            @Html.TextBoxFor(x => x.Cep, new { @style = "width:80px;", @onKeyPress = "MascaraCep(formCadastrarEditarCadastroEmpresa.Cep);", @maxlength = "10", @onblur = "this.style.backgroundColor = '#ffffff'" })
+                        </div>
+                        <div class="col-sm-4" style="padding-top: 10px;">
+                            <b>Bairro/Distrito</b><br/>
+                            @Html.TextBoxFor(x => x.Bairro, new {@style = "width:150px;", @onblur = "this.style.backgroundColor = '#ffffff'"})
+                        </div>
+                        <div class="col-sm-4" style="padding-top: 10px;">
+                            <b>Cidade</b><br />
+                            @Html.DropDownListFor(x => x.Cidade.Id, (IEnumerable<SelectListItem>)ViewBag.ListaCidade, "Selecione a Cidade", new { @class = "select2-A", style = "width:200px;" })
+                        </div>
+                        <br />
+
+                        <div class="col-sm-5" style="padding-top: 10px;">
+                            <b>Email</b><br />
+                            @Html.TextBoxFor(x => x.Email, new { @style = "width:200px;", @onblur = "this.style.backgroundColor = '#ffffff'" })
+                        </div>
+                        <div class="col-sm-3" style="padding-top: 10px;">
+                            <b>Telefone 1</b><br />
+                            @Html.TextBoxFor(x => x.Telefone1, new
+                   {
+                       @style = "width:110px;",
+                       @onKeyPress = "MascaraTelefone(formCadastrarEditarEmpresa.Telefone1);",
+                       @maxlength = "15",
+                       @onblur = "this.style.backgroundColor = '#ffffff'"
+                   })
+                        </div>
+                        <div class="col-sm-3" style="padding-top: 10px;">
+                            <b>Telefone 2</b><br />
+                            @Html.TextBoxFor(x => x.Telefone2, new
+                   {
+                       @style = "width:110px;",
+                       @onKeyPress = "MascaraTelefone(formCadastrarEditarEmpresa.Telefone2);",
+                       @maxlength = "15",
+                       @onblur = "this.style.backgroundColor = '#ffffff'"
+                   })
+                        </div>
+                        <br />
+                        <br/><br/>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+                        <input type="submit" value="Salvar" name="enviar" id="salvar" onclick="return validaForm()" class="btn btn-primary">
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+</div>
+
+
+<div id="abrirModalProcessando" class="modal fade modal-v2" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body" align=center>
+                <img src="../../Images/loading_2x.gif" width="300">
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    $(document).ready(function() {
+
+        $("#datepicker").datepicker({
+            changeMonth: true,
+            changeYear: true,
+            showButtonPanel: true,
+            dateFormat: 'dd/mm/yy',
+            minDate: new Date(2000, 1 - 1, 1)
+        });
+
+    });
+
+    function validaForm() {
+        d = document.formCadastrarEditarEmpresa;
+        if (d.Cnpj.value == "") {
+            d.Cnpj.style.border = "1px solid red";
+            d.Cnpj.focus();
+            $.simplyToast('danger', 'O CNPJ da empresa não foi informado!');
+            return false;
+        }
+        if (d.Cnpj.value != "") {
+            var cnpj = d.Cnpj.value;
+            var valida = new Array(6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2);
+            var dig1 = new Number;
+            var dig2 = new Number;
+
+            exp = /\.|\-|\//g
+            cnpj = cnpj.toString().replace(exp, "");
+            var digito = new Number(eval(cnpj.charAt(12) + cnpj.charAt(13)));
+
+            for (i = 0; i < valida.length; i++) {
+                dig1 += (i > 0 ? (cnpj.charAt(i - 1) * valida[i]) : 0);
+                dig2 += cnpj.charAt(i) * valida[i];
+            }
+            dig1 = (((dig1 % 11) < 2) ? 0 : (11 - (dig1 % 11)));
+            dig2 = (((dig2 % 11) < 2) ? 0 : (11 - (dig2 % 11)));
+
+            if (((dig1 * 10) + dig2) != digito) {
+                d.Cnpj.style.border = "1px solid red";
+                d.Cnpj.focus();
+                $.simplyToast('danger', 'O CNPJ é inválido!');
+                return false;
+            }
+
+
+        }
+        if (d.DataAbertura.value == "") {
+            d.DataAbertura.style.border = "1px solid red";
+            d.DataAbertura.focus();
+            $.simplyToast('danger', 'A data de abertura não foi informado!');
+            return false;
+        }
+        if (d.Nome.value == "") {
+            d.Nome.style.border = "1px solid red";
+            d.Nome.focus();
+            $.simplyToast('danger', 'O nome da empresa não foi informado!');
+            return false;
+        }
+        if (d.NomeFantasia.value == "") {
+            d.NomeFantasia.style.border = "1px solid red";
+            d.NomeFantasia.focus();
+            $.simplyToast('danger', 'O nome fantasia da empresa não foi informado!');
+            return false;
+        }
+        if (d.CategoriaEmpresa_Id.value == "") {
+            d.CategoriaEmpresa_Id.style.border = "1px solid red";
+            d.CategoriaEmpresa_Id.focus();
+            $.simplyToast('danger', 'A atividade ecômica não foi informada!');
+            return false;
+        }
+        if (d.Logradouro.value == "") {
+            d.Logradouro.style.border = "1px solid red";
+            d.Logradouro.focus();
+            $.simplyToast('danger', 'O logradouro não foi informado!');
+            return false;
+        }
+        if (d.Numero.value == "") {
+            d.Numero.style.border = "1px solid red";
+            d.Numero.focus();
+            $.simplyToast('danger', 'O numero não foi informado!');
+            return false;
+        }
+        if (d.Cep.value == "") {
+            d.Cep.style.border = "1px solid red";
+            d.Cep.focus();
+            $.simplyToast('danger', 'O CEP não foi informado!');
+            return false;
+        }
+        if (d.Bairro.value == "") {
+            d.Bairro.style.border = "1px solid red";
+            d.Bairro.focus();
+            $.simplyToast('danger', 'O bairro não foi informado!');
+            return false;
+        }
+        if (d.Cidade_Id.value == "") {
+            d.Cidade_Id.style.border = "1px solid red";
+            d.Cidade_Id.focus();
+            $.simplyToast('danger', 'A cidade não foi informada!');
+            return false;
+        }
+        usuario = d.Email.value.substring(0, d.Email.value.indexOf('@@'));
+        dominio = d.Email.value.substring(d.Email.value.indexOf('@@') + 1, d.Email.value.length);
+        if ((usuario.length >= 1) &&
+            (dominio.length >= 3) &&
+            (usuario.search('@@') == -1) &&
+            (dominio.search('@@') == -1) &&
+            (usuario.search(" ") == -1) &&
+            (dominio.search(" ") == -1) &&
+            (dominio.search(".") != -1) &&
+            (dominio.indexOf(".") >= 1) &&
+            (dominio.lastIndexOf(".") < dominio.length - 1)) {
+            //document.getElementById("msgemail").innerHTML = "E-mail válido";
+            //alert("E-mail valido");
+        }
+        else {
+            d.Email.focus();
+            $.simplyToast('danger', 'Por favor, informe um E-MAIL válido!');
+            return false;
+        }
+        if (d.Telefone1.value == "") {
+            d.Telefone1.style.border = "1px solid red";
+            d.Telefone1.focus();
+            $.simplyToast('danger', 'O Telefone não foi informado!');
+            return false;
+        }
+
+
+        $('#abrirModalProcessando').modal('show');
+
+
+    };
+
+    $(".select2-A").select2({
+        placeholder: "Selecione a Cidade",
+        allowClear: true
+    });
+
+    function MascaraCNPJ(cnpj) {
+        if (mascaraInteiro(cnpj) == false) {
+            event.returnValue = false;
+        }
+        return formataCampo(cnpj, '00.000.000/0000-00', event);
+    }
+
+    //adiciona mascara de cep
+    function MascaraCep(cep) {
+        if (mascaraInteiro(cep) == false) {
+            event.returnValue = false;
+        }
+        return formataCampo(cep, '00.000-000', event);
+    }
+
+    function MascaraTelefone(tel) {
+        if (mascaraInteiro(tel) == false) {
+            event.returnValue = false;
+        }
+        return formataCampo(tel, '(00) 0000-00000', event);
+    }
+
+    function ValidaTelefone(tel) {
+        //exp = /\(\d{2}\)\ \d{4}\-\d{4}/
+        //if (!exp.test(tel.value))
+        //alert('Numero de Telefone Invalido!');
+    }
+
+    //valida CEP
+    function ValidaCep(cep) {
+        // exp = /\d{2}\.\d{3}\-\d{3}/
+        //if (!exp.test(cep.value))
+        //$('#alertaCep').modal('show');
+    }
+
+    function mascaraInteiro() {
+        if (event.keyCode < 48 || event.keyCode > 57) {
+            event.returnValue = false;
+            return false;
+        }
+        return true;
+    }
+
+
+    //formata de forma generica os campos
+    function formataCampo(campo, Mascara, evento) {
+        var boleanoMascara;
+
+        var Digitato = evento.keyCode;
+        exp = /\-|\.|\/|\(|\)| /g
+        campoSoNumeros = campo.value.toString().replace(exp, "");
+
+        var posicaoCampo = 0;
+        var NovoValorCampo = "";
+        var TamanhoMascara = campoSoNumeros.length;;
+
+        if (Digitato != 8) { // backspace 
+            for (i = 0; i <= TamanhoMascara; i++) {
+                boleanoMascara = ((Mascara.charAt(i) == "-") || (Mascara.charAt(i) == ".")
+                                                        || (Mascara.charAt(i) == "/"))
+                boleanoMascara = boleanoMascara || ((Mascara.charAt(i) == "(")
+                                                        || (Mascara.charAt(i) == ")") || (Mascara.charAt(i) == " "))
+                if (boleanoMascara) {
+                    NovoValorCampo += Mascara.charAt(i);
+                    TamanhoMascara++;
+                } else {
+                    NovoValorCampo += campoSoNumeros.charAt(posicaoCampo);
+                    posicaoCampo++;
+                }
+            }
+            campo.value = NovoValorCampo;
+            return true;
+        } else {
+            return true;
+        }
+    }
+
+</script>

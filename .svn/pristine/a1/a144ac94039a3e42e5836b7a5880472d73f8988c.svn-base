@@ -1,0 +1,62 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Configuration;
+using System.Linq;
+using System.Text.RegularExpressions;
+using System.Threading;
+using System.Web.Mvc;
+using System.Web.WebPages;
+using Kendo.Mvc.Extensions;
+using ProfitManager.Fabrica.Entidade;
+using ProfitManager.Fabrica.Enum;
+using ProfitManager.Negocio.Implementacao;
+using ProfitManager.Web.RepositorioWeb;
+using ProfitManager.Web.ViewModels;
+
+namespace ProfitManager.Web.Controllers.AcessoRestrito
+{
+    public class BalanceteController : Controller
+    {
+
+        public ActionResult Index()
+        {
+            EmpresaUsuario empresaUsuario =
+                FuncoesEmpresaUsuario.Load(RepositorioWebUsuario.VerificaSeOUsuarioEstaLogado(true).Id) ??
+                new EmpresaUsuario();
+
+            ViewBag.Empresa = empresaUsuario.Empresa.NomeFantasia;
+
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult SetDataBalancete(Balancete balancete)
+        {
+            return RedirectToAction("VisualizarBalancete", new { dataAtual = balancete.DataAtual, dataInicial = balancete.DataInicial });
+        }
+
+       
+        public ActionResult VisualizarBalancete(DateTime dataAtual, DateTime dataInicial )
+        {
+            EmpresaUsuario empresaUsuario =
+                FuncoesEmpresaUsuario.Load(RepositorioWebUsuario.VerificaSeOUsuarioEstaLogado(true).Id);
+
+            int empresa = empresaUsuario.Empresa.Id;
+
+            if (dataInicial == Convert.ToDateTime("01/01/0001"))
+            {
+                dataInicial = dataAtual;
+            }
+
+            List<Balancete> listBalancete = FuncoesBalancete.CarregaBalancete(empresa, dataInicial);
+
+            ViewBag.ListaBalancete = listBalancete;
+            
+            ViewBag.DataInicial = dataInicial.Month + "/" + dataInicial.Year;
+            ViewBag.Empresa = empresaUsuario.Empresa.NomeFantasia;
+
+            return View();
+        }
+
+    }
+}

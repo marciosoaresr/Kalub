@@ -1,0 +1,27 @@
+﻿using System;
+using ProfitManager.Fabrica.Entidade;
+using ProfitManager.Negocio.Repositorio;
+
+namespace ProfitManager.Negocio.Implementacao
+{
+    public class FuncoesEventoOperacao
+    {
+        public static EventoOperacao Load(int id)
+        {
+            using (var repositorio = SessionFactory.CreateRepositorio())
+            {
+                try
+                {
+                    var eventoOperacao = repositorio.BuscarId<EventoOperacao>(id);
+
+                    return eventoOperacao;
+                }
+                catch (Exception err)
+                {
+                    throw err;
+                }
+            }
+        }
+
+    }
+}

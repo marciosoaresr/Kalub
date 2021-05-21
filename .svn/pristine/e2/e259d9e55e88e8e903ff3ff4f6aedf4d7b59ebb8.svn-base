@@ -1,0 +1,121 @@
+﻿using System;
+using System.Web.Mvc;
+using System.Web.UI.WebControls;
+using ProfitManager.Fabrica.Enum;
+using ProfitManager.Fabrica.Excecao;
+using ProfitManager.Web.RepositorioWeb;
+
+namespace ProfitManager.Web.Controllers
+{
+
+    public class LoginController : Controller
+    {
+       
+        public ActionResult Login()
+        {
+            var usuario = RepositorioWebUsuario.VerificaSeOUsuarioEstaLogado(true);
+            if (usuario != null)
+            {
+                if(usuario.Administrador == EnumSimNao.Sim)
+                    return RedirectToAction("Index", "Principal");
+
+                return RedirectToAction("Index", "PrincipalUser");
+            }
+
+            return View();
+        }
+
+        public ActionResult LoginAdm()
+        {
+            var usuario = RepositorioWebUsuario.VerificaSeOUsuarioEstaLogado(true);
+            if (usuario != null)
+            {
+                if (usuario.Administrador == EnumSimNao.Sim)
+                    return RedirectToAction("Index", "Principal");
+
+                return RedirectToAction("Index", "PrincipalUser");
+            }
+
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult AutenticarAdm(FormCollection form)
+        {
+            string email = form["email"];
+            string senha = form["senha"];
+
+            if (!RepositorioWebUsuario.AutenticarUsuario(email, RepositorioWebCriptografia.Criptografar(senha),
+                    EnumSimNao.Sim))
+            {
+                ViewBag.Notification = new NotificationException("O e-mail ou a senha inseridos estão incorretos",
+                    EnumTypeException.Information);
+
+                return View("LoginAdm");
+            }
+
+            return RedirectToAction("Index", "Principal");
+        }
+
+        [HttpPost]
+        public ActionResult Autenticar(FormCollection form)
+        {
+            string email = form["email"];
+            string senha = form["senha"];
+
+            if (email == "kalub.contabil")
+            {
+                if (!RepositorioWebUsuario.AutenticarUsuario(email, RepositorioWebCriptografia.Criptografar(senha),
+                EnumSimNao.Sim))
+                {
+                    ViewBag.Notification = new NotificationException("O login ou a senha inseridos estão incorretos",
+                        EnumTypeException.Information);
+
+                    return View("Login");
+                }
+                else
+                {
+                    return View("LoginCnpj");
+                }
+
+            }
+            else
+            {
+                if (!RepositorioWebUsuario.AutenticarUsuario(email, RepositorioWebCriptografia.Criptografar(senha),
+                    EnumSimNao.Nao))
+                {
+                    ViewBag.Notification = new NotificationException("O e-mail ou a senha inseridos estão incorretos",
+                        EnumTypeException.Information);
+
+                    return View("Login");
+                }
+
+            }
+            ViewBag.usuarioLogado = System.Web.HttpContext.Current.Request.Cookies["UserCookieAuthentication"];
+            return RedirectToAction("Index", "Principal");
+        }
+
+        [HttpPost]
+        public ActionResult AutenticarCnpj(FormCollection form)
+        {
+            var usuario = RepositorioWebUsuario.VerificaSeOUsuarioEstaLogado(true);
+            string cnpj = form["cnpj"];
+
+            if (!RepositorioWebUsuario.AutenticarCnpj(cnpj, EnumSimNao.Nao, usuario.Email))
+            {
+                ViewBag.Notification = new NotificationException("O Cnj esta incorreto",EnumTypeException.Information);
+                return View("LoginCnpj");
+            }
+
+            return RedirectToAction("Index", "Principal");
+        }
+
+        public ActionResult Logout()
+        {
+            RepositorioWebUsuario.Logout();
+            return RedirectToAction("Index","Home");
+        }
+
+      
+    }
+}

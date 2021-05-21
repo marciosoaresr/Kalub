@@ -1,0 +1,154 @@
+﻿@{
+    ViewBag.Title = "Fale Conosco";
+    Layout = "~/Views/Shared/_LayoutInicial.cshtml";
+}
+
+
+
+
+<section style="background-color: #0099da;">
+    <div style="text-align: center; background-color: #0099da;height: 150px; padding-top: 15px;">
+
+        <p class="animated  animation-delay-17" style="font-size: 40px; color: white;font-weight: bold">
+            Entre em contato conosco
+        </p>
+
+        <p class="animated  animation-delay-17" style="font-size: 20px; color: white;">
+            Utilize o formulário ou demais informações
+        </p>
+    </div>
+</section>
+
+<section >
+    <div class="container">
+        <div class="">
+
+            <br/><br/>
+            <div class="col-md-12">
+                <h2 class="section-title no-margin-top">Entre em contato</h2>
+            </div>
+            <div class="col-md-8">
+                <section>
+                    <p>Envie sua mensagem. Retornaremos em breve</p>
+
+                    @using (Html.BeginForm("EnviarContato", "Contato", FormMethod.Post, new {id = "formContato", name = "formContato"}))
+                    {
+                        if (ViewBag.msgenviada != null)
+                        {
+                            <div class="alert alert-info alert-raised alert-dismissible fade in" role="alert">
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                @ViewBag.msgenviada
+                            </div>
+                        }
+                        if (ViewBag.erro != null)
+                        {
+                            <div class="alert alert-danger alert-raised alert-dismissible fade in" role="alert">
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                @ViewBag.erro
+                            </div>
+                        }
+                        <div class="form-group">
+                            <label for="InputName">Seu nome</label>
+                            <input type="text" class="form-control" id="nome" name="nome" required="required">
+                        </div>
+                        <div class="form-group">
+                            <label for="InputEmail1">Seu email</label>
+                            <input type="email" class="form-control" id="email" name="email" required="required">
+                        </div>
+                        <div class="form-group">
+                            <label for="InputMessage">Mensagem</label>
+                            <textarea class="form-control" id="mensagem" name="mensagem" rows="8" required="required"></textarea>
+                        </div>
+                        <button type="submit" onclick="return validaForm()" class="btn btn-ar btn-primary"> Enviar </button>
+                        <div class="clearfix"></div>
+                    }
+                </section>
+            </div>
+
+            <div class="col-md-4">
+                <section>
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <i class="fa fa-envelope-o"></i> Informações Adicionais
+                        </div>
+                        <div class="panel-body">
+                            <h4 class="section-title no-margin-top">Contatos</h4>
+                            <address>
+                                Email: <a href="#">comercial@kalub.com.br</a>
+                            </address>
+
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<hr class="dotted">
+
+<section>
+    <div class="well well-sm">
+        <iframe width="100%" height="350" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3799.8596109006617!2d-48.63244668558711!3d-17.751252878841!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94a7315222e1413d%3A0xd5e813bbaa709a92!2sKalub+-+Aplicativo+online+organizador+e+gerador+de+informa%C3%A7%C3%B5es+financeiras.!5e0!3m2!1spt-BR!2sbr!4v1469824446110"></iframe>
+    </div>
+</section>
+
+<div id="abrirModalProcessando" class="modal fade modal-v2" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body" align=center>
+                <img src="../../Images/loading_2x.gif" width="300">
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+    <script>
+
+        function validaForm() {
+            d = document.formContato;
+            if (d.nome.value == "") {
+                d.nome.style.border = "1px solid red";
+                d.nome.focus();
+                $.simplyToast('danger', 'O nome não foi informado!');
+                return false;
+            }
+            usuario = d.email.value.substring(0, d.email.value.indexOf('@@'));
+            dominio = d.email.value.substring(d.email.value.indexOf('@@') + 1, d.email.value.length);
+            if ((usuario.length >= 1) &&
+                (dominio.length >= 3) &&
+                (usuario.search('@@') == -1) &&
+                (dominio.search('@@') == -1) &&
+                (usuario.search(" ") == -1) &&
+                (dominio.search(" ") == -1) &&
+                (dominio.search(".") != -1) &&
+                (dominio.indexOf(".") >= 1) &&
+                (dominio.lastIndexOf(".") < dominio.length - 1)) {
+                //document.getElementById("msgemail").innerHTML = "E-mail válido";
+                //alert("E-mail valido");
+            }
+            else {
+                d.email.focus();
+                $.simplyToast('danger', 'Por favor, informe um E-MAIL válido!');
+                return false;
+            }
+            if (d.mensagem.value == "") {
+                d.mensagem.style.border = "1px solid red";
+                d.mensagem.focus();
+                $.simplyToast('danger', 'A mensagem não foi informada!');
+                return false;
+            }
+
+
+            $('#abrirModalProcessando').modal('show');
+
+
+        };
+
+
+
+    </script>
+

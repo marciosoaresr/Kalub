@@ -1,0 +1,187 @@
+﻿@using System
+@using System.Collections.Generic
+@using System.Web.Mvc;
+@using ProfitManager.Fabrica.Entidade
+@using ProfitManager.Fabrica.Enum
+@model ProfitManager.Fabrica.Entidade.Exercicio
+
+@{
+    var data = DateTime.Now;
+}
+
+<script src="../../Scripts/ckeditor/ckeditor.js"></script>
+<script src="../../Scripts/ckeditor/adapters/jquery.js"></script>
+<script src="../../Scripts/ckeditor/samples/js/sample.js"></script>
+
+<style type="text/css">
+    .ui-datepicker-calendar .ui-state-active {
+        background: #2c4970;
+        -webkit-box-shadow: inset 0px 0px 10px 0px rgba(0, 0, 0, .1);
+        -moz-box-shadow: inset 0px 0px 10px 0px rgba(0, 0, 0, .1);
+        box-shadow: inset 0px 0px 10px 0px rgba(0, 0, 0, .1);
+        color: #e0e0e0;
+        text-shadow: 0px 1px 0px #4d7a85;
+        filter: dropshadow(color=#4d7a85, offx=0, offy=1);
+        border: 1px solid #55838f;
+        position: relative;
+        margin: -1px;
+    }
+
+    .ui-datepicker select.ui-datepicker-month,
+    .ui-datepicker select.ui-datepicker-year {
+        background: #2c4970;
+        color: #fff;
+        width: 45%;
+    }
+</style>
+
+@if (TempData["erro"] != null)
+{
+    <div id="alerta" class="modal fade" data-backdrop="static" style="padding-top: 200px; font-size: 15px;">
+        <div class="modal-dialog">
+            <div class="alert alert-danger alert-raised alert-dismissible fade in" role="alert">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                <br /><strong>ATENÇÃO!</strong><BR />
+                @TempData["erro"]<br /><br />
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">$(document).ready(function() { $('#alerta').modal('show'); });</script>
+}
+else
+{
+    <div id="AbreCadastrarEditarExercicio" class="modal fade" data-backdrop="static">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="panel-heading2" style="padding-bottom: 15px;">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title"><b>Exercício</b></h4>
+                </div>
+
+                @using (Html.BeginForm("CadastrarEditarExercicio", "Exercicio", FormMethod.Post, new { id = "formCadastrarEditarExercicio", name = "formCadastrarEditarExercicio" }))
+                {
+                    <div class="modal-body">
+                        <div style="display: inline-block">
+                            @Html.AntiForgeryToken()
+                            @Html.ValidationSummary(true)
+
+                            @Html.HiddenFor(x => x.Id)
+                            @Html.HiddenFor(x => x.DataHoraCriacao)
+
+                            <table style="width: 100%">
+                                <tr>
+                                    <td>
+                                        <h4><b>Titulo:</b></h4><br/>
+                                        @Html.TextBoxFor(x => x.Titulo, new {@style = "width:300px;"})
+                                    </td>
+                                    <td >
+                                        <h4><b>Categoria:</b></h4><br />
+                                        @Html.DropDownListFor(x => x.CategoriaEmpresa.Id, (IEnumerable<SelectListItem>)ViewBag.ListaCategoriaEmpresa, "Selecione uma Categoria", new { @class = "select"})
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td width="180" >
+                                        <h4><b><span class="fa-calendar fa "></span>&nbsp;&nbsp; Data inicial:</b></h4>
+                                        <input id="datepicker" name="DataInicio" type="text" size="20" style="text-align: center;" class="campoDataInicio" value="@data.ToShortDateString()">
+                                    </td>
+                                    <td>
+                                        <div class="alert alert-danger alert-raised alert-dismissible fade in" role="alert">
+                                            Intervalo máximo de seis meses.
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+
+                                </tr>
+                            </table>
+                            <table >
+                                <tr>
+                                    <td>
+                                        <div class="well">
+                                            <h4><b>Exercício</b></h4>
+                                            <table style="width: 800px">
+                                                <tr>
+                                                    <td>
+                                                        @Html.TextAreaFor(x => x.Descricao, new { @name = "my-textarea", id = "my-textarea" })
+                                                    </td>
+                                                </tr>
+
+                                            </table>
+
+                                        </div>
+
+                                    </td>
+                                </tr>
+                            </table>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+                            <input type="submit" value="Salvar" name="enviar" id="salvarexercicio" onclick="return validaForm()" class="btn btn-primary">
+                        </div>
+                    </div>
+                }
+
+            </div>
+        </div>
+    </div>
+}
+
+
+
+
+<div id="abrirModalProcessando" class="modal fade modal-v2" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body" align=center>
+                <img src="../../Images/loading_2x.gif" width="300">
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    $(document).ready(function() {
+
+        $('#my-textarea').ckeditor({ toolbar: 'Basic', width: 800, height: 150 });
+
+        $("#datepicker").datepicker({
+            changeMonth: true,
+            changeYear: true,
+            showButtonPanel: true,
+            dateFormat: 'dd/mm/yy'
+        });
+
+    });
+
+
+    function validaForm() {
+        d = document.formCadastrarEditarExercicio;
+
+        if (d.Titulo.value == "") {
+            d.Titulo.style.border = "1px solid red";
+            $.simplyToast('danger', 'O titlo do exercicio não foi informado!');
+            return false;
+        }
+        if (d.DataInicio.value == "") {
+            d.DataInicio.style.border = "1px solid red";
+            $.simplyToast('danger', 'A data inicial não foi informado!');
+            return false;
+        }
+        //if (d.Descricao.value == "") {
+            //d.Descricao.style.border = "1px solid red";
+            //$.simplyToast('danger', 'A descrição do exercicio não foi informado!');
+            //return false;
+        //}
+        if (d.CategoriaEmpresa_Id.value == "") {
+            d.CategoriaEmpresa_Id.style.border = "1px solid red";
+            $.simplyToast('danger', 'A atividade econômica não foi informada!');
+            return false;
+        }
+
+        $('#abrirModalProcessando').modal('show');
+
+    };
+
+</script>

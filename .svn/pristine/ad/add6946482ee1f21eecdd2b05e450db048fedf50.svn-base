@@ -1,0 +1,127 @@
+﻿@{
+    ViewBag.Title = "Principal";
+    Layout = "~/Views/Shared/_LayoutRestrito.cshtml";
+}
+
+<div class="col-md-2" style="padding-top: 85px;">
+    <div class="panel box-v4">
+        <div class="panel-heading border-none" style="color: #fff; background-color: #1E90FF;">
+            <b>@ViewBag.totalHoje - ASSINATURAS</b> <br/>
+            Hoje<br/>
+            <h4><b>R$ @ViewBag.totalValorHoje</b></h4>
+        </div>
+    </div>
+</div>
+<div class="col-md-2" style="padding-top: 85px;">
+    <div class="panel box-v4">
+        <div class="panel-heading border-none" style="color: #fff; background-color: #1E90FF;">
+            <b>@ViewBag.totalOntem - ASSINATURAS</b> <br />
+            Ontem<br />
+            <h4><b>R$ @ViewBag.totalValorOntem</b></h4>
+        </div>
+    </div>
+</div>
+<div class="col-md-2" style="padding-top: 85px;">
+    <div class="panel box-v4">
+        <div class="panel-heading border-none" style="color: #fff; background-color: #1E90FF;">
+            <b>@ViewBag.totalSeteDias - ASSINATURAS</b> <br/>
+            Últimos 7 dias<br/>
+            <h4><b>R$ @ViewBag.totalValorSeteDias</b></h4>
+        </div>
+    </div>
+</div>
+<div class="col-md-2" style="padding-top: 85px;">
+    <div class="panel box-v4">
+        <div class="panel-heading border-none" style="color: #fff;background-color: #1E90FF;">
+            <b>@ViewBag.totalMesAtual - ASSINATURAS</b> <br/>
+            Este Mês<br/>
+            <h4><b>R$ @ViewBag.totalValorMesAtual</b></h4>
+        </div>
+    </div>
+</div>
+<div class="col-md-2" style="padding-top: 85px;">
+    <div class="panel box-v4">
+        <div class="panel-heading border-none" style="color: #fff;background-color: #1E90FF;">
+            <b>@ViewBag.totalMesAnterior - ASSINATURAS</b> <br/>
+            Mês Anterior<br/>
+            <h4><b>R$ @ViewBag.totalValorMesAnterior</b></h4>
+        </div>
+    </div>
+</div>
+<div class="col-md-2" style="padding-top: 85px;">
+    <div class="panel box-v4">
+        <div class="panel-heading border-none" style="color: #fff; background-color: #1E90FF;">
+            <b>@ViewBag.totalTodos - ASSINATURAS</b> <br/>
+            Todas as Assinaturas<br/>
+            <h4><b>R$ @ViewBag.totalValorTodos</b></h4>
+        </div>
+    </div>
+</div>
+
+
+<div class="col-md-2" style="padding-top: 15px;">
+    <div class="panel box-v4">
+        <div class="panel-heading border-none" style="color: #000; background-color: #fff;">
+            <font color="#000">
+                <b>EMPRESAS</b> <br />
+                Hoje<br />
+                <h4><b>@ViewBag.totaleHoje</b></h4>
+            </font>
+</div>
+    </div>
+</div>
+<div class="col-md-2" style="padding-top: 15px;">
+    <div class="panel box-v4">
+        <div class="panel-heading border-none" style="color: #000; background-color: #fff;">
+            <font color="#000">
+                <b>EMPRESAS</b> <br />
+                Ontem<br />
+                <h4><b>@ViewBag.totaleOntem</b></h4>
+            </font>
+</div>
+    </div>
+</div>
+<div class="col-md-2" style="padding-top: 15px;">
+    <div class="panel box-v4">
+        <div class="panel-heading border-none" style="color: #000; background-color: #fff;">
+            <font color="#000">
+                <b>EMPRESAS</b> <br />
+                Últimos 7 dias<br />
+                <h4><b>@ViewBag.totaleSeteDias</b></h4>
+            </font>
+</div>
+    </div>
+</div>
+<div class="col-md-2" style="padding-top: 15px;">
+    <div class="panel box-v4">
+        <div class="panel-heading border-none" style="color: #000;background-color: #fff;">
+            <font color="#000">
+                <b>EMPRESAS</b> <br />
+                Este Mês<br />
+                <h4><b>@ViewBag.totaleMesAtual</b></h4>
+            </font>
+</div>
+    </div>
+</div>
+<div class="col-md-2" style="padding-top: 15px;">
+    <div class="panel box-v4">
+        <div class="panel-heading border-none" style="color: #000;background-color: #fff;">
+            <font color="#000">
+                <b>EMPRESAS</b> <br />
+                Mês Anterior<br />
+                <h4><b>@ViewBag.totaleMesAnterior</b></h4>
+            </font>
+</div>
+    </div>
+</div>
+<div class="col-md-2" style="padding-top: 15px;">
+    <div class="panel box-v4" style="color: #000;background-color: #fff;">
+        <div class="panel-heading border-none" style="color: #000; background-color: #fff;">
+            <font color="#000">
+                <b>EMPRESAS</b> <br />
+                Todas as Empresas<br />
+                <h4><b>@ViewBag.totaleTodos</b></h4>
+            </font>
+        </div>
+    </div>
+</div>

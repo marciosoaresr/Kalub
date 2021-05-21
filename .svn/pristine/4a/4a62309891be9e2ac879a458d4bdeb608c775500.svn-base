@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+  <class name="ProfitManager.Fabrica.Entidade.Cidade, ProfitManager.Fabrica" table="Cidade" lazy="true">
+    <cache usage="read-write"/>
+    <id name="Id">
+      <column name="Id"/>
+      <generator class="native">
+        <param name="sequence">Cidade_</param>
+      </generator>
+    </id>
+    <property name="DataHoraCriacao" column= "DataHoraCriacao" type="Timestamp"/>
+    <property name="DataHoraAlteracao" column= "DataHoraAlteracao" type="Timestamp"/>
+
+    <property name="Nome" column= "Nome" type="String" length="100"/>
+    <many-to-one name="Estado" column="Estado" class="ProfitManager.Fabrica.Entidade.Estado, ProfitManager.Fabrica" fetch="join" />
+
+
+  </class>
+</hibernate-mapping>

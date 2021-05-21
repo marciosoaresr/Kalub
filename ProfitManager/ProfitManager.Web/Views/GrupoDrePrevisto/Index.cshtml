@@ -1,0 +1,142 @@
+﻿@using System.Linq
+@using ProfitManager.Fabrica.Entidade
+@using ProfitManager.Fabrica.EntidadeAuxiliar
+@using ProfitManager.Fabrica.Enum
+@using ProfitManager.Web.ViewModels
+@model ProfitManager.Fabrica.Entidade.GrupoDrePrevisto
+
+@{
+    ViewBag.Title = "KALUB - DRE Previsto";
+    Layout = "~/Views/Shared/_LayoutRestritoUser.cshtml";
+
+
+}
+
+<div id="content">
+    <div class="tabs-wrapper text-center">
+        <div class="panel box-shadow-none text-left content-header">
+            <div class="panel-body">
+                <div class="col-sm-4" style="padding-top: 55px;">
+                    <p class="animated fadeInLeft">
+                        <a href="/PrincipalUser" style="font-size: 1.0em !important; color: #fff;">Home</a> <span class="fa-angle-right fa"></span> DRE Previsto
+                    </p>
+
+                </div>
+                <div style="text-align: right; padding-top: 38px; padding-left: 86%;">
+                    <table width="190" height="40" border="1px" bordercolor="#fff">
+                        <tr>
+                            <td style="text-align: right; ">
+                                <span style="padding-right: 20px;">Dinheiro em Caixa</span>
+                                <p style="padding-top: 10px;"><span style="padding-right: 20px; font-weight: bold;font-size: 20px;">R$ @string.Format("{0:#,##0}", ViewBag.TotalSaldoinicialDiaAnteiorContaCaixa)</span></p>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div align="center" style="padding-top: 10px;">
+<div class="panel " style="width: 100%;">
+<div class="panel-body">
+    <div class="panel-heading2">
+        <h4 class="modal-title"><font color="white"><b>Previsão DRE</b></font></h4>
+    </div>
+
+    <table width="98%" >
+        <tr style="font-weight: bold;text-align: right">
+            <td width="600"></td>
+            <td>Janeiro</td>
+            <td>Fevereiro</td>
+            <td>Março</td>
+            <td>Abril</td>
+            <td>Maio</td>
+            <td>Junho</td>
+            <td>Julho</td>
+            <td>Agosto</td>
+            <td>Setembro</td>
+            <td>Outubro</td>
+            <td>Novembro</td>
+            <td>Dezembro</td>
+            <td width="100">Total</td>
+        </tr>
+        @foreach (var iGrupo in ((DreAuxiliar)ViewBag.ListaDRE).DreGrupoAuxiliarList)
+        {
+            <tr height="5">
+                
+                @if (iGrupo.Codigo.StartsWith("06."))
+                {
+                    <td width="600">&nbsp;&nbsp;&nbsp;&nbsp;@iGrupo.Nome</td>
+                }
+                else
+                {
+                    <td width="600">&nbsp;@iGrupo.Nome</td>
+                }
+
+
+            </tr>
+
+            <tr height="5"></tr>
+
+                foreach (var conta in iGrupo.DreGrupoItemAuxiliarList)
+                {
+                    <tr>
+                        <td width="600">&nbsp;&nbsp;&nbsp;&nbsp;@conta.Nome</td>
+
+                        @for (int i = 1; i <= 12; i++)
+                        {
+                            <td>
+                                <input type="hidden" name="mes" value="@i"/>
+                                <input type="text" name="valor" size="6" maxlength="10" onkeydown="mascara(this, valor);" class="text-right"/>
+                            </td>
+                        }
+
+                        <td style="text-align: right;font-weight: bold">@string.Format("{0:#,##0}", 100)</td>
+                    </tr>
+                }
+
+            <tr><th colspan="3" height="10"></th></tr>
+        }
+
+        <tr><td colspan="13" style="text-align: right; "><br/><button type="submit" value="Entrar" id="Entrar" class="btn btn-success">Salva Previsão DRE</button></td></tr>
+    </table>
+</div>
+</div>
+</div>
+
+
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            
+            //$(document).on('focus click', 'input[type=text]', function () { this.select(); this.style.backgroundColor = '#FFFF00'; });
+
+        });
+
+        function mascara(o, f) {
+            v_obj = o;
+            v_fun = f;
+            setTimeout("execmascara()", 1);
+        }
+
+        function execmascara() {
+            v_obj.value = v_fun(v_obj.value);
+        }
+
+        function valor(v) {
+            v = v.toString().replace(/\D/g, "");
+            v = v.replace(/[0-9]{16}/, "inválido");
+            v = v.replace(/(\d{1})(\d{11})$/, "$1.$2"); // coloca ponto antes dos ultimos 11 digitos
+            v = v.replace(/(\d{1})(\d{6})$/, "$1.$2"); // coloca ponto antes dos ultimos 6 digitos
+            v = v.replace(/(\d{1})(\d{3})$/, "$1.$2"); // coloca ponto antes dos ultimos 5 digitos
+            return v;
+        }
+
+
+    </script>
+
+}

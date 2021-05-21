@@ -1,0 +1,59 @@
+﻿@using System.Globalization
+@using System.Xml.Schema
+@using ProfitManager.Fabrica.Entidade
+@using ProfitManager.Fabrica.Enum
+@model ProfitManager.Fabrica.Entidade.Exercicio
+
+@{
+    ViewBag.Title = "KALUB - Visualizar Exercicio";
+    Layout = "~/Views/Shared/_LayoutRelatorios.cshtml";
+
+}
+
+
+<table width="750" style="margin-left: 20px">
+    <tr>
+        <th width="550">
+            <h4>
+                <b>@ViewBag.Empresa</b>
+            </h4>
+            Categoria: @ViewBag.NomeCategoria<br/>
+        </th>
+        <th colspan="2"  style="text-align: right">
+            @if (ViewBag.Logomarca != null)
+            {
+                <img src="~/Images/Logomarcas/@ViewBag.Logomarca" width="160" />
+            }
+            else
+            {
+                <img src="~/Images/kalub-logo-home.png" width="160" />
+            }
+        </th>
+    </tr>
+    <tr>
+        <td COLSPAN="2" style="border-bottom: 1px solid; font-weight: bold; text-align: center">
+            <h4>
+                <b>- EXERCÍCIO -</b>
+            </h4>
+        </td>
+    </tr>
+    <tr><th colspan="2" height="10"></th></tr>
+
+    <tr>
+        <td height="5"><b>Titulo: </b>@ViewBag.Titulo</td>
+    </tr>
+    <tr>
+        <td height="5"><b>Data de inicio: </b>@ViewBag.DataInicio</td>
+    </tr>
+    <tr>
+        <td height="5"><b>Data final: </b>@ViewBag.DataFim</td>
+    </tr>
+    <tr>
+        <td height="5" colspan="3" style="border-top: 1px solid;"><br/>@Html.Raw(ViewBag.Descricao)</td>
+    </tr>
+
+</table>
+
+
+
+                  

@@ -1,0 +1,145 @@
+﻿@using ProfitManager.Web.ViewModels
+@model List<ContaContabilSaldoInicialViewModel>
+
+@{
+    ViewBag.Title = "Empresa";
+    Layout = "~/Views/Shared/_LayoutRestritoUser.cshtml";
+}
+
+
+<div id="content">
+    <div class="tabs-wrapper text-center">
+        <div class="panel box-shadow-none text-left content-header">
+            <div class="panel-body">
+                <div class="col-sm-4" style="padding-top: 35px;">
+                    <p class="animated fadeInLeft">
+                        <a href="/PrincipalUser" style="font-size: 1.0em !important; color: #fff;">Home</a> <span class="fa-angle-right fa"></span> Cadastros Gerais
+                    </p>
+                </div>
+                <div class="col-sm-8" style="text-align: left; padding-top: 42px; padding-left: 100px;">
+                    Empresa:  @ViewBag.empresaDados.Nome
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="col-md-8">
+    <div class="col-md-12 tabs-area">
+
+        <ul id="tabs-demo3" class="nav nav-tabs nav-tabs-v2" role="tablist">
+            <li role="presentation">
+                <a href="#empresa" id="tabs-demo3-1" role="tab" data-toggle="tab" aria-expanded="true">Empresa</a>
+            </li>
+            <li role="presentation" class="">
+                <a href="#usuario" role="tab" id="tabs-demo3-2" data-toggle="tab" aria-expanded="false">Usuario</a>
+            </li>
+            <li role="presentation" class="active">
+                <a href="#saldoinicial" id="tabs-demo3-3" role="tab" data-toggle="tab" aria-expanded="false">Saldos Iniciais</a>
+            </li>
+        </ul>
+
+        <div id="tabsDemo3Content" class="tab-content tabs-content-v2">
+            <div role="tabpanel" class="tab-pane fade" id="empresa" aria-labelledby="tabs-demo3-area1">
+                
+
+
+
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="usuario" aria-labelledby="tabs-demo3-area2">
+
+
+            </div>
+            <div role="tabpanel" class="tab-pane fade active in" id="saldoinicial" aria-labelledby="tabs-demo3-area3">
+
+                @using (Html.BeginForm("Editing_Update", "Empresa", FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true)
+
+                    <div class="col-md-9 top-20 padding-0" style="padding-left:50px;padding-top:20px;">
+
+                        <div class="col-sm-7" style="background-color:#2c4970;padding-top: 4px;color:#fff">
+                            <b>Item</b>
+                        </div>
+                        <div class="col-sm-2" style="background-color:#2c4970;padding-top: 4px;color:#fff;">
+                            &nbsp;&nbsp;&nbsp;<b>Valor</b>
+                        </div>
+                        <br />
+                        @foreach (var plano in Model)
+                        {
+                            var id = "S" + plano.Id;
+
+                            <div class="col-sm-7" style="padding-top: 1px;">
+                                @plano.NotaExplicativaContaContabil
+                            </div>
+                            <div class="col-sm-2" style="padding-top: 1px;">
+                                <div class="col-sm-2" style="padding-top: 1px;">
+                                    <input id="@id" name="@id" class="text-right" size="4" type="text" value="@string.Format("{0:#,##0}", plano.Valor)" onblur="this.style.backgroundColor = '#ffffff';" onkeyup="mascara(this, mvalor);">
+                                </div>
+                            </div>
+
+
+                        }
+
+                        <div style="padding-left:600px;">
+                            <button class="btn btn-success btn-lg" type="submit" name="salvaroperacao" id="salvaroperacao" value="1">
+                                Salvar Saldos
+                            </button>
+                        </div>
+
+                        <div class="col-sm-10" style="padding-bottom: 20px;"></div>
+
+                    </div>
+                }
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="abrirModalProcessando" class="modal fade modal-v2" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body" align=center>
+                <img src="../../Images/loading_2x.gif" width="300">
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+
+            $(document).on('click', 'input[type=text]', function () { this.select(); this.style.backgroundColor = '#FFFF00'; });
+
+            $(".nav-tabs a").click(function (e) {
+                e.preventDefault();
+                $(this).tab('show');
+            });
+
+            $("#salvaroperacao").click(function () {
+                $('#abrirModalProcessando').modal('show');
+            });
+
+        });
+
+        function mvalor(v) {
+            v = v.toString().replace(/\D/g, "");
+            v = v.replace(/(\d)(\d{3})$/, "$1.$2");
+            return v;
+        }
+
+        function mascara(o, f) {
+            v_obj = o;
+            v_fun = f;
+            setTimeout("execmascara()", 1);
+        }
+        function execmascara() {
+            v_obj.value = v_fun(v_obj.value);
+        }
+
+    </script>
+
+}

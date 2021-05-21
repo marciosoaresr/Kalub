@@ -1,0 +1,69 @@
+﻿.delete {
+    width: 20px;
+    background-image: url('../Views/../Images/file_delete.png');
+    background-repeat: no-repeat;
+    /*background-position: -31px -193px;*/
+    display: inline-block;
+    cursor: pointer;
+}
+
+.excluir {
+    left: 600px;
+    position: absolute;
+}
+
+.collapse {
+    width: 15px;
+    background-image: url('../Views/../Images/ui-icons_454545_256x240.png');
+    background-repeat: no-repeat;
+    background-position: -30px -17px;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.expand {
+    width: 15px;
+    background-image: url('../Views/../Images/ui-icons_454545_256x240.png');
+    background-repeat: no-repeat;
+    background-position: -50px -17px;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.fechado {
+    width: 15px;
+    background-image: url('../Views/../Images/ui-icons_454545_256x240.png');
+    background-repeat: no-repeat;
+    background-position: -30px -17px;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.treeview ul {
+    font: 13px Arial, Sans-Serif;
+    margin: 0px;
+    padding-left: 8px;
+    list-style: none;
+}
+
+.treeview > li > a {
+    font-weight: bold;
+}
+
+.treeview li {
+    border-top: 1px solid #dddddd;
+}
+
+.treeview li a {
+    padding: 0px;
+    font-size: 10px;
+    display: inline-block;
+    text-decoration: none;
+    width: auto;
+    font-size: 1.1em;
+}
+
+.collapsible {
+}
+
+

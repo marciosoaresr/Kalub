@@ -1,0 +1,98 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{1876C876-D262-4C77-B6B1-677C56576B64}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ProfitManager.Negocio</RootNamespace>
+    <AssemblyName>ProfitManager.Negocio</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="NHibernate">
+      <HintPath>..\ProfitManager.Factory\bin\Debug\NHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Implementacao\Enumerador.cs" />
+    <Compile Include="Implementacao\Funcoes.cs" />
+    <Compile Include="Implementacao\FuncoesArea.cs" />
+    <Compile Include="Implementacao\FuncoesBalancoPatrimonial.cs" />
+    <Compile Include="Implementacao\FuncoesDFC.cs" />
+    <Compile Include="Implementacao\FuncoesGrupoDRE.cs" />
+    <Compile Include="Implementacao\FuncoesExtratoConta.cs" />
+    <Compile Include="Implementacao\FuncoesBalancete.cs" />
+    <Compile Include="Implementacao\FuncoesCategoriaEmpresaSecundaria.cs" />
+    <Compile Include="Implementacao\FuncoesFechamentoCaixa.cs" />
+    <Compile Include="Implementacao\FuncoesTipoDocumentoFechamentoCaixa.cs" />
+    <Compile Include="Implementacao\FuncoesNaturezaJuridica.cs" />
+    <Compile Include="Implementacao\FuncoesCidade.cs" />
+    <Compile Include="Implementacao\FuncoesContaContabil.cs" />
+    <Compile Include="Implementacao\FuncoesContaContabilGrupo.cs" />
+    <Compile Include="Implementacao\FuncoesContaContabilRelatorioItem.cs" />
+    <Compile Include="Implementacao\FuncoesContaContabilSaldoInicial.cs" />
+    <Compile Include="Implementacao\FuncoesContaContabilSubGrupo.cs" />
+    <Compile Include="Implementacao\FuncoesEmpresa.cs" />
+    <Compile Include="Implementacao\FuncoesEmpresaUsuario.cs" />
+    <Compile Include="Implementacao\FuncoesCategoriaEmpresa.cs" />
+    <Compile Include="Implementacao\FuncoesEvento.cs" />
+    <Compile Include="Implementacao\FuncoesEventoLancamento.cs" />
+    <Compile Include="Implementacao\FuncoesEventoCategoriaEmpresa.cs" />
+    <Compile Include="Implementacao\FuncoesEventoOperacao.cs" />
+    <Compile Include="Implementacao\FuncoesGrupoArea.cs" />
+    <Compile Include="Implementacao\FuncoesRelatorio.cs" />
+    <Compile Include="Implementacao\FuncoesRelatorioItem.cs" />
+    <Compile Include="Implementacao\FuncoesRelatorioItemAuxiliar.cs" />
+    <Compile Include="Implementacao\FuncoesUsuario.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositorio\HqlParameter.cs" />
+    <Compile Include="Repositorio\ICrudDal.cs" />
+    <Compile Include="Repositorio\IRepositorio.cs" />
+    <Compile Include="Repositorio\Repositorio.cs" />
+    <Compile Include="Repositorio\SessionFactory.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\ProfitManager.Factory\ProfitManager.Fabrica.csproj">
+      <Project>{d91e6d2a-28cd-44f8-a824-3ffaefd98853}</Project>
+      <Name>ProfitManager.Fabrica</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -1,0 +1,102 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Threading;
+using System.Web.Mvc;
+using Kendo.Mvc.Extensions;
+using PagedList;
+using ProfitManager.Fabrica.Entidade;
+using ProfitManager.Negocio.Implementacao;
+using ProfitManager.Web.RepositorioWeb;
+
+
+namespace ProfitManager.Web.Controllers.AcessoRestrito.Administrador
+{
+    public class GrupoDreController : Controller
+    {
+
+        public ActionResult Index(int? pageNumber, string search)
+        {
+            List<GrupoDRE> listGrupoDre = (search.HasValue()) ? FuncoesGrupoDre.Load(search) : FuncoesGrupoDre.Load();
+
+            const int pageSize = 10;
+            int pageCurrent = (pageNumber ?? 1);
+            ViewBag.PageCount = listGrupoDre != null && listGrupoDre.Count > 0 ? (listGrupoDre.Count + pageSize - 1) / pageSize : 1;
+            ViewBag.PageNumber = pageCurrent;
+            ViewBag.Search = search;
+
+            return View(listGrupoDre.ToPagedList(pageCurrent, pageSize));
+        }
+
+        public ActionResult GerarDre()
+        {
+            EmpresaUsuario empresaUsuario =
+                FuncoesEmpresaUsuario.Load(RepositorioWebUsuario.VerificaSeOUsuarioEstaLogado(true).Id) ??
+                new EmpresaUsuario();
+
+            ViewBag.Empresa = empresaUsuario.Empresa.NomeFantasia;
+
+            return View();
+        }
+
+        [HttpGet]
+        public ActionResult Excluir(int? id)
+        {
+            if (id.HasValue)
+                FuncoesGrupoDre.Excluir((int)id);
+
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public ActionResult CadastrarEditarGrupoDre(int? id)
+        {
+            var grupodre = (id.HasValue) ? FuncoesGrupoDre.Load((int)id) : new GrupoDRE();
+
+            return PartialView("CadastrarEditarGrupoDRE", grupodre);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CadastrarEditarGrupoDre(GrupoDRE grupodre, FormCollection form)
+        {
+            ModelState["Id"].Errors.Clear();
+
+            if (ModelState.IsValid)
+            {
+                FuncoesGrupoDre.Salvar(grupodre);
+                Thread.Sleep(1000);
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                return View("Index","CadastrarEditarGrupoDRE");
+            }
+        }
+
+        [HttpPost]
+        public ActionResult SetDataGerarDre(GrupoDRE dre)
+        {
+            return RedirectToAction("VisualizarDre", new { dataAtual = dre.DataAtual, dataInicial = dre.DataInicial, tipo = dre.tipoDre });
+        }
+
+
+        public ActionResult VisualizarDre(DateTime dataAtual, DateTime dataInicial, string tipo)
+        {
+            EmpresaUsuario empresaUsuario =
+                FuncoesEmpresaUsuario.Load(RepositorioWebUsuario.VerificaSeOUsuarioEstaLogado(true).Id);
+
+            if (dataInicial == Convert.ToDateTime("01/01/0001"))
+            {
+                dataInicial = dataAtual;
+            }
+            int empresa = empresaUsuario.Empresa.Id;
+
+            ViewBag.ListaDRE = FuncoesGrupoDre.CarregaDre(empresa, dataInicial);
+
+            ViewBag.Empresa = empresaUsuario.Empresa.NomeFantasia;
+            ViewBag.TipoDre = tipo;
+            ViewBag.mesAtual = dataInicial.Month + "/" + dataInicial.Year;
+            return View();
+        }
+    }
+}

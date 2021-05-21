@@ -1,0 +1,72 @@
+﻿@using log4net.Util.TypeConverters
+@using ProfitManager.Fabrica.Entidade
+@using ProfitManager.Fabrica.Enum
+@model ProfitManager.Fabrica.Entidade.Balancete
+
+@{
+    ViewBag.Title = "Visualizar Balancete";
+    Layout = "~/Views/Shared/_LayoutSemCabecalho.cshtml";
+}
+
+
+<table width="850" >
+    <tr>
+        <th colspan="3">
+            <h3>
+                <b>BALANCETE ANALÍTICO</b>
+            </h3>
+            Empresa: @ViewBag.Empresa<br/>
+            Período: de @ViewBag.DataInicial a @ViewBag.DataFinal
+        </th>
+        <th colspan="2" style="text-align: right">
+            <img src="~/Images/kalub-logo-home.png" width="160">
+        </th>
+    </tr>
+    <tr><th colspan="5" height="10"></th></tr>
+    <tr style="background-color: #dcdcdc">
+        <th>Código</th>
+        <th>Conta</th>
+        <th style="text-align: right">Saldo Anterior</th>
+        <th style="text-align: right">Débito</th>
+        <th style="text-align: right">Credito</th>
+    </tr>
+    <tr><th colspan="5" height="5"></th></tr>
+    @foreach (var iGrupo in ((List<Balancete>)ViewBag.ListaBalancete).GroupBy(x => x.GrupoCodigo))
+    {
+        var grupoFirst = iGrupo.FirstOrDefault();
+        <tr class="responsive-table" style="font-weight: bold">
+            <td width="100">@grupoFirst.GrupoCodigo</td>
+            <td>@grupoFirst.GrupoNome</td>
+            <td style="text-align: right">@Convert.ToInt32(iGrupo.Sum(x => x.SaldoAnterior))</td>
+            <td style="text-align: right">@Convert.ToInt32(iGrupo.Sum(x => x.Debito))</td>
+            <td style="text-align: right">@Convert.ToInt32(iGrupo.Sum(x => x.Credito))</td>
+        </tr>
+        foreach (var iSubGrupo in iGrupo.GroupBy(x => x.SubGrupoCodigo))
+        {
+            var subGrupoFirst = iSubGrupo.FirstOrDefault();
+            <tr class="responsive-table"  style="font-weight: bold">
+                <td width="100">&nbsp;&nbsp;@subGrupoFirst.SubGrupoCodigo</td>
+                <td>&nbsp;&nbsp;@subGrupoFirst.SubGrupoNome</td>
+                <td style="text-align: right">@Convert.ToInt32(iSubGrupo.Sum(x => x.SaldoAnterior))</td>
+                <td style="text-align: right">@Convert.ToInt32(iSubGrupo.Sum(x => x.Debito))</td>
+                <td style="text-align: right">@Convert.ToInt32(iSubGrupo.Sum(x => x.Credito))</td>
+            </tr>
+            foreach (var balancete in iSubGrupo)
+            {
+                <tr class="responsive-table">
+                    <td width="100">&nbsp;&nbsp;&nbsp;&nbsp;@balancete.Codigo</td>
+                    <td>&nbsp;&nbsp;&nbsp;&nbsp;@balancete.CampoNome.Nome</td>
+                    <td style="text-align: right">@Convert.ToInt32(balancete.SaldoAnterior)</td>
+                    <td style="text-align: right">@Convert.ToInt32(balancete.Debito)</td>
+                    <td style="text-align: right">@Convert.ToInt32(balancete.Credito)</td>
+                </tr>
+            }
+        }
+
+    }
+
+</table>
+
+
+
+                  

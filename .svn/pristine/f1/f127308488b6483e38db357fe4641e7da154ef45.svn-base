@@ -1,0 +1,118 @@
+﻿@using System
+@using System.Linq
+@using System.Reflection
+@using System.Web.UI.WebControls
+@using PagedList.Mvc;
+@using PagedList;
+@using System.Web.Mvc
+@using ProfitManager.Fabrica.Entidade
+
+@helper Grid(IPagedList<ProfitManager.Fabrica.Entidade.EntidadeBase> listItens, string[] columnsTitle, string[] propertiesName,
+Type typeObjectListItens)
+{
+
+    <div class="responsive-table" style="padding-left:20px;padding-right:20px;padding-top:20px">
+        <table id="datatables-example" class="table table-bordered">
+            <thead>
+                <tr style="color:#fff; background-color: #44a9df;">
+                    @foreach (var title in columnsTitle)
+                    {
+                        <th>
+                            @title
+                        </th>
+                    }
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach (var item in listItens)
+            {
+                int status = 0;
+                <tr class="linhatabela">
+                    @foreach (var property in propertiesName)
+                    {
+                        if (typeObjectListItens.GetProperties().Any(x => x.Name == property.Split('.').First()))
+                        {
+                            PropertyInfo propInfo =
+                                typeObjectListItens.GetProperties().First(x => x.Name == property.Split('.').First());
+
+                            object value = propInfo.GetValue(item, null);
+
+                            string[] namesNestedProperty = property.Split('.');
+                            if (namesNestedProperty.Length > 1 && value != null)
+                            {
+                                PropertyInfo lastProperyInfo = propInfo;
+                                foreach (string nameNestedProp in namesNestedProperty.Where(x => x != property.Split('.').First()))
+                                {
+                                    lastProperyInfo = lastProperyInfo.PropertyType.GetProperty(nameNestedProp);
+                                    value = lastProperyInfo.GetValue(value, null);
+                                }
+                            }
+
+                            <td>
+                                @{
+                                    if (value == null)
+                                    {
+                                        value = "";
+                                    }
+                                }
+                                @value.ToString()
+
+                            </td>
+                         }
+                    }
+
+
+                        @if (typeObjectListItens.Name == "Empresa" && typeObjectListItens.Name != "EmpresaRecebimentoTransacao")
+                        {
+                            <td width="10%" style="text-align: center">
+                                <input type="image" src="../../../Images/file_edit.png" data-toggle='tooltip' data-placement='top' title="Editar Empresa" width=20 value="@item.Id" data-id="@item.Id" class="empresa" />
+                                <input type="image" src="../../../Images/user_edit.png" data-toggle='tooltip' data-placement='top' title="Editar Usuario" width=20 value="@item.Id" data-id="@item.Id" class="empresausuario" />
+                                <input type="image" src="../../../Images/file_recalc_saldo.png" data-toggle='tooltip' data-placement='top' title="Recalcular Saldo" width=20 value="@item.Id" data-id="@item.Id" class="recalcularsaldoempresa"/>
+                                <input type="image" src="../../../Images/file_delete.png" data-toggle='tooltip' data-placement='top' title="Excluir Empresa" width=20 value="@item.Id" data-id="@item.Id" class="deletarempresa" />
+                            </td>
+                        }
+                        else 
+                        {
+                            <td width="10%" style="text-align: center">
+
+                                @if (typeObjectListItens.Name == "Evento")
+                                {
+                                    <input type="image" src="../../../Images/icon_help.png" data-toggle='tooltip' data-placement='top' title="Editar Help" width=20 value="@item.Id" data-id="@item.Id" class="help" />
+                                    <input type="image" src="../../../Images/file_recalc_saldo.png" data-toggle='tooltip' data-placement='top' title="Recalcular Saldo" width=20 value="@item.Id" data-id="@item.Id" class="recalcularsaldoevento" />
+                                }
+
+                                @if (typeObjectListItens.Name == "EmpresaUsuario")
+                                {
+                                    <input type="image" src="../../../Images/user_edit.png" data-toggle='tooltip' data-placement='top' title="Alterar usuario" width=20 value="@item.Id" data-id="@item.Id" class="alterar-usuario"/>
+                                    <a href="/Empresa/UsuariosLogs"><input type="image" src="../../../Images/icone_logins.png" data-toggle='tooltip' data-placement='top' title="Histórico de acesso" width=20 value="@item.Id" class="historico"/></a>
+                                }
+                                else if (typeObjectListItens.Name != "EmpresaRecebimentoTransacao" && typeObjectListItens.Name != "EmpresaUsuarioLogs" && typeObjectListItens.Name != "EmpresaRecebimento" && typeObjectListItens.Name != "Exercicio")
+                                {
+                                    <input type="image" src="../../../Images/file_edit.png" data-toggle='tooltip' data-placement='top' title="Editar" width=20 value="@item.Id" data-id="@item.Id" class="evento" />
+                                    <input type="image" src="../../../Images/file_delete.png" data-toggle='tooltip' data-placement='top' title="Excluir" width=20 value="@item.Id" class="deletar" />
+
+                                }
+                                else if (typeObjectListItens.Name == "Exercicio")
+                                {
+                                    <input type="image" src="../../../Images/file_edit.png" data-toggle='tooltip' data-placement='top' title="Editar" width=20 value="@item.Id" data-id="@item.Id" class="exercicio" />
+                                    <input type="image" src="../../../Images/file_delete.png" data-toggle='tooltip' data-placement='top' title="Excluir" width=20 value="@item.Id" class="deletar" />
+
+                                }
+                            </td>
+
+                        }
+
+                   
+
+                </tr>
+            }
+
+
+            </tbody>
+        </table>
+    </div>
+
+
+}
+

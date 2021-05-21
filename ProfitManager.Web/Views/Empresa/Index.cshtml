@@ -1,0 +1,516 @@
+﻿@using ProfitManager.Fabrica.Entidade
+@using ProfitManager.Fabrica.Enum
+@using ProfitManager.Web.ViewModels
+@model List<ContaContabilSaldoInicialViewModel>
+
+@{
+    ViewBag.Title = "Empresa";
+    Layout = "~/Views/Shared/_LayoutRestritoUser.cshtml";
+
+    
+}
+
+
+
+<div id="content">
+    <div class="tabs-wrapper text-center">
+        <div class="panel box-shadow-none text-left content-header">
+            <div class="panel-body">
+                <div class="col-sm-4" style="padding-top: 35px;">
+                    <p class="animated fadeInLeft">
+                        <a href="/PrincipalUser" style="font-size: 1.0em !important; color: #fff;">Home</a> <span class="fa-angle-right fa"></span> Saldos Iniciais
+                    </p>
+                </div>
+                <div class="col-sm-8" style="text-align: left; padding-top: 42px; padding-left: 100px;">
+                    Empresa:  @ViewBag.empresaDados.NomeFantasia
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (TempData["mensagem"] != null)
+{
+     <script>$.simplyToast('salva', 'Saldos iniciais gravados com sucesso!');</script>
+}
+
+@using (Html.BeginForm("ContaContabilSaldoInicial_Salvar", "Empresa", FormMethod.Post, new { id = "form", name = "form" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+        <div style="width: 100%;">
+            <div style="width: 70%; left: 15%; top: 105%; position: absolute;">
+                <div class="panel">
+                    <div class="panel-heading" style="padding-left: 10px; padding-right: 30px; padding-bottom: 50px">
+                        <ul class="nav navbar-nav navbar-left" style="color: #2c4970;">
+                            <h4><b>Saldos Iniciais</b></h4>
+                        </ul>
+                        @if (ViewBag.ExisteLucroPrejuizoAcumulado != 0 && ViewBag.ExisteSaldoinicial != 0)
+                        {
+                            <ul class="nav navbar-nav navbar-right" style="padding-top: 10px;">
+                                <button class="btn btn-success" type="submit" name="salvaroperacao" id="salvaroperacao" value="1">
+                                    Salvar Saldos
+                                </button>
+                            </ul>
+                        }
+                    </div>
+
+                    <div class="panel-body" >
+                        <div >
+
+                            <table width="950" style="align-content: center">
+                                <tr>
+                                    
+                                        @if (ViewBag.ExisteSaldoinicial == 0)
+                                        {
+                                            <div class="alert alert-danger alert-raised alert-dismissible fade in" role="alert">
+                                                <strong>ATENÇÃO!</strong> NÃO FOI DEFINIDO UMA CONTA QUE EXIGE SALDO INICIAL.
+                                            </div>
+                                        }
+                                        else if (ViewBag.ExisteLucroPrejuizoAcumulado == 0)
+                                        {
+                                            <div class="alert alert-danger alert-raised alert-dismissible fade in" role="alert">
+                                                <strong>ATENÇÃO!</strong> NÃO FOI DEFINIDO A CONTA DE LUCRO OU PREJUIZO ACUMULADO.
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <td valign="top" width="450">
+                                                @foreach (var iGrupo in Model.Where(x => x.GrupoCodigo == "1").GroupBy(x => x.GrupoCodigo))
+                                                {
+                                                    decimal totalAtivo = 0;
+                                                    decimal totalGeral = 0;
+                                                    var grupoFirst = iGrupo.FirstOrDefault();
+                                                    <table width="450">
+                                                        @if (grupoFirst.NotaExplicativaSubGrupo == "")
+                                                        {
+                                                            <tr>
+                                                                <td colspan="3" style="background-color: #2c4970; color: #fff; padding-top: 2px;">
+                                                                    &nbsp;&nbsp;<b>@grupoFirst.GrupoNome</b>
+                                                                </td>
+                                                            </tr>
+                                                        }
+                                                        else
+                                                        {
+                                                            <tr>
+                                                                <td>
+                                                                    &nbsp;&nbsp;<b>@grupoFirst.NotaExplicativaSubGrupo</b>
+                                                                </td>
+                                                            </tr>
+                                                        }
+                                                        @foreach (var iSubGrupo in iGrupo.GroupBy(x => x.SubGrupoCodigo))
+                                                        {
+                                                            totalAtivo = 0;
+                                                            var subGrupoFirst = iSubGrupo.FirstOrDefault();
+                                                            if (subGrupoFirst.NotaExplicativaGrupo == "")
+                                                            {
+                                                                <tr>
+                                                                    <td>
+                                                                        &nbsp;&nbsp;&nbsp;&nbsp;<b>@subGrupoFirst.SubGrupoNome</b>
+                                                                    </td>
+                                                                </tr>
+                                                            }
+                                                            else
+                                                            {
+                                                                <tr>
+                                                                    <td>
+                                                                        &nbsp;&nbsp;&nbsp;&nbsp;<b>@subGrupoFirst.NotaExplicativaGrupo</b>
+                                                                    </td>
+                                                                </tr>
+                                                            }
+                                                            foreach (var conta in iSubGrupo)
+                                                            {
+
+                                                                var id = "S" + conta.Id;
+                                                                var help = conta.CampoHelp.Nome;
+                                                                if (conta.TipoContaContabil == EnumTipoContaContabil.Credora)
+                                                                {
+                                                                    totalGeral = totalGeral + (conta.Valor*-1);
+                                                                    totalAtivo = totalAtivo + (conta.Valor*-1);
+                                                                }
+                                                                else
+                                                                {
+                                                                    totalGeral = totalGeral + conta.Valor;
+                                                                    totalAtivo = totalAtivo + conta.Valor;
+                                                                }
+                                                                <tr>
+                                                                    @if (conta.NotaExplicativaContaContabil == "")
+                                                                    {
+                                                                        <td width="350">
+                                                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@conta.ContaContabil
+                                                                        </td>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <td width="350">
+                                                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@conta.NotaExplicativaContaContabil
+                                                                        </td>
+                                                                    }
+                                                                    <td width="30" style="align-content: center">
+                                                                        @if (help != "")
+                                                                        {
+                                                                            <img src="../../Images/icon_help.png" class="animate" data-tipso="@help" width='18'  />
+                                                                        }
+                                                                    </td>
+                                                                    <td width="60">
+                                                                        <input id="@id" name="@id" class="text-right" size="6" maxlength="10" type="text" value="@string.Format("{0:#,##0}", conta.Valor)" onblur="this.style.backgroundColor = '#ffffff';" onkeydown="mascara(this, mvalor);">
+                                                                    </td>
+                                                                </tr>
+                                                            }
+                                                            <tr>
+                                                                <td colspan="2">
+                                                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Sub Total</b>
+                                                                </td>
+                                                                <td>
+                                                                    <input id="TD501" disabled="disabled" size="6" type="text" class="text-right " style="color: white; background-color: #6A5ACD;" value="@string.Format("{0:#,##0}", totalAtivo)" />
+                                                                </td>
+                                                            </tr>
+
+                                                        }
+                                                        <tr><td colspan="3"></td></tr>
+                                                        <tr>
+                                                            <td colspan="2">
+                                                                &nbsp;&nbsp;&nbsp;<b>TOTAL GERAL</b>
+                                                            </td>
+                                                            <td>
+                                                                <input id="TD501" disabled="disabled" size="6" type="text" class="text-right " style="color: white; background-color: #6A5ACD;" value="@string.Format("{0:#,##0}", totalGeral)" />
+                                                            </td>
+                                                        </tr>
+
+                                                    </table>
+                                                }
+                                            </td>
+                                            <td width="50%">
+                                                @foreach (var iGrupo in Model.Where(x => x.GrupoCodigo == "2").GroupBy(x => x.GrupoCodigo))
+                                                {
+                                                    decimal totalAtivo = 0;
+                                                    decimal totalGeral = 0;
+                                                    var grupoFirst = iGrupo.FirstOrDefault();
+                                                    <table width="450">
+                                                        @if (grupoFirst.NotaExplicativaSubGrupo == "")
+                                                        {
+                                                            <tr>
+                                                                <td colspan="3" style="background-color: #2c4970; color: #fff; padding-top: 2px;">
+                                                                    &nbsp;&nbsp;<b>@grupoFirst.GrupoNome</b>
+                                                                </td>
+                                                            </tr>
+                                                        }
+                                                        else
+                                                        {
+                                                            <tr>
+                                                                <td>
+                                                                    &nbsp;&nbsp;<b>@grupoFirst.NotaExplicativaSubGrupo</b>
+                                                                </td>
+                                                            </tr>
+                                                        }
+                                                        @foreach (var iSubGrupo in iGrupo.GroupBy(x => x.SubGrupoCodigo))
+                                                        {
+                                                            totalAtivo = 0;
+                                                            var subGrupoFirst = iSubGrupo.FirstOrDefault();
+                                                            if (subGrupoFirst.NotaExplicativaGrupo == "")
+                                                            {
+                                                                <tr>
+                                                                    <td>
+                                                                        &nbsp;&nbsp;&nbsp;&nbsp;<b>@subGrupoFirst.SubGrupoNome</b>
+                                                                    </td>
+                                                                </tr>
+                                                            }
+                                                            else
+                                                            {
+                                                                <tr>
+                                                                    <td>
+                                                                        &nbsp;&nbsp;&nbsp;&nbsp;<b>@subGrupoFirst.NotaExplicativaGrupo</b>
+                                                                    </td>
+                                                                </tr>
+                                                            }
+                                                            foreach (var conta in iSubGrupo)
+                                                            {
+
+                                                                var id = "S" + conta.Id;
+                                                                var help = conta.CampoHelp.Nome;
+                                                                if (conta.TipoContaContabil == EnumTipoContaContabil.Devedora)
+                                                                {
+                                                                    totalGeral = totalGeral + (conta.Valor*-1);
+                                                                    totalAtivo = totalAtivo + (conta.Valor*-1);
+                                                                }
+                                                                else
+                                                                {
+                                                                    totalGeral = totalGeral + conta.Valor;
+                                                                    totalAtivo = totalAtivo + conta.Valor;
+                                                                }
+
+                                                                <tr>
+                                                                    @if (conta.NotaExplicativaContaContabil == "")
+                                                                    {
+                                                                        <td width="350">
+                                                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@conta.ContaContabil
+                                                                        </td>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <td width="350">
+                                                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@conta.NotaExplicativaContaContabil
+                                                                        </td>
+                                                                    }
+                                                                    <td width="30" style="align-content: center">
+                                                                        @if (help != "")
+                                                                        {
+                                                                            <img src="../../Images/icon_help.png" class="top-left" data-tipso="@help" width='18' />
+                                                                        }
+                                                                    </td>
+                                                                    @if (conta.IdContaContabil == 71)
+                                                                    {
+                                                                        <td width="60">
+                                                                            <input disabled="disabled" class="text-right" size="6" type="text" style="color: white; background-color: red;" value="@string.Format("{0:#,##0}", conta.Valor)">
+                                                                        </td>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <td width="60">
+                                                                            <input id="@id" name="@id" class="text-right" size="6" maxlength="10" type="text" value="@string.Format("{0:#,##0}", conta.Valor)" onblur="this.style.backgroundColor = '#ffffff';" onkeydown="mascara(this, mvalor);">
+                                                                        </td>
+                                                                    }
+                                                                </tr>
+                                                            }
+                                                            <tr>
+                                                                <td colspan="2">
+                                                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>Sub Total</b>
+                                                                </td>
+                                                                <td>
+                                                                    <input id="TD501" disabled="disabled" size="6" type="text" class="text-right " style="color: white; background-color: #6A5ACD;" value="@string.Format("{0:#,##0}", totalAtivo)" />
+                                                                </td>
+                                                            </tr>
+
+                                                        }
+                                                        <tr><td colspan="3"></td></tr>
+                                                        <tr>
+                                                            <td colspan="2">
+                                                                &nbsp;&nbsp;&nbsp;<b>TOTAL GERAL</b>
+                                                            </td>
+                                                            <td>
+                                                                <input id="TD501" disabled="disabled" size="6" type="text" class="text-right " style="color: white; background-color: #6A5ACD;" value="@string.Format("{0:#,##0}", totalGeral)" />
+                                                            </td>
+                                                        </tr>
+
+                                                    </table>
+                                                }
+                                            </td>
+                                        }
+
+                                            
+                                </tr>
+                            </table>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+
+        </div>
+}
+
+<div id="abrirModalProcessando" class="modal fade modal-v2" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body" align=center>
+                <img src="../../Images/loading_2x.gif" width="300">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="alerta" class="modal fade" data-backdrop="static" style="padding-top: 200px; font-size: 15px;">
+    <div class="modal-dialog">
+        <div class="alert alert-danger alert-raised alert-dismissible fade in" role="alert">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+            <strong>ATENÇÃO!</strong><BR />
+            DIGITE OS VALORES DAS CONTAS QUE EXIGEM SALDO INICIAL.
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            
+            $(document).on('focus click', 'input[type=text]', function () { this.select(); this.style.backgroundColor = '#FFFF00'; });
+
+            $("#salvaroperacao").click(function (e) {
+                $('#abrirModalProcessando').modal('show');
+                $("#form").submit();
+            });
+
+        });
+
+        $('.tipso').tipso();
+
+        jQuery(document).ready(function () {
+            // Position Tipso
+            jQuery('.right').tipso({
+                position: 'right',
+                background: 'rgba(0,0,0,0.8)',
+                useTitle: false,
+            });
+            jQuery('.left').tipso({
+                position: 'left',
+                background: 'tomato',
+                useTitle: false,
+            });
+            jQuery('.bottom').tipso({
+                position: 'bottom',
+                background: '#2574A9',
+                useTitle: false,
+            });
+            jQuery('.top, .destroy, .update, .update-tipso-content').tipso({
+                position: 'top',
+                background: '#F62459',
+                useTitle: false,
+            });
+            // Tooltip Hover
+            jQuery('.hover-tipso-tooltip').tipso({
+                position: 'top',
+                background: '#000',
+                useTitle: false,
+                width: false,
+                maxWidth: 300,
+                tooltipHover: true,
+                content: function () {
+                    return 'You can <a href="javascript:;">CLICK ME</a> now!';
+                }
+            });
+
+            jQuery('.top-right').tipso({
+                position: 'top-right',
+                background: 'rgba(0,0,0,0.8)',
+                titleBackground: 'tomato',
+                titleContent: 'Some title',
+                useTitle: false,
+                tooltipHover: true
+            });
+
+            jQuery('.top-left').tipso({
+                position: 'top-left',
+                background: 'rgba(0,0,0,0.8)',
+                titleBackground: 'blue',
+                titleContent: '     Ajuda',
+                useTitle: false,
+                tooltipHover: true
+            });
+
+            jQuery('.bottom-right').tipso({
+                position: 'bottom-right',
+                background: 'rgba(0,0,0,0.8)',
+                titleBackground: 'tomato',
+                titleContent: 'Some title',
+                useTitle: false,
+                tooltipHover: true
+            });
+
+            jQuery('.bottom-left').tipso({
+                position: 'bottom-left',
+                background: 'rgba(0,0,0,0.8)',
+                titleBackground: 'tomato',
+                titleContent: 'Some title',
+                useTitle: false,
+                tooltipHover: true
+            });
+
+            // Use Title For Tipso Content
+            jQuery('.title-tipso').tipso({
+                useTitle: true
+            });
+            // Tipso for Image
+            jQuery('.img-tipso').tipso({
+                useTitle: false,
+                background: 'rgba(0,0,0,0.8)'
+            });
+            // Show - Hide Tipso on Click
+            jQuery('.show-hide').tipso({
+                background: 'tomato',
+                useTitle: false
+            });
+            jQuery('.show-hide-tipso').on('click', function (e) {
+                if (jQuery(this).hasClass('clicked')) {
+                    jQuery(this).removeClass('clicked');
+                    jQuery('.show-hide').tipso('hide');
+                } else {
+                    jQuery(this).addClass('clicked');
+                    jQuery('.show-hide').tipso('show');
+                }
+                e.preventDefault();
+            });
+            // Before show
+            jQuery('.beforeShow').tipso({
+                background: 'tomato',
+                useTitle: false,
+                onBeforeShow: function (element, tips) {
+                    element.tipso('update', 'content', 'the title is a random number');
+                    element.tipso('update', 'titleContent', Math.random());
+                }
+            });
+            jQuery('.beforeShow-tipso').on('click', function (e) {
+                if (jQuery(this).hasClass('clicked')) {
+                    jQuery(this).removeClass('clicked');
+                    jQuery('.beforeShow').tipso('hide');
+                } else {
+                    jQuery(this).addClass('clicked');
+                    jQuery('.beforeShow').tipso('show');
+                }
+                e.preventDefault();
+            });
+
+            // Animate Tipso
+            jQuery('.animate').tipso({
+                animationIn: 'bounceIn',
+                animationOut: 'bounceOut',
+                background: 'ForestGreen',
+                titleBackground: 'black',
+                titleContent: 'Ajuda',
+                position: 'top',
+                useTitle: false,
+                tooltipHover: true
+            });
+            jQuery('.animationIn').on('change', function (e) {
+                var $this = jQuery(this);
+                jQuery('.animate').tipso('update', 'animationIn', $this.val());
+            });
+            jQuery('.animationOut').on('change', function (e) {
+                var $this = jQuery(this);
+                jQuery('.animate').tipso('update', 'animationOut', $this.val());
+            });
+
+        });
+        jQuery(window).load(function () {
+            // Show Tipso on Load
+            jQuery('.page-load').tipso('show');
+        });
+
+
+
+        function mascara(o, f) {
+            v_obj = o;
+            v_fun = f;
+            setTimeout("execmascara()", 1);
+        }
+
+        function execmascara() {
+            v_obj.value = v_fun(v_obj.value);
+        }
+
+        function mvalor(v) {
+            v = v.toString().replace(/\D/g, "");
+            v = v.replace(/[0-9]{16}/, "inválido");
+            v = v.replace(/(\d{1})(\d{11})$/, "$1.$2"); // coloca ponto antes dos ultimos 11 digitos
+            v = v.replace(/(\d{1})(\d{6})$/, "$1.$2"); // coloca ponto antes dos ultimos 6 digitos
+            v = v.replace(/(\d{1})(\d{3})$/, "$1.$2"); // coloca ponto antes dos ultimos 5 digitos
+            return v;
+        }
+
+
+    </script>
+
+}

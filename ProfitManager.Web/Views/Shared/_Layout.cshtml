@@ -1,0 +1,52 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width"/>
+    <title>@ViewBag.Title</title>
+    <link rel="shortcut icon" href="../../Images/favicon.ico">
+    @Styles.Render("~/css")
+    @Styles.Render("~/css/plugins")
+    @Styles.Render("~/fonts")
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    @Scripts.Render("~/Scripts")
+    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+    @Scripts.Render("~/Scripts/plugins")
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
+    <script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+
+
+</head>
+
+<body style="background-color: #E6E6FA;">
+
+<div id="wrapper" style="height: 100%; background-color: #E6E6FA;">
+    
+    <!-- inicio: Cabeçalho -->
+    <nav class="navbar navbar-default header navbar-fixed-top">
+        <div class="col-md-12 nav-wrapper">
+            <div class="navbar-header" style="padding-top: 10px; padding-left: 50px; width: 100%;">
+                <ul class="nav navbar-nav navbar-left">
+                    <img src="../../Images/kalub-logo-home.png" width="200"/>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- fim: Cabeçalho -->
+
+    <section id="content" style="height: 100%;">
+        <section id="contentrigth" style="width: 100%; height: 98.8%;position: absolute;">
+             @RenderBody()
+        </section>
+    </section>
+
+
+
+    @RenderSection("scripts", required: false)
+
+</div>
+
+</body>
+
+</html>
